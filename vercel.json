@@ -1,6 +1,7 @@
 {
   "version": 2,
   "framework": null,
+  "outputDirectory": "public",
   "cleanUrls": true,
   "rewrites": [
     { "source": "/api/anicli/run", "destination": "/api/anicli/run.js" },
