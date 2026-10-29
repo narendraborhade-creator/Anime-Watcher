@@ -112,20 +112,23 @@
 
       <!-- Navigation View Switcher -->
       <nav class="flex items-center gap-1 rounded-xl bg-white/[0.04] p-1 ring-1 ring-white/10 flex-wrap">
-        <button id="navTabStream" type="button" class="rounded-lg bg-cyan-400 px-3 py-1.5 font-mono-code text-xs font-bold text-slate-950 transition">
-          📺 01 // CINEMA STREAM
+        <button id="navTabHome" type="button" class="rounded-lg bg-cyan-400 px-3 py-1.5 font-mono-code text-xs font-bold text-slate-950 transition shadow">
+          🏠 01 // HOME
+        </button>
+        <button id="navTabStream" type="button" class="rounded-lg px-3 py-1.5 font-mono-code text-xs font-medium text-slate-300 transition hover:bg-white/5 hover:text-white">
+          🎬 02 // WATCH ROOM
         </button>
         <button id="navTabTerminal" type="button" class="rounded-lg px-3 py-1.5 font-mono-code text-xs font-medium text-slate-300 transition hover:bg-white/5 hover:text-white">
-          🐧 02 // LINUX TERMINAL (ani-cli)
+          🐧 03 // LINUX TERMINAL (ani-cli)
         </button>
         <button id="navTabSources" type="button" class="rounded-lg px-3 py-1.5 font-mono-code text-xs font-medium text-slate-300 transition hover:bg-white/5 hover:text-white">
-          🌐 03 // ALL SOURCES MESH
+          🌐 04 // ALL SOURCES MESH
         </button>
         <button id="navTabCode" type="button" class="rounded-lg px-3 py-1.5 font-mono-code text-xs font-medium text-slate-300 transition hover:bg-white/5 hover:text-white">
-          📁 04 // MONOREPO (20 FILES)
+          📁 05 // MONOREPO (20 FILES)
         </button>
         <button id="navTabPipeline" type="button" class="rounded-lg px-3 py-1.5 font-mono-code text-xs font-medium text-slate-300 transition hover:bg-white/5 hover:text-white">
-          ⚡ 05 // CANARY PIPELINE
+          ⚡ 06 // CANARY PIPELINE
         </button>
       </nav>
 
@@ -148,9 +151,213 @@
   <main class="relative z-10 mx-auto max-w-7xl px-4 py-6 md:px-6">
 
     <!-- =================================================================== -->
+    <!-- VIEW 0: HOME SCREEN // CURATED REFERRED ANIME WATCH RECOMMENDATIONS -->
+    <!-- =================================================================== -->
+    <div id="viewHome" class="space-y-12">
+      <!-- 1. Hero Featured Spotlight Carousel -->
+      <section id="homeHeroSection" class="relative overflow-hidden rounded-3xl hud-glass border border-cyan-500/30 p-6 md:p-10 shadow-2xl transition-all duration-500">
+        <!-- Dynamic Spotlight Background Image with Gradient Overlay -->
+        <img
+          id="homeHeroBg"
+          src="https://s4.anilist.co/file/anilistcdn/media/anime/banner/151807-3L1q6LzV8Y2U.jpg"
+          alt="Featured Anime Backdrop"
+          class="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-35 transition-all duration-700 filter brightness-90"
+        />
+        <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#06070B] via-[#06070B]/85 to-transparent"></div>
+        <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#06070B] via-transparent to-transparent"></div>
+
+        <div class="relative z-10 grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-center">
+          <div class="space-y-5 lg:col-span-8">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="inline-flex items-center gap-1.5 rounded-full bg-cyan-500/20 px-3 py-1 font-mono-code text-[11px] font-extrabold text-cyan-300 ring-1 ring-cyan-400/40">
+                <span class="h-2 w-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                <span>🔥 REFERRED FOR YOU // TOP RATED SPOTLIGHT</span>
+              </span>
+              <span id="homeHeroSeasonsBadge" class="rounded-full bg-amber-500/20 px-3 py-1 font-mono-code text-[11px] font-extrabold text-amber-300 ring-1 ring-amber-400/40">
+                ⚡ 2 SEASONS AVAILABLE
+              </span>
+              <span class="rounded-full bg-fuchsia-500/20 px-3 py-1 font-mono-code text-[11px] font-extrabold text-fuchsia-300 ring-1 ring-fuchsia-400/40">
+                SUB + DUB (EN)
+              </span>
+            </div>
+
+            <div>
+              <div class="font-mono-code text-xs font-semibold text-cyan-400 tracking-wider uppercase mb-1" id="homeHeroNativeTitle">
+                俺だけレベルアップな件 • A-1 PICTURES
+              </div>
+              <h1 id="homeHeroTitle" class="font-display text-4xl font-extrabold tracking-tight text-white sm:text-6xl drop-shadow-md">
+                Solo Leveling
+              </h1>
+            </div>
+
+            <p id="homeHeroSynopsis" class="max-w-2xl text-sm leading-relaxed text-slate-300 sm:text-base line-clamp-3">
+              Known as the Weakest Hunter of All Mankind, E-rank hunter Sung Jinwoo is fighting for his life in low-rank dungeons to pay his mother's medical bills. After surviving a brutal double dungeon, he awakens with the unique ability to see a quest log and level up indefinitely.
+            </p>
+
+            <div id="homeHeroMeta" class="flex flex-wrap items-center gap-2.5 font-mono-code text-xs">
+              <span id="homeHeroScore" class="rounded-lg bg-emerald-500/25 px-3 py-1 font-bold text-emerald-300 ring-1 ring-emerald-400/40">
+                ★ 86% SCORE
+              </span>
+              <span id="homeHeroEpisodes" class="rounded-lg bg-white/10 px-3 py-1 text-white">
+                12 EPISODES
+              </span>
+              <span class="rounded-lg bg-cyan-500/15 px-3 py-1 text-cyan-300">
+                1080p HD MULTI-STREAM
+              </span>
+              <span id="homeHeroGenres" class="rounded-lg bg-indigo-500/20 px-3 py-1 text-indigo-300">
+                Action • Adventure • Fantasy
+              </span>
+            </div>
+
+            <!-- Main CTA Buttons -->
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+              <button
+                id="homeHeroWatchNowBtn"
+                type="button"
+                class="group flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-cyan-400 via-sky-400 to-indigo-500 px-7 py-3.5 font-mono-code text-sm font-extrabold text-slate-950 shadow-xl shadow-cyan-400/25 transition hover:scale-105 hover:from-cyan-300 hover:to-indigo-400 active:scale-95 cursor-pointer"
+              >
+                <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-slate-950/20 text-xs">▶</span>
+                <span>WATCH EPISODE 1 NOW</span>
+              </button>
+              <button
+                id="homeHeroViewDetailsBtn"
+                type="button"
+                class="flex items-center gap-2 rounded-xl bg-white/10 px-6 py-3.5 font-mono-code text-xs font-semibold text-white ring-1 ring-white/20 transition hover:bg-white/20 hover:ring-cyan-400/40 cursor-pointer"
+              >
+                <span>📑</span>
+                <span>VIEW ALL SEASONS & EPISODES</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Right: Hero Spotlight Switcher / Mini-Deck -->
+          <div class="lg:col-span-4 hud-glass-elevated rounded-2xl p-5 border border-white/15 space-y-3">
+            <div class="flex items-center justify-between border-b border-white/10 pb-2.5 font-mono-code text-xs">
+              <span class="font-bold text-cyan-300 flex items-center gap-1.5">
+                <span>⚡</span>
+                <span>FEATURED SPOTLIGHTS</span>
+              </span>
+              <span class="text-slate-400 text-[11px]">Click to preview</span>
+            </div>
+
+            <div class="space-y-2" id="homeSpotlightList">
+              <!-- Dynamically populated spotlight pills -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. Section: 🔥 REFERRED FOR YOU // TRENDING HITS -->
+      <section class="space-y-4">
+        <div class="flex items-center justify-between border-b border-white/10 pb-3">
+          <div class="flex items-center gap-3">
+            <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-orange-600 text-slate-950 font-bold text-sm shadow">
+              🔥
+            </span>
+            <div>
+              <h2 class="font-display text-xl font-extrabold tracking-tight text-white sm:text-2xl">
+                REFERRED FOR YOU
+              </h2>
+              <p class="font-mono-code text-xs text-slate-400">
+                Hand-picked trending anime recommendations with instant streaming & complete seasons
+              </p>
+            </div>
+          </div>
+          <span class="hidden sm:inline-block rounded-md bg-cyan-500/10 px-2.5 py-1 font-mono-code text-[11px] font-bold text-cyan-300 ring-1 ring-cyan-400/30">
+            CLICK ANY CARD TO WATCH
+          </span>
+        </div>
+        <div id="homeReferredGrid" class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </section>
+
+      <!-- 3. Section: ⚔️ TOP SHONEN & ACTION HITS -->
+      <section class="space-y-4">
+        <div class="flex items-center justify-between border-b border-white/10 pb-3">
+          <div class="flex items-center gap-3">
+            <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-rose-500 to-red-700 text-white font-bold text-sm shadow">
+              ⚔️
+            </span>
+            <div>
+              <h2 class="font-display text-xl font-extrabold tracking-tight text-white sm:text-2xl">
+                HIGH-OCTANE ACTION & SHONEN
+              </h2>
+              <p class="font-mono-code text-xs text-slate-400">
+                Haikyuu!!, Solo Leveling, Demon Slayer, Attack on Titan, Jujutsu Kaisen & more
+              </p>
+            </div>
+          </div>
+        </div>
+        <div id="homeActionGrid" class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </section>
+
+      <!-- 4. Section: 🌌 ISEKAI & DARK FANTASY EXPEDITIONS -->
+      <section class="space-y-4">
+        <div class="flex items-center justify-between border-b border-white/10 pb-3">
+          <div class="flex items-center gap-3">
+            <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-indigo-700 text-white font-bold text-sm shadow">
+              🌌
+            </span>
+            <div>
+              <h2 class="font-display text-xl font-extrabold tracking-tight text-white sm:text-2xl">
+                ISEKAI & DARK FANTASY EXPEDITIONS
+              </h2>
+              <p class="font-mono-code text-xs text-slate-400">
+                Reincarnated as a Sword (Seasons 1 & 2), Frieren, Bleach TYBW & otherworldly adventures
+              </p>
+            </div>
+          </div>
+        </div>
+        <div id="homeFantasyGrid" class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </section>
+
+      <!-- 5. Section: 🌸 TIMELESS MASTERPIECES & STUDIO GHIBLI -->
+      <section class="space-y-4">
+        <div class="flex items-center justify-between border-b border-white/10 pb-3">
+          <div class="flex items-center gap-3">
+            <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 text-slate-950 font-bold text-sm shadow">
+              🌸
+            </span>
+            <div>
+              <h2 class="font-display text-xl font-extrabold tracking-tight text-white sm:text-2xl">
+                TIMELESS MASTERPIECES & STUDIO GHIBLI
+              </h2>
+              <p class="font-mono-code text-xs text-slate-400">
+                Acclaimed cinema classics: Princess Mononoke, Spirited Away, Fullmetal Alchemist, Koe no Katachi
+              </p>
+            </div>
+          </div>
+        </div>
+        <div id="homeClassicsGrid" class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </section>
+    </div>
+
+    <!-- =================================================================== -->
     <!-- VIEW 1: SPATIAL STREAMING PLATFORM (HERO + CINEMA STAGE + CATALOG)  -->
     <!-- =================================================================== -->
-    <div id="viewStream" class="space-y-8">
+    <div id="viewStream" class="hidden space-y-8">
+      <!-- Back to Home Navigation Bar -->
+      <div class="flex flex-wrap items-center justify-between gap-3 py-2.5 px-4 rounded-2xl bg-slate-950/80 border border-cyan-500/20 backdrop-blur-md shadow-lg">
+        <button id="backToHomeBtn" type="button" class="group flex items-center gap-2 rounded-xl bg-cyan-500/20 px-4 py-2 font-mono-code text-xs font-bold text-cyan-300 ring-1 ring-cyan-400/40 hover:bg-cyan-500/30 transition shadow cursor-pointer">
+          <span class="group-hover:-translate-x-1 transition-transform">←</span>
+          <span>BACK TO HOME // BROWSE ALL ANIME</span>
+        </button>
+        <div class="flex items-center gap-2 font-mono-code text-xs text-slate-300">
+          <span class="h-2 w-2 rounded-full bg-cyan-400 animate-pulse"></span>
+          <span class="text-slate-400">CURRENTLY WATCHING:</span>
+          <span id="breadcrumbAnimeTitle" class="font-extrabold text-white text-sm">Attack on Titan</span>
+        </div>
+        <button id="homeBrowseQuickBtn" type="button" class="hidden sm:flex items-center gap-1.5 rounded-lg bg-white/5 px-3 py-1.5 font-mono-code text-xs text-slate-300 hover:bg-white/10 transition cursor-pointer">
+          <span>🏠 Home Recommendations</span>
+        </button>
+      </div>
 
       <!-- 2.5D Parallax Hero Banner -->
       <section id="heroStageCard" class="hud-glass relative overflow-hidden rounded-3xl border border-white/10 p-6 md:p-10">
@@ -982,6 +1189,161 @@
     // 1. CATALOG DATA (WITH GENERATED HIGH-RES ANIME POSTERS & CHAMELEON PALETTES)
     // =========================================================================
     const ANIME_CATALOG = [
+  {
+    "id": 151807,
+    "malId": 52299,
+    "source": "anilist",
+    "slug": "solo-leveling",
+    "title": "Solo Leveling",
+    "nativeTitle": "俺だけレベルアップな件",
+    "genreTag": "ACTION FANTASY",
+    "episodes": 12,
+    "score": 86,
+    "studio": "A-1 Pictures",
+    "accentPrimary": "#3b82f6",
+    "accentSecondary": "#8b5cf6",
+    "poster": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx151807-m1g5wtVpTuJg.jpg",
+    "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/151807-3L1q6LzV8Y2U.jpg",
+    "synopsis": "Known as the Weakest Hunter of All Mankind, E-rank hunter Sung Jinwoo is fighting for his life in low-rank dungeons to pay his mother's medical bills. After surviving a brutal double dungeon, he awakens with the unique ability to see a quest log and level up indefinitely.",
+    "streamUrl": "https://amg02159-kcglobal-amg02159c1-samsung-in-521.playouts.now.amagi.tv/playlist/amg02159-kcglobal-animax-samsungin/playlist.m3u8",
+    "streamName": "Animax Asia 1080p Live",
+    "subtitles": {
+      "sub": "[Solo Leveling - Japanese Audio] \"Streaming via public-apis mesh.\"",
+      "dub": "[Solo Leveling - English Dub] \"Streaming via public-apis mesh.\""
+    },
+    "anilistId": 151807,
+    "romajiTitle": "Ore dake Level Up na Ken",
+    "trailer": {
+      "id": "vT57cKzQvXg",
+      "site": "youtube",
+      "thumbnail": "https://i.ytimg.com/vi/vT57cKzQvXg/hqdefault.jpg"
+    },
+    "trailerId": "vT57cKzQvXg",
+    "trailerUrl": "https://www.youtube-nocookie.com/embed/vT57cKzQvXg?autoplay=1&enablejsapi=1&rel=0&modestbranding=1",
+    "duration": "24m",
+    "status": "FINISHED",
+    "genres": [
+      "Action",
+      "Adventure",
+      "Fantasy"
+    ]
+  },
+  {
+    "id": 113415,
+    "malId": 40748,
+    "source": "anilist",
+    "slug": "jujutsu-kaisen",
+    "title": "Jujutsu Kaisen",
+    "nativeTitle": "呪術廻戦",
+    "genreTag": "SUPERNATURAL",
+    "episodes": 24,
+    "score": 86,
+    "studio": "MAPPA",
+    "accentPrimary": "#ef4444",
+    "accentSecondary": "#6366f1",
+    "poster": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx113415-bbBWj4pEFseh.jpg",
+    "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/113415-96nwrZLDYVaa.jpg",
+    "synopsis": "Idly indulging in paranormal activities with the Occult Club, high schooler Yuuji Itadori spends his days visiting his bedridden grandfather. When a cursed talisman is unsealed at his school, Yuuji swallows the demon Sukuna's decaying finger to save his friends, thrusting him into the perilous world of Jujutsu Sorcery.",
+    "streamUrl": "https://amg02159-kcglobal-amg02159c1-samsung-in-521.playouts.now.amagi.tv/playlist/amg02159-kcglobal-animax-samsungin/playlist.m3u8",
+    "streamName": "Animax Asia 1080p Live",
+    "subtitles": {
+      "sub": "[Jujutsu Kaisen - Japanese Audio] \"Streaming via public-apis mesh.\"",
+      "dub": "[Jujutsu Kaisen - English Dub] \"Streaming via public-apis mesh.\""
+    },
+    "anilistId": 113415,
+    "romajiTitle": "Jujutsu Kaisen",
+    "trailer": {
+      "id": "pkKu9hLT-t8",
+      "site": "youtube",
+      "thumbnail": "https://i.ytimg.com/vi/pkKu9hLT-t8/hqdefault.jpg"
+    },
+    "trailerId": "pkKu9hLT-t8",
+    "trailerUrl": "https://www.youtube-nocookie.com/embed/pkKu9hLT-t8?autoplay=1&enablejsapi=1&rel=0&modestbranding=1",
+    "duration": "24m",
+    "status": "FINISHED",
+    "genres": [
+      "Action",
+      "Fantasy",
+      "Supernatural"
+    ]
+  },
+  {
+    "id": 140960,
+    "malId": 50265,
+    "source": "anilist",
+    "slug": "spy-x-family",
+    "title": "Spy x Family",
+    "nativeTitle": "SPY×FAMILY",
+    "genreTag": "COMEDY ACTION",
+    "episodes": 25,
+    "score": 85,
+    "studio": "WIT Studio x CloverWorks",
+    "accentPrimary": "#10b981",
+    "accentSecondary": "#06b6d4",
+    "poster": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx140960-YrkPtHGQwNmS.jpg",
+    "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/140960-vXm5bNd5x6N8.jpg",
+    "synopsis": "Master spy Twilight must disguise himself as psychiatrist Loid Forger and build a fake family to infiltrate an elite school. Unbeknownst to him, his adopted daughter Anya is a telepath, and his fake wife Yor is a deadly assassin.",
+    "streamUrl": "https://amg02159-kcglobal-amg02159c1-samsung-in-521.playouts.now.amagi.tv/playlist/amg02159-kcglobal-animax-samsungin/playlist.m3u8",
+    "streamName": "Animax Asia 1080p Live",
+    "subtitles": {
+      "sub": "[Spy x Family - Japanese Audio] \"Streaming via public-apis mesh.\"",
+      "dub": "[Spy x Family - English Dub] \"Streaming via public-apis mesh.\""
+    },
+    "anilistId": 140960,
+    "romajiTitle": "SPY×FAMILY",
+    "trailer": {
+      "id": "ofXigq9aIpo",
+      "site": "youtube",
+      "thumbnail": "https://i.ytimg.com/vi/ofXigq9aIpo/hqdefault.jpg"
+    },
+    "trailerId": "ofXigq9aIpo",
+    "trailerUrl": "https://www.youtube-nocookie.com/embed/ofXigq9aIpo?autoplay=1&enablejsapi=1&rel=0&modestbranding=1",
+    "duration": "24m",
+    "status": "FINISHED",
+    "genres": [
+      "Action",
+      "Comedy"
+    ]
+  },
+  {
+    "id": 154587,
+    "malId": 52991,
+    "source": "anilist",
+    "slug": "frieren",
+    "title": "Frieren: Beyond Journey's End",
+    "nativeTitle": "葬送のフリーレン",
+    "genreTag": "FANTASY MASTERPIECE",
+    "episodes": 28,
+    "score": 93,
+    "studio": "Madhouse",
+    "accentPrimary": "#06b6d4",
+    "accentSecondary": "#a855f7",
+    "poster": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx154587-n1fmjvsNlzre.jpg",
+    "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/154587-iv4LG1dhwEKz.jpg",
+    "synopsis": "The Demon King has been defeated, and the victorious hero party returns home before disbanding. As an elf with a lifespan of over a thousand years, Frieren sets out on a new journey to understand humanity and honor the memories of her companions.",
+    "streamUrl": "https://amg02159-kcglobal-amg02159c1-samsung-in-521.playouts.now.amagi.tv/playlist/amg02159-kcglobal-animax-samsungin/playlist.m3u8",
+    "streamName": "Animax Asia 1080p Live",
+    "subtitles": {
+      "sub": "[Frieren - Japanese Audio] \"Streaming via public-apis mesh.\"",
+      "dub": "[Frieren - English Dub] \"Streaming via public-apis mesh.\""
+    },
+    "anilistId": 154587,
+    "romajiTitle": "Sousou no Frieren",
+    "trailer": {
+      "id": "ZEkwCGJ3o7M",
+      "site": "youtube",
+      "thumbnail": "https://i.ytimg.com/vi/ZEkwCGJ3o7M/hqdefault.jpg"
+    },
+    "trailerId": "ZEkwCGJ3o7M",
+    "trailerUrl": "https://www.youtube-nocookie.com/embed/ZEkwCGJ3o7M?autoplay=1&enablejsapi=1&rel=0&modestbranding=1",
+    "duration": "24m",
+    "status": "FINISHED",
+    "genres": [
+      "Adventure",
+      "Drama",
+      "Fantasy"
+    ]
+  },
   {
     "id": 20464,
     "malId": 20583,
@@ -2578,6 +2940,9 @@ USER anicli`
       const nowPlaying = document.getElementById('playerNowPlayingTitle');
       if (nowPlaying) nowPlaying.textContent = anime.title;
 
+      const breadcrumb = document.getElementById('breadcrumbAnimeTitle');
+      if (breadcrumb) breadcrumb.textContent = anime.title;
+
       const epBadge = document.getElementById('playerEpisodeBadge');
       if (epBadge) epBadge.textContent = 'EP // ' + String(currentEpisode).padStart(2, '0');
 
@@ -3698,22 +4063,256 @@ USER anicli`
     // =========================================================================
     // 9. WIRE ALL CONTROLS & EVENT LISTENERS
     // =========================================================================
+    
+    // =========================================================================
+    // HOME SCREEN REFERRED ANIME RECOMMENDATION ENGINE & SPOTLIGHT CAROUSEL
+    // =========================================================================
+    let currentHomeSpotlightIndex = 0;
+    const HOME_SPOTLIGHT_SLUGS = ['solo-leveling', 'haikyuu', 'reincarnated-as-a-sword', 'kimetsu-no-yaiba', 'frieren', 'jujutsu-kaisen'];
+
+    function getAnimeSeasonCount(anime) {
+      if (!anime) return 1;
+      const slug = (anime.slug || '').toLowerCase();
+      if (typeof SEASONS_DATABASE !== 'undefined') {
+        if (SEASONS_DATABASE[slug]) return SEASONS_DATABASE[slug].length;
+        for (const [key, seasons] of Object.entries(SEASONS_DATABASE)) {
+          if (slug.includes(key) || (anime.title && anime.title.toLowerCase().includes(key))) {
+            return seasons.length;
+          }
+        }
+      }
+      return 1;
+    }
+
+    window.openAnimeWatchPage = function(identifier, ep = 1) {
+      let matched = ANIME_CATALOG.find(a => 
+        a.slug === identifier || 
+        String(a.id) === String(identifier) || 
+        String(a.malId) === String(identifier) || 
+        a.title.toLowerCase() === String(identifier).toLowerCase()
+      );
+      if (!matched) {
+        matched = ANIME_CATALOG.find(a => 
+          a.title.toLowerCase().includes(String(identifier).toLowerCase()) ||
+          (a.slug && a.slug.includes(String(identifier).toLowerCase()))
+        );
+      }
+      if (!matched && ANIME_CATALOG.length > 0) {
+        matched = ANIME_CATALOG[0];
+      }
+      if (matched) {
+        selectAndPlayAnime(matched, ep, currentMode);
+        const tabStream = document.getElementById('navTabStream');
+        const viewStream = document.getElementById('viewStream');
+        if (window.switchView && tabStream && viewStream) {
+          window.switchView(tabStream, viewStream);
+        }
+        const breadcrumb = document.getElementById('breadcrumbAnimeTitle');
+        if (breadcrumb) breadcrumb.textContent = matched.title;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    };
+
+    function setHomeSpotlightAnime(anime) {
+      if (!anime) return;
+      const bg = document.getElementById('homeHeroBg');
+      const title = document.getElementById('homeHeroTitle');
+      const nativeTitle = document.getElementById('homeHeroNativeTitle');
+      const synopsis = document.getElementById('homeHeroSynopsis');
+      const score = document.getElementById('homeHeroScore');
+      const eps = document.getElementById('homeHeroEpisodes');
+      const genres = document.getElementById('homeHeroGenres');
+      const seasonsBadge = document.getElementById('homeHeroSeasonsBadge');
+      const watchNowBtn = document.getElementById('homeHeroWatchNowBtn');
+      const viewDetailsBtn = document.getElementById('homeHeroViewDetailsBtn');
+
+      if (bg) bg.src = anime.bannerImage || anime.poster;
+      if (title) title.textContent = anime.title;
+      if (nativeTitle) nativeTitle.textContent = (anime.nativeTitle ? anime.nativeTitle + ' • ' : '') + (anime.studio || 'STUDIO');
+      if (synopsis) synopsis.textContent = anime.synopsis;
+      if (score) score.textContent = '★ ' + (anime.score || 85) + '% SCORE';
+      if (eps) eps.textContent = (anime.episodes || 12) + ' EPISODES';
+      if (genres) genres.textContent = (anime.genres ? anime.genres.join(' • ') : anime.genreTag || 'Action');
+      
+      const seasonsCount = getAnimeSeasonCount(anime);
+      if (seasonsBadge) {
+        seasonsBadge.textContent = '⚡ ' + seasonsCount + (seasonsCount > 1 ? ' SEASONS AVAILABLE' : ' SEASON');
+      }
+
+      if (watchNowBtn) {
+        watchNowBtn.onclick = () => window.openAnimeWatchPage(anime.slug || anime.id, 1);
+      }
+      if (viewDetailsBtn) {
+        viewDetailsBtn.onclick = () => window.openAnimeWatchPage(anime.slug || anime.id, 1);
+      }
+    }
+
+    function createReferredAnimeCard(anime) {
+      const card = document.createElement('div');
+      const seasonsCount = getAnimeSeasonCount(anime);
+      card.className = 'hud-glass group cursor-pointer overflow-hidden rounded-2xl border border-white/10 hover:border-cyan-400/60 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-cyan-500/10 flex flex-col justify-between';
+      card.title = `Click to watch ${anime.title}`;
+
+      const sourceBadge = anime.source === 'ghibli' ? 'bg-emerald-500/20 text-emerald-300 ring-emerald-400/40' : 'bg-cyan-500/20 text-cyan-300 ring-cyan-400/40';
+
+      card.innerHTML = `
+        <div class="relative aspect-[3/4] w-full overflow-hidden bg-slate-900">
+          <img src="${anime.poster}" alt="${anime.title}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+          <div class="absolute inset-0 bg-gradient-to-t from-[#06070B] via-transparent to-transparent opacity-90"></div>
+          
+          <div class="absolute left-2.5 top-2.5 flex flex-col gap-1 z-10">
+            ${seasonsCount > 1 ? `<span class="rounded-md bg-amber-500/90 px-1.5 py-0.5 font-mono-code text-[9px] font-extrabold text-slate-950 shadow">⚡ ${seasonsCount} SEASONS</span>` : ''}
+            <span class="rounded-md bg-slate-950/80 px-1.5 py-0.5 font-mono-code text-[9px] font-bold text-cyan-300 ring-1 ring-white/15">
+              ${anime.genreTag || 'ANIME'}
+            </span>
+          </div>
+          
+          <div class="absolute right-2.5 top-2.5 rounded-md bg-emerald-500/90 px-1.5 py-0.5 font-mono-code text-[10px] font-extrabold text-slate-950 shadow z-10">
+            ★ ${anime.score || 85}%
+          </div>
+          
+          <div class="absolute bottom-2.5 left-2.5 right-2.5 z-10">
+            <div class="font-mono-code text-[9px] text-cyan-300 truncate">${anime.studio || 'Studio'} • ${anime.episodes || '?'} EPS</div>
+            <h3 class="font-display text-sm font-bold text-white line-clamp-1 group-hover:text-cyan-300 transition-colors">${anime.title}</h3>
+          </div>
+        </div>
+        
+        <div class="p-3 space-y-2 flex-1 flex flex-col justify-between bg-slate-950/40">
+          <p class="line-clamp-2 text-[11px] text-slate-400 leading-tight">${anime.synopsis || ''}</p>
+          <div class="pt-1">
+            <button type="button" class="w-full flex items-center justify-center gap-1.5 rounded-xl bg-cyan-400/15 py-1.5 font-mono-code text-xs font-bold text-cyan-300 group-hover:bg-cyan-400 group-hover:text-slate-950 transition-all duration-200 shadow">
+              <span>▶</span>
+              <span>STREAM NOW</span>
+            </button>
+          </div>
+        </div>
+      `;
+
+      card.addEventListener('click', () => {
+        window.openAnimeWatchPage(anime.slug || anime.id, 1);
+      });
+
+      return card;
+    }
+
+    function renderHomeScreen() {
+      // 1. Setup Spotlight List
+      const spotlightList = document.getElementById('homeSpotlightList');
+      if (spotlightList) {
+        spotlightList.innerHTML = '';
+        HOME_SPOTLIGHT_SLUGS.forEach((slug, idx) => {
+          const anime = ANIME_CATALOG.find(a => a.slug === slug || a.title.toLowerCase().includes(slug.replace(/-/g, ' ')));
+          if (!anime) return;
+          const pill = document.createElement('button');
+          pill.type = 'button';
+          pill.className = 'w-full flex items-center justify-between p-2 rounded-xl bg-white/5 hover:bg-cyan-500/20 hover:text-cyan-300 transition text-left font-mono-code text-xs group cursor-pointer border border-transparent hover:border-cyan-400/30';
+          pill.innerHTML = `
+            <div class="flex items-center gap-2 truncate">
+              <span class="text-cyan-400 font-bold text-[10px]">0${idx + 1}</span>
+              <span class="truncate font-semibold text-white group-hover:text-cyan-300">${anime.title}</span>
+            </div>
+            <span class="text-[10px] text-emerald-400 font-bold ml-2">★${anime.score}%</span>
+          `;
+          pill.addEventListener('click', () => {
+            setHomeSpotlightAnime(anime);
+          });
+          spotlightList.appendChild(pill);
+        });
+
+        // Set initial spotlight anime
+        const initialSpotlight = ANIME_CATALOG.find(a => a.slug === HOME_SPOTLIGHT_SLUGS[0]) || ANIME_CATALOG[0];
+        setHomeSpotlightAnime(initialSpotlight);
+      }
+
+      // Helper to populate grid by slugs or filter
+      function populateGrid(containerId, slugsOrFilter) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        container.innerHTML = '';
+
+        let items = [];
+        if (Array.isArray(slugsOrFilter)) {
+          slugsOrFilter.forEach(slug => {
+            const found = ANIME_CATALOG.find(a => a.slug === slug || (a.title && a.title.toLowerCase().includes(slug.replace(/-/g, ' '))));
+            if (found && !items.includes(found)) items.push(found);
+          });
+        } else if (typeof slugsOrFilter === 'function') {
+          items = ANIME_CATALOG.filter(slugsOrFilter);
+        }
+
+        items.forEach(anime => {
+          container.appendChild(createReferredAnimeCard(anime));
+        });
+      }
+
+      // 2. Populate "REFERRED FOR YOU"
+      const referredSlugs = [
+        'solo-leveling',
+        'haikyuu',
+        'reincarnated-as-a-sword',
+        'kimetsu-no-yaiba',
+        'attack-on-titan',
+        'jujutsu-kaisen',
+        'frieren',
+        'spy-x-family',
+        'bleach',
+        'cyberpunk-edgerunners-2',
+        'death-note',
+        'fullmetal-alchemist-brotherhood'
+      ];
+      populateGrid('homeReferredGrid', referredSlugs);
+
+      // 3. Populate "HIGH-OCTANE ACTION & SHONEN"
+      const actionSlugs = [
+        'haikyuu',
+        'solo-leveling',
+        'kimetsu-no-yaiba',
+        'attack-on-titan',
+        'jujutsu-kaisen',
+        'one-punch-man',
+        'boku-no-hero-academia',
+        'hunter-x-hunter'
+      ];
+      populateGrid('homeActionGrid', actionSlugs);
+
+      // 4. Populate "ISEKAI & DARK FANTASY"
+      const fantasySlugs = [
+        'reincarnated-as-a-sword',
+        'frieren',
+        'bleach',
+        'returners-magic',
+        'overgeared',
+        'the-worlds-strongest-witch'
+      ];
+      populateGrid('homeFantasyGrid', (a) => {
+        const s = (a.slug || '') + (a.title || '');
+        return /sword|frieren|bleach|returner|overgeared|witch|cheat|clover|fantasy/i.test(s) && a.source !== 'ghibli';
+      });
+
+      // 5. Populate "TIMELESS MASTERPIECES & STUDIO GHIBLI"
+      populateGrid('homeClassicsGrid', (a) => {
+        return a.source === 'ghibli' || /death note|fullmetal|koe no katachi|kimi no na/i.test(a.title);
+      });
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       // 1. Initialize Views and Navigation (Linux POSIX Desktop)
+      const tabHome = document.getElementById('navTabHome');
       const tabStream = document.getElementById('navTabStream');
       const tabTerminal = document.getElementById('navTabTerminal');
       const tabSources = document.getElementById('navTabSources');
       const tabCode = document.getElementById('navTabCode');
       const tabPipeline = document.getElementById('navTabPipeline');
 
+      const viewHome = document.getElementById('viewHome');
       const viewStream = document.getElementById('viewStream');
       const viewTerminal = document.getElementById('viewTerminal');
       const viewSources = document.getElementById('viewSources');
       const viewCode = document.getElementById('viewCode');
       const viewPipeline = document.getElementById('viewPipeline');
 
-      const allTabs = [tabStream, tabTerminal, tabSources, tabCode, tabPipeline].filter(Boolean);
-      const allViews = [viewStream, viewTerminal, viewSources, viewCode, viewPipeline].filter(Boolean);
+      const allTabs = [tabHome, tabStream, tabTerminal, tabSources, tabCode, tabPipeline].filter(Boolean);
+      const allViews = [viewHome, viewStream, viewTerminal, viewSources, viewCode, viewPipeline].filter(Boolean);
 
       window.switchView = function(activeTab, activeView) {
         allTabs.forEach((t) => {
@@ -3728,6 +4327,10 @@ USER anicli`
         if (activeView) activeView.classList.remove('hidden');
       };
 
+      if (tabHome) tabHome.addEventListener('click', () => {
+        window.switchView(tabHome, viewHome);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
       if (tabStream) tabStream.addEventListener('click', () => window.switchView(tabStream, viewStream));
       if (tabTerminal) tabTerminal.addEventListener('click', () => {
         window.switchView(tabTerminal, viewTerminal);
@@ -3820,8 +4423,28 @@ USER anicli`
       applyChameleonTheme(currentAnime);
       renderEpisodeGrid();
       renderCatalogGrid();
+      renderHomeScreen();
       initVideoAndAmbilight();
       initThreeStage();
+
+      // Back to Home Button in Stream View
+      const backHomeBtn = document.getElementById('backToHomeBtn');
+      if (backHomeBtn) {
+        backHomeBtn.addEventListener('click', () => {
+          window.switchView(tabHome, viewHome);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+      const homeBrowseQuickBtn = document.getElementById('homeBrowseQuickBtn');
+      if (homeBrowseQuickBtn) {
+        homeBrowseQuickBtn.addEventListener('click', () => {
+          window.switchView(tabHome, viewHome);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+
+      // Set initial view to Home Screen by default
+      window.switchView(tabHome, viewHome);
 
 
       // Quick Anime Title Preset Chips

@@ -205,9 +205,23 @@ const server = http.createServer(async (req, res) => {
 
   // 2. ANI-CLI Linux Shell API Endpoint
   if (pathname === '/api/anicli/run') {
-    const q = parsedUrl.query.q || parsedUrl.query.query || 'naruto';
-    const ep = parseInt(parsedUrl.query.ep || parsedUrl.query.episode || '1', 10);
-    const mode = parsedUrl.query.mode || 'sub';
+    let postBody = {};
+    if (req.method === 'POST') {
+      try {
+        const buffers = [];
+        for await (const chunk of req) buffers.push(chunk);
+        const raw = Buffer.concat(buffers).toString('utf8');
+        if (raw.trim()) postBody = JSON.parse(raw);
+      } catch (e) {}
+    }
+
+    let q = postBody.anime || postBody.q || postBody.query || parsedUrl.query.q || parsedUrl.query.query || 'naruto';
+    const season = postBody.season || parsedUrl.query.season || '';
+    if (season && !q.toLowerCase().includes(season.toLowerCase())) {
+      q = `${q} ${season}`.trim();
+    }
+    const ep = parseInt(postBody.episode || postBody.ep || parsedUrl.query.ep || parsedUrl.query.episode || '1', 10);
+    const mode = postBody.mode || parsedUrl.query.mode || 'sub';
 
     try {
       const result = await runAniCli(q, ep, mode);
