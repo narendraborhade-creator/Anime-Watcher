@@ -763,61 +763,90 @@
       </section>
 
       <!-- =================================================================== -->
-      <!-- 🎬 RELATED MOVIES & SPECIALS RECOMMENDATIONS (AT THE BOTTOM)         -->
+      <!-- 🎬 FRANCHISE HUB // NEXT SEASONS, MOVIES & OVAs (AT THE BOTTOM)     -->
       <!-- =================================================================== -->
-      <section id="animeMoviesSection" class="space-y-4 pt-6 border-t border-white/10">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
+      <section id="franchiseHubSection" class="space-y-8 pt-8 border-t border-white/10">
+        <!-- Section Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
           <div class="flex items-center gap-3">
-            <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-orange-600 text-slate-950 font-bold text-lg shadow-lg shadow-amber-500/20">
-              🎬
+            <span class="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 via-sky-500 to-indigo-600 text-slate-950 font-extrabold text-xl shadow-lg shadow-cyan-500/20">
+              ⚡
             </span>
             <div>
               <div class="flex items-center gap-2 flex-wrap">
-                <h2 class="font-display text-xl font-extrabold tracking-tight text-white sm:text-2xl" id="moviesSectionTitle">
-                  RELATED MOVIES & THEATRICAL SPECIALS
+                <h2 class="font-display text-xl font-extrabold tracking-tight text-white sm:text-2xl" id="franchiseHubTitle">
+                  FRANCHISE COMPANION HUB // NEXT SEASONS, MOVIES &amp; OVAs
                 </h2>
-                <span class="rounded-full bg-amber-500/20 px-2.5 py-0.5 font-mono-code text-[10px] font-bold text-amber-300 ring-1 ring-amber-400/30" id="moviesCountBadge">
-                  5 MOVIES AVAILABLE
+                <span class="rounded-full bg-cyan-500/20 px-2.5 py-0.5 font-mono-code text-[10px] font-bold text-cyan-300 ring-1 ring-cyan-400/30" id="franchiseCountBadge">
+                  CANONICAL RELEASES
                 </span>
               </div>
-              <p class="font-mono-code text-xs text-slate-400" id="moviesSectionSubtitle">
-                Theatrical films, canonical OVAs, and cinematic climaxes for this anime
+              <p class="font-mono-code text-xs text-slate-400" id="franchiseHubSubtitle">
+                Direct next seasons, canonical movies, and official OVAs for this anime
               </p>
             </div>
           </div>
-          <span class="hidden sm:inline-block rounded-lg bg-cyan-500/10 px-3 py-1 font-mono-code text-xs font-bold text-cyan-300 ring-1 ring-cyan-400/30">
-            CLICK ANY MOVIE TO STREAM DIRECTLY
+          <span class="hidden sm:inline-block rounded-lg bg-white/5 px-3 py-1 font-mono-code text-xs text-slate-300 ring-1 ring-white/10">
+            STRICTLY CANONICAL TO THIS TITLE
           </span>
         </div>
-        <div id="animeMoviesGrid" class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-          <!-- Populated dynamically via JS -->
-        </div>
-      </section>
 
-      <!-- =================================================================== -->
-      <!-- ✨ MORE ANIME YOU MAY LIKE // COMPANION RECOMMENDATIONS (BOTTOM)    -->
-      <!-- =================================================================== -->
-      <section id="animeRecommendationsSection" class="space-y-4 pt-6 border-t border-white/10">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
-          <div class="flex items-center gap-3">
-            <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-400 to-blue-600 text-slate-950 font-bold text-lg shadow-lg shadow-cyan-500/20">
-              ✨
-            </span>
-            <div>
-              <h2 class="font-display text-xl font-extrabold tracking-tight text-white sm:text-2xl" id="recommendedSectionTitle">
-                RECOMMENDED FOR YOU
-              </h2>
-              <p class="font-mono-code text-xs text-slate-400" id="recommendedSectionSubtitle">
-                Top rated companion anime sharing genre, animation studio & intensity
-              </p>
+        <!-- 1. NEXT SEASONS & SEQUELS -->
+        <div id="franchiseSeasonsContainer" class="space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="h-2 w-2 rounded-full bg-cyan-400 animate-pulse"></span>
+              <h3 class="font-display text-base font-bold text-white flex items-center gap-2">
+                <span>⚡ NEXT SEASONS &amp; SEQUELS</span>
+                <span id="nextSeasonsCount" class="text-xs font-mono-code text-cyan-300 font-normal"></span>
+              </h3>
             </div>
+            <span class="text-[11px] font-mono-code text-slate-400 hidden sm:inline">Click any season to load episodes</span>
           </div>
-          <span class="hidden sm:inline-block rounded-md bg-white/5 px-2.5 py-1 font-mono-code text-[11px] text-slate-400">
-            POSITIONED CLEANLY BELOW VIDEO
-          </span>
+          <div id="franchiseSeasonsGrid" class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+            <!-- Populated dynamically via JS -->
+          </div>
         </div>
-        <div id="animeRecommendationsGrid" class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-          <!-- Populated dynamically via JS -->
+
+        <!-- 2. THEATRICAL MOVIES & CINEMATIC EDITIONS -->
+        <div id="franchiseMoviesContainer" class="space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="h-2 w-2 rounded-full bg-amber-400 animate-pulse"></span>
+              <h3 class="font-display text-base font-bold text-white flex items-center gap-2">
+                <span>🎬 THEATRICAL MOVIES</span>
+                <span id="theatricalMoviesCount" class="text-xs font-mono-code text-amber-300 font-normal"></span>
+              </h3>
+            </div>
+            <span class="text-[11px] font-mono-code text-slate-400 hidden sm:inline">Official feature-length films</span>
+          </div>
+          <div id="franchiseMoviesGrid" class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+            <!-- Populated dynamically via JS -->
+          </div>
+        </div>
+
+        <!-- 3. OFFICIAL OVAs & SPECIALS -->
+        <div id="franchiseOvasContainer" class="space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="h-2 w-2 rounded-full bg-fuchsia-400 animate-pulse"></span>
+              <h3 class="font-display text-base font-bold text-white flex items-center gap-2">
+                <span>📼 OFFICIAL OVAs &amp; SPECIALS</span>
+                <span id="officialOvasCount" class="text-xs font-mono-code text-fuchsia-300 font-normal"></span>
+              </h3>
+            </div>
+            <span class="text-[11px] font-mono-code text-slate-400 hidden sm:inline">Canonical side stories &amp; OVAs</span>
+          </div>
+          <div id="franchiseOvasGrid" class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+            <!-- Populated dynamically via JS -->
+          </div>
+        </div>
+
+        <!-- Empty State Container when Standalone -->
+        <div id="franchiseEmptyContainer" class="hidden p-6 hud-glass rounded-2xl text-center font-mono-code text-xs text-slate-300 border border-white/10 space-y-2">
+          <div class="text-3xl">✨</div>
+          <div class="font-bold text-sm text-white">Standalone Single-Season Title</div>
+          <p class="text-slate-400">All canonical episodes are available in the episode selector grid above. No sequels, movies or OVAs have been released for this title yet.</p>
         </div>
       </section>
 
@@ -4215,7 +4244,7 @@ USER anicli`
 
     
     // =========================================================================
-    // 🎬 COMPREHENSIVE ANIME MOVIES & SPECIALS DATABASE
+    // 🎬 CANONICAL ANIME MOVIES DATABASE (STRICTLY FRANCHISE-SPECIFIC)
     // =========================================================================
     const ANIME_MOVIES_DATABASE = {
       'haikyuu': [
@@ -4231,23 +4260,8 @@ USER anicli`
           studio: 'Production I.G',
           poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx153658-KVnjW77cQw3y.jpg',
           bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/anime/banner/20464-PpYjO9cPN1gs.jpg',
-          synopsis: 'The fateful national tournament showdown between Karasuno High and Nekoma High. Hinata and Kageyama clash with Kenma Kozume in an official match with no second chances.',
+          synopsis: 'The long-awaited Spring Tournament showdown between Karasuno High and Nekoma High. Hinata and Kageyama face Kenma Kozume in an official match with no practice rematches.',
           genres: ['Sports', 'Drama', 'Comedy']
-        },
-        {
-          id: 111790,
-          malId: 40074,
-          slug: 'haikyuu-land-vs-air',
-          title: 'Haikyu!! Land vs. Air (Riku vs. Kuu)',
-          nativeTitle: 'ハイキュー!! 陸 VS 空',
-          format: 'OVA',
-          duration: '45m',
-          score: 81,
-          studio: 'Production I.G',
-          poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx111790-MrEJLRJxjPja.jpg',
-          bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/anime/banner/20464-PpYjO9cPN1gs.jpg',
-          synopsis: 'The Tokyo Qualifiers determine which teams advance to the Spring Tournament. Nekoma High, Fukurodani Academy, and Nohebi fight for the final berths.',
-          genres: ['Sports', 'Drama']
         },
         {
           id: 98885,
@@ -4261,7 +4275,7 @@ USER anicli`
           studio: 'Production I.G',
           poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx98885-xzHYFUr0keBT.jpg',
           bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/anime/banner/20464-PpYjO9cPN1gs.jpg',
-          synopsis: 'Compiles the intense Miyagi Prefecture finals between Karasuno High and Shiratorizawa Academy led by the formidable Ushijima.',
+          synopsis: 'Compiles the intense Miyagi Prefecture finals between Karasuno High and the powerhouse Shiratorizawa Academy led by Ushijima.',
           genres: ['Sports', 'Drama']
         },
         {
@@ -4276,7 +4290,7 @@ USER anicli`
           studio: 'Production I.G',
           poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx98884-PCa1CawsXpjB.png',
           bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/anime/banner/20464-PpYjO9cPN1gs.jpg',
-          synopsis: 'The fierce rematch between Karasuno and Aoba Johsai High, highlighting the tactical brilliance of Toru Oikawa.',
+          synopsis: 'The fierce rematch between Karasuno and Aoba Johsai High, highlighting the strategic genius of Toru Oikawa.',
           genres: ['Sports', 'Drama']
         },
         {
@@ -4291,7 +4305,7 @@ USER anicli`
           studio: 'Production I.G',
           poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx21120-x1TAu6HfHnyr.jpg',
           bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/anime/banner/20464-PpYjO9cPN1gs.jpg',
-          synopsis: 'The beginning of Karasuno revival and their first legendary practice match against the Nekoma Cats.',
+          synopsis: 'Recaps the beginning of Karasuno revival and their first legendary practice match against Nekoma.',
           genres: ['Sports', 'Comedy']
         }
       ],
@@ -4344,6 +4358,21 @@ USER anicli`
           bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/anime/banner/16498-8jpFCOcDmneX.jpg',
           synopsis: 'The fate of humanity hangs in the balance as the remaining Scout Regiment makes their desperate final stand against Eren Yeager.',
           genres: ['Action', 'Drama', 'Fantasy']
+        },
+        {
+          id: 114656,
+          malId: 42091,
+          slug: 'attack-on-titan-chronicle',
+          title: 'Attack on Titan: Chronicle (Movie)',
+          nativeTitle: '進撃の巨人 〜クロニクル〜',
+          format: 'MOVIE',
+          duration: '2h 02m',
+          score: 82,
+          studio: 'WIT Studio',
+          poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx114656-p6yY77cQw3y.jpg',
+          bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/anime/banner/16498-8jpFCOcDmneX.jpg',
+          synopsis: 'Theatrical compilation covering the events of Seasons 1 through 3 with fully remastered audio and visuals.',
+          genres: ['Action', 'Drama', 'Fantasy']
         }
       ],
       'one-piece': [
@@ -4361,6 +4390,21 @@ USER anicli`
           bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/anime/banner/21-0w3GkY0X5aV.jpg',
           synopsis: 'Uta, the world most renowned singer and daughter of Red-Haired Shanks, reveals herself on the musical island of Elegia.',
           genres: ['Action', 'Adventure', 'Fantasy']
+        },
+        {
+          id: 105333,
+          malId: 38234,
+          slug: 'one-piece-stampede',
+          title: 'One Piece: Stampede (2019)',
+          nativeTitle: '劇場版 航海王 狂熱行動',
+          format: 'MOVIE',
+          duration: '1h 41m',
+          score: 79,
+          studio: 'Toei Animation',
+          poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx105333-3L1q6LzV8Y2U.jpg',
+          bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/anime/banner/21-0w3GkY0X5aV.jpg',
+          synopsis: 'Pirates across the Grand Line gather at the Pirate Expo to search for the hidden treasure of Gol D. Roger.',
+          genres: ['Action', 'Adventure']
         }
       ],
       'spy-x-family': [
@@ -4378,6 +4422,23 @@ USER anicli`
           bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/anime/banner/140960-Z7xSvkRxHKfj.jpg',
           synopsis: 'The Forgers embark on a winter holiday to Frigis, where Anya inadvertently swallows a microchip that could trigger a world war.',
           genres: ['Action', 'Comedy']
+        }
+      ],
+      'solo-leveling': [
+        {
+          id: 180374,
+          malId: 59374,
+          slug: 'solo-leveling-reawakening',
+          title: 'Solo Leveling: ReAwakening (2024)',
+          nativeTitle: '俺だけレベルアップな件 -ReAwakening-',
+          format: 'MOVIE',
+          duration: '1h 56m',
+          score: 82,
+          studio: 'A-1 Pictures',
+          poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx151807-it355ZgzquUd.png',
+          bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/anime/banner/151807-37yfQA3ym8PA.jpg',
+          synopsis: 'Theatrical film recapping Sung Jinwoo awakening alongside an exclusive world premiere screening of the Jeju Island Arc.',
+          genres: ['Action', 'Fantasy']
         }
       ],
       'bleach': [
@@ -4413,6 +4474,128 @@ USER anicli`
           synopsis: 'Deku and Class 1-A confront a fearsome villain named Dark Might who mimics All Might.',
           genres: ['Action', 'Adventure']
         }
+      ],
+      'black-clover': [
+        {
+          id: 130773,
+          malId: 48471,
+          slug: 'black-clover-sword-of-the-wizard-king',
+          title: 'Black Clover: Sword of the Wizard King',
+          nativeTitle: 'ブラッククローバー 魔法帝の剣',
+          format: 'MOVIE',
+          duration: '1h 53m',
+          score: 82,
+          studio: 'Studio Pierrot',
+          poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx130773-yM2g3V7WkY2U.jpg',
+          bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/anime/banner/97940-0w3GkY0X5aV.jpg',
+          synopsis: 'Four banished Wizard Kings from the past return to destroy the Clover Kingdom using the Imperial Sword.',
+          genres: ['Action', 'Fantasy']
+        }
+      ]
+    };
+
+    // =========================================================================
+    // 📼 OFFICIAL CANONICAL OVAs & SPECIALS DATABASE
+    // =========================================================================
+    const ANIME_OVAS_DATABASE = {
+      'haikyuu': [
+        {
+          id: 111790,
+          malId: 40074,
+          slug: 'haikyuu-land-vs-air',
+          title: 'Haikyu!! Land vs. Air (Riku vs. Kuu)',
+          nativeTitle: 'ハイキュー!! 陸 VS 空',
+          format: 'OVA',
+          duration: '45m',
+          score: 81,
+          studio: 'Production I.G',
+          poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx111790-MrEJLRJxjPja.jpg',
+          synopsis: 'The fierce Tokyo Qualifiers battle between Nekoma High, Fukurodani Academy, and Nohebi Academy for the final spots in the Spring Nationals.'
+        },
+        {
+          id: 20884,
+          malId: 25303,
+          slug: 'haikyuu-lev-appears',
+          title: 'Haikyu!!: Lev Appears! (OVA)',
+          nativeTitle: 'ハイキュー!! リエーフ見参！',
+          format: 'OVA',
+          duration: '24m',
+          score: 79,
+          studio: 'Production I.G',
+          poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx20884-5U9SNWxDJBeT.jpg',
+          synopsis: 'Half-Russian middle blocker Lev Haiba joins the Nekoma High volleyball team, training under Kenma Kozume.'
+        },
+        {
+          id: 21348,
+          malId: 35806,
+          slug: 'haikyuu-vs-failing-marks',
+          title: 'Haikyu!!: VS Failing Marks (Special)',
+          nativeTitle: 'ハイキュー!! アカテン危機一髪！',
+          format: 'SPECIAL',
+          duration: '21m',
+          score: 79,
+          studio: 'Production I.G',
+          poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx21348-VIKyHcNUWIlb.jpg',
+          synopsis: 'Hinata and Kageyama struggle to pass their makeup exams so they can participate in the Tokyo Away Games training camp.'
+        }
+      ],
+      'attack-on-titan': [
+        {
+          id: 25781,
+          malId: 25781,
+          slug: 'attack-on-titan-no-regrets',
+          title: 'Attack on Titan: No Regrets (Levi OVA)',
+          nativeTitle: '進撃の巨人 悔いなき選択',
+          format: 'OVA',
+          duration: '55m',
+          score: 84,
+          studio: 'WIT Studio',
+          poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx20698-t0j8w7E0T0mJ.jpg',
+          synopsis: 'Captain Levi past as an underground thug and how he joined the Scout Regiment under Commander Erwin Smith.'
+        },
+        {
+          id: 18397,
+          malId: 18397,
+          slug: 'attack-on-titan-ilses-notebook',
+          title: 'Attack on Titan: Ilse\'s Notebook (OVA)',
+          nativeTitle: '進撃の巨人 イルセの手帳',
+          format: 'OVA',
+          duration: '24m',
+          score: 78,
+          studio: 'WIT Studio',
+          poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx18397-h7Q2Qz2SM1xB.jpg',
+          synopsis: 'The Scout Regiment discovers the journal of deceased soldier Ilse Langnar detailing an encounter with a talking Titan.'
+        }
+      ],
+      'reincarnated-as-a-sword': [
+        {
+          id: 159043,
+          malId: 53914,
+          slug: 'reincarnated-as-a-sword-special',
+          title: 'Reincarnated as a Sword: Fran\'s Special',
+          nativeTitle: '転生したら剣でした 特別編',
+          format: 'SPECIAL',
+          duration: '24m',
+          score: 76,
+          studio: 'C2C',
+          poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx139587-rbZVcigCRtHY.jpg',
+          synopsis: 'A special side adventure following Fran and Teacher exploring rare monster materials and cooking curry in Alea.'
+        }
+      ],
+      'one-punch-man': [
+        {
+          id: 21343,
+          malId: 31772,
+          slug: 'one-punch-man-road-to-hero',
+          title: 'One Punch Man: Road to Hero (OVA)',
+          nativeTitle: 'ワンパンマン ロード・トゥ・ヒーロー',
+          format: 'OVA',
+          duration: '24m',
+          score: 78,
+          studio: 'Madhouse',
+          poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx21343-G7wKx4V8M8PA.jpg',
+          synopsis: 'Saitama early days as an unpaid hero before losing all his hair and achieving absolute strength.'
+        }
       ]
     };
 
@@ -4425,9 +4608,9 @@ USER anicli`
     };
 
     // Stream a movie or theatrical special
-    window.streamMovieOrSpecial = function(movie) {
-      if (!movie) return;
-      currentAnime = movie;
+    window.streamMovieOrSpecial = function(item) {
+      if (!item) return;
+      currentAnime = item;
       currentEpisode = 1;
       currentMode = 'sub';
       
@@ -4436,22 +4619,126 @@ USER anicli`
       saveWatchState();
       loadAnimeStream(currentAnime, 1, true);
 
-      // Update badge to indicate Movie
+      // Update badge to indicate Movie or OVA
       const epBadge = document.getElementById('playerEpisodeBadge');
-      if (epBadge) epBadge.textContent = '🎬 ' + (movie.format || 'MOVIE');
+      if (epBadge) epBadge.textContent = '🎬 ' + (item.format || 'MOVIE');
 
       const cinema = document.getElementById('cinemaStageSection');
       if (cinema) cinema.scrollIntoView({ behavior: 'smooth' });
-      showToast('Now Streaming Movie: ' + movie.title);
+      showToast('Now Streaming: ' + item.title);
     };
 
-    // Render Movies & Recommendations at bottom of Watch Page
-    function renderRelatedMoviesAndRecommendations(anime) {
+    // Render STRICTLY FRANCHISE-SPECIFIC Next Seasons, Movies & OVAs at bottom of Watch Page
+    async function renderRelatedMoviesAndRecommendations(anime) {
       if (!anime) return;
       const slug = (anime.slug || '').toLowerCase();
       const titleLower = (anime.title || '').toLowerCase();
 
-      // 1. Resolve movies for current anime
+      // Update Section Title & Subtitle
+      const hubTitle = document.getElementById('franchiseHubTitle');
+      const hubSubtitle = document.getElementById('franchiseHubSubtitle');
+      const countBadge = document.getElementById('franchiseCountBadge');
+      if (hubTitle) hubTitle.textContent = (anime.title || 'ANIME').toUpperCase() + ' // FRANCHISE HUB';
+      if (hubSubtitle) hubSubtitle.textContent = 'Direct next seasons, canonical movies, and official OVAs for ' + anime.title;
+
+      // 1. Resolve Next Seasons & Sequels for this anime
+      let allSeasons = [];
+      for (const [key, list] of Object.entries(SEASONS_DATABASE)) {
+        if (slug.includes(key) || titleLower.includes(key.replace(/-/g, ' '))) {
+          allSeasons = list;
+          break;
+        }
+      }
+
+      // Filter next seasons (seasons that are not the currently playing season)
+      const currentMal = anime.malId;
+      const currentAnilist = anime.id;
+      const nextSeasons = allSeasons.filter(s => {
+        if (currentMal && s.malId && s.malId === currentMal) return false;
+        if (currentAnilist && s.id && s.id === currentAnilist) return false;
+        // Don't duplicate movies that appear in movies section
+        if (s.badge === 'MOVIE') return false;
+        return true;
+      });
+
+      const seasonsContainer = document.getElementById('franchiseSeasonsContainer');
+      const seasonsGrid = document.getElementById('franchiseSeasonsGrid');
+      const nextCount = document.getElementById('nextSeasonsCount');
+
+      if (seasonsGrid) {
+        seasonsGrid.innerHTML = '';
+        if (nextSeasons.length > 0) {
+          if (seasonsContainer) seasonsContainer.classList.remove('hidden');
+          if (nextCount) nextCount.textContent = `(${nextSeasons.length} Available)`;
+
+          nextSeasons.forEach(s => {
+            const card = document.createElement('div');
+            card.className = 'hud-glass group cursor-pointer overflow-hidden rounded-2xl border border-white/10 hover:border-cyan-400/60 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-cyan-500/10 flex flex-col justify-between';
+            const posterSrc = s.poster || anime.poster;
+            card.innerHTML = `
+              <div class="relative aspect-[3/4] w-full overflow-hidden bg-slate-900">
+                <img
+                  src="${posterSrc}"
+                  alt="${s.title}"
+                  class="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                  onerror="window.handlePosterError(this, '${s.title}')"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-[#06070B] via-transparent to-transparent opacity-90"></div>
+                
+                <div class="absolute left-2.5 top-2.5 flex flex-col gap-1 z-10">
+                  <span class="rounded-md bg-cyan-400 px-1.5 py-0.5 font-mono-code text-[9px] font-extrabold text-slate-950 shadow">
+                    ⚡ ${s.badge || 'NEXT'}
+                  </span>
+                  <span class="rounded-md bg-slate-950/85 px-1.5 py-0.5 font-mono-code text-[9px] font-bold text-cyan-300 ring-1 ring-white/15">
+                    ${s.episodes || 12} EPS
+                  </span>
+                </div>
+                
+                <div class="absolute right-2.5 top-2.5 rounded-md bg-emerald-500/90 px-1.5 py-0.5 font-mono-code text-[10px] font-extrabold text-slate-950 shadow z-10">
+                  ${s.year || 'SEQUEL'}
+                </div>
+                
+                <div class="absolute bottom-2.5 left-2.5 right-2.5 z-10">
+                  <div class="font-mono-code text-[9px] text-cyan-300 truncate">CANONICAL CONTINUATION</div>
+                  <h3 class="font-display text-sm font-bold text-white line-clamp-1 group-hover:text-cyan-300 transition-colors">${s.title}</h3>
+                </div>
+              </div>
+              
+              <div class="p-3 space-y-2 flex-1 flex flex-col justify-between bg-slate-950/50">
+                <p class="line-clamp-2 text-[11px] text-slate-400 leading-tight">Continue the journey with ${s.title}. Complete ${s.episodes} episodes in HD.</p>
+                <div class="pt-1">
+                  <button type="button" class="w-full flex items-center justify-center gap-1.5 rounded-xl bg-cyan-400/20 py-1.5 font-mono-code text-xs font-bold text-cyan-300 group-hover:bg-cyan-400 group-hover:text-slate-950 transition-all duration-200 shadow">
+                    <span>▶</span>
+                    <span>WATCH SEASON</span>
+                  </button>
+                </div>
+              </div>
+            `;
+
+            card.addEventListener('click', () => {
+              const fullSeasonItem = {
+                id: s.id,
+                malId: s.malId,
+                title: anime.title + ' - ' + s.title,
+                slug: anime.slug,
+                episodes: s.episodes || 12,
+                poster: posterSrc,
+                bannerImage: anime.bannerImage,
+                genres: anime.genres,
+                score: anime.score,
+                studio: anime.studio
+              };
+              selectAndPlayAnime(fullSeasonItem, 1, currentMode);
+            });
+            seasonsGrid.appendChild(card);
+          });
+        } else {
+          if (seasonsContainer) seasonsContainer.classList.add('hidden');
+        }
+      }
+
+      // 2. Resolve Canonical Theatrical Movies for this anime (ZERO RANDOM MOVIES)
       let movies = [];
       for (const [key, list] of Object.entries(ANIME_MOVIES_DATABASE)) {
         if (slug.includes(key) || titleLower.includes(key.replace(/-/g, ' '))) {
@@ -4460,160 +4747,153 @@ USER anicli`
         }
       }
 
-      // If no static movies, fallback to high-quality anime cinema
-      if (!movies || movies.length === 0) {
-        movies = [
-          {
-            id: 90008,
-            malId: 164,
-            slug: 'princess-mononoke',
-            title: 'Princess Mononoke',
-            format: 'CINEMA',
-            duration: '2h 14m',
-            score: 85,
-            studio: 'Studio Ghibli',
-            poster: 'https://images.metahub.space/poster/medium/tt0119698/img.jpg',
-            synopsis: 'Hayao Miyazaki acclaimed cinematic epic exploring the clash between the natural gods and human industry.',
-            genres: ['Action', 'Adventure', 'Fantasy']
-          },
-          {
-            id: 80028,
-            malId: 28851,
-            slug: 'koe-no-katachi',
-            title: 'A Silent Voice (Koe no Katachi)',
-            format: 'CINEMA',
-            duration: '2h 10m',
-            score: 88,
-            studio: 'Kyoto Animation',
-            poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx20954-UMb622SjW4xH.jpg',
-            synopsis: 'A poignant masterpiece about redemption, empathy, and overcoming past regrets.',
-            genres: ['Drama', 'Romance']
-          }
-        ];
-      }
-
-      const moviesGrid = document.getElementById('animeMoviesGrid');
-      const countBadge = document.getElementById('moviesCountBadge');
-      const subTitle = document.getElementById('moviesSectionSubtitle');
-
-      if (countBadge) countBadge.textContent = movies.length + ' MOVIES & SPECIALS AVAILABLE';
-      if (subTitle) subTitle.textContent = 'Canonical movies, theatrical releases & specials for ' + anime.title;
+      const moviesContainer = document.getElementById('franchiseMoviesContainer');
+      const moviesGrid = document.getElementById('franchiseMoviesGrid');
+      const movieCount = document.getElementById('theatricalMoviesCount');
 
       if (moviesGrid) {
         moviesGrid.innerHTML = '';
-        movies.forEach(m => {
-          const card = document.createElement('div');
-          card.className = 'hud-glass group cursor-pointer overflow-hidden rounded-2xl border border-white/10 hover:border-amber-400/60 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-amber-500/10 flex flex-col justify-between';
-          card.innerHTML = `
-            <div class="relative aspect-[3/4] w-full overflow-hidden bg-slate-900">
-              <img
-                src="${m.poster}"
-                alt="${m.title}"
-                class="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                loading="lazy"
-                onerror="window.handlePosterError(this, '${m.title}')"
-              />
-              <div class="absolute inset-0 bg-gradient-to-t from-[#06070B] via-transparent to-transparent opacity-90"></div>
-              
-              <div class="absolute left-2.5 top-2.5 flex flex-col gap-1 z-10">
-                <span class="rounded-md bg-amber-500 px-1.5 py-0.5 font-mono-code text-[9px] font-extrabold text-slate-950 shadow">
-                  🎬 ${m.format || 'MOVIE'}
-                </span>
-                <span class="rounded-md bg-slate-950/85 px-1.5 py-0.5 font-mono-code text-[9px] font-bold text-cyan-300 ring-1 ring-white/15">
-                  ${m.duration || 'Feature'}
-                </span>
-              </div>
-              
-              <div class="absolute right-2.5 top-2.5 rounded-md bg-emerald-500/90 px-1.5 py-0.5 font-mono-code text-[10px] font-extrabold text-slate-950 shadow z-10">
-                ★ ${m.score}%
-              </div>
-              
-              <div class="absolute bottom-2.5 left-2.5 right-2.5 z-10">
-                <div class="font-mono-code text-[9px] text-amber-300 truncate">${m.studio || 'Studio'} • THEATRICAL</div>
-                <h3 class="font-display text-sm font-bold text-white line-clamp-1 group-hover:text-amber-300 transition-colors">${m.title}</h3>
-              </div>
-            </div>
-            
-            <div class="p-3 space-y-2 flex-1 flex flex-col justify-between bg-slate-950/50">
-              <p class="line-clamp-2 text-[11px] text-slate-400 leading-tight">${m.synopsis || ''}</p>
-              <div class="pt-1">
-                <button type="button" class="w-full flex items-center justify-center gap-1.5 rounded-xl bg-amber-400/20 py-1.5 font-mono-code text-xs font-bold text-amber-300 group-hover:bg-amber-400 group-hover:text-slate-950 transition-all duration-200 shadow">
-                  <span>▶</span>
-                  <span>STREAM MOVIE</span>
-                </button>
-              </div>
-            </div>
-          `;
+        if (movies && movies.length > 0) {
+          if (moviesContainer) moviesContainer.classList.remove('hidden');
+          if (movieCount) movieCount.textContent = `(${movies.length} Theatrical Releases)`;
 
-          card.addEventListener('click', () => {
-            window.streamMovieOrSpecial(m);
+          movies.forEach(m => {
+            const card = document.createElement('div');
+            card.className = 'hud-glass group cursor-pointer overflow-hidden rounded-2xl border border-white/10 hover:border-amber-400/60 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-amber-500/10 flex flex-col justify-between';
+            card.innerHTML = `
+              <div class="relative aspect-[3/4] w-full overflow-hidden bg-slate-900">
+                <img
+                  src="${m.poster}"
+                  alt="${m.title}"
+                  class="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                  onerror="window.handlePosterError(this, '${m.title}')"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-[#06070B] via-transparent to-transparent opacity-90"></div>
+                
+                <div class="absolute left-2.5 top-2.5 flex flex-col gap-1 z-10">
+                  <span class="rounded-md bg-amber-500 px-1.5 py-0.5 font-mono-code text-[9px] font-extrabold text-slate-950 shadow">
+                    🎬 ${m.format || 'MOVIE'}
+                  </span>
+                  <span class="rounded-md bg-slate-950/85 px-1.5 py-0.5 font-mono-code text-[9px] font-bold text-amber-300 ring-1 ring-white/15">
+                    ${m.duration || 'Feature'}
+                  </span>
+                </div>
+                
+                <div class="absolute right-2.5 top-2.5 rounded-md bg-emerald-500/90 px-1.5 py-0.5 font-mono-code text-[10px] font-extrabold text-slate-950 shadow z-10">
+                  ★ ${m.score}%
+                </div>
+                
+                <div class="absolute bottom-2.5 left-2.5 right-2.5 z-10">
+                  <div class="font-mono-code text-[9px] text-amber-300 truncate">${m.studio || 'Studio'} • THEATRICAL FILM</div>
+                  <h3 class="font-display text-sm font-bold text-white line-clamp-1 group-hover:text-amber-300 transition-colors">${m.title}</h3>
+                </div>
+              </div>
+              
+              <div class="p-3 space-y-2 flex-1 flex flex-col justify-between bg-slate-950/50">
+                <p class="line-clamp-2 text-[11px] text-slate-400 leading-tight">${m.synopsis || ''}</p>
+                <div class="pt-1">
+                  <button type="button" class="w-full flex items-center justify-center gap-1.5 rounded-xl bg-amber-400/20 py-1.5 font-mono-code text-xs font-bold text-amber-300 group-hover:bg-amber-400 group-hover:text-slate-950 transition-all duration-200 shadow">
+                    <span>▶</span>
+                    <span>STREAM MOVIE</span>
+                  </button>
+                </div>
+              </div>
+            `;
+
+            card.addEventListener('click', () => {
+              window.streamMovieOrSpecial(m);
+            });
+            moviesGrid.appendChild(card);
           });
-          moviesGrid.appendChild(card);
-        });
+        } else {
+          if (moviesContainer) moviesContainer.classList.add('hidden');
+        }
       }
 
-      // 2. Resolve companion recommendations
-      const recsGrid = document.getElementById('animeRecommendationsGrid');
-      const recsTitle = document.getElementById('recommendedSectionTitle');
-      const recsSubtitle = document.getElementById('recommendedSectionSubtitle');
+      // 3. Resolve Official OVAs & Specials for this anime (ZERO RANDOM OVAs)
+      let ovas = [];
+      for (const [key, list] of Object.entries(ANIME_OVAS_DATABASE)) {
+        if (slug.includes(key) || titleLower.includes(key.replace(/-/g, ' '))) {
+          ovas = list;
+          break;
+        }
+      }
 
-      if (recsTitle) recsTitle.textContent = 'RECOMMENDED COMPANIONS FOR ' + anime.title.toUpperCase();
-      if (recsSubtitle) recsSubtitle.textContent = 'Hand-picked companion anime sharing genre, animation studio and intensity';
+      const ovasContainer = document.getElementById('franchiseOvasContainer');
+      const ovasGrid = document.getElementById('franchiseOvasGrid');
+      const ovaCount = document.getElementById('officialOvasCount');
 
-      if (recsGrid) {
-        recsGrid.innerHTML = '';
-        // Find recommendations sharing genres or top ranked
-        const companionList = ANIME_CATALOG.filter(a => {
-          if (a.id === anime.id || a.slug === anime.slug) return false;
-          if (a.genreTag === anime.genreTag) return true;
-          if (anime.genres && a.genres && anime.genres.some(g => a.genres.includes(g))) return true;
-          return a.score >= 82;
-        }).slice(0, 6);
+      if (ovasGrid) {
+        ovasGrid.innerHTML = '';
+        if (ovas && ovas.length > 0) {
+          if (ovasContainer) ovasContainer.classList.remove('hidden');
+          if (ovaCount) ovaCount.textContent = `(${ovas.length} Official OVAs)`;
 
-        companionList.forEach(rec => {
-          const card = document.createElement('div');
-          card.className = 'hud-glass group cursor-pointer overflow-hidden rounded-2xl border border-white/10 hover:border-cyan-400/60 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-cyan-500/10 flex flex-col justify-between';
-          card.innerHTML = `
-            <div class="relative aspect-[3/4] w-full overflow-hidden bg-slate-900">
-              <img
-                src="${rec.poster}"
-                alt="${rec.title}"
-                class="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                loading="lazy"
-                onerror="window.handlePosterError(this, '${rec.title}')"
-              />
-              <div class="absolute inset-0 bg-gradient-to-t from-[#06070B] via-transparent to-transparent opacity-90"></div>
+          ovas.forEach(o => {
+            const card = document.createElement('div');
+            card.className = 'hud-glass group cursor-pointer overflow-hidden rounded-2xl border border-white/10 hover:border-fuchsia-400/60 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-fuchsia-500/10 flex flex-col justify-between';
+            card.innerHTML = `
+              <div class="relative aspect-[3/4] w-full overflow-hidden bg-slate-900">
+                <img
+                  src="${o.poster}"
+                  alt="${o.title}"
+                  class="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                  onerror="window.handlePosterError(this, '${o.title}')"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-[#06070B] via-transparent to-transparent opacity-90"></div>
+                
+                <div class="absolute left-2.5 top-2.5 flex flex-col gap-1 z-10">
+                  <span class="rounded-md bg-fuchsia-500 px-1.5 py-0.5 font-mono-code text-[9px] font-extrabold text-slate-950 shadow">
+                    📼 ${o.format || 'OVA'}
+                  </span>
+                  <span class="rounded-md bg-slate-950/85 px-1.5 py-0.5 font-mono-code text-[9px] font-bold text-fuchsia-300 ring-1 ring-white/15">
+                    ${o.duration || 'Special'}
+                  </span>
+                </div>
+                
+                <div class="absolute right-2.5 top-2.5 rounded-md bg-emerald-500/90 px-1.5 py-0.5 font-mono-code text-[10px] font-extrabold text-slate-950 shadow z-10">
+                  ★ ${o.score || 80}%
+                </div>
+                
+                <div class="absolute bottom-2.5 left-2.5 right-2.5 z-10">
+                  <div class="font-mono-code text-[9px] text-fuchsia-300 truncate">${o.studio || 'Studio'} • CANONICAL OVA</div>
+                  <h3 class="font-display text-sm font-bold text-white line-clamp-1 group-hover:text-fuchsia-300 transition-colors">${o.title}</h3>
+                </div>
+              </div>
               
-              <div class="absolute left-2.5 top-2.5 z-10">
-                <span class="rounded-md bg-slate-950/85 px-1.5 py-0.5 font-mono-code text-[9px] font-bold text-cyan-300 ring-1 ring-white/15">
-                  ${rec.genreTag || 'ANIME'}
-                </span>
+              <div class="p-3 space-y-2 flex-1 flex flex-col justify-between bg-slate-950/50">
+                <p class="line-clamp-2 text-[11px] text-slate-400 leading-tight">${o.synopsis || ''}</p>
+                <div class="pt-1">
+                  <button type="button" class="w-full flex items-center justify-center gap-1.5 rounded-xl bg-fuchsia-400/20 py-1.5 font-mono-code text-xs font-bold text-fuchsia-300 group-hover:bg-fuchsia-400 group-hover:text-slate-950 transition-all duration-200 shadow">
+                    <span>▶</span>
+                    <span>STREAM OVA</span>
+                  </button>
+                </div>
               </div>
-              <div class="absolute right-2.5 top-2.5 rounded-md bg-emerald-500/90 px-1.5 py-0.5 font-mono-code text-[10px] font-extrabold text-slate-950 shadow z-10">
-                ★ ${rec.score}%
-              </div>
-              <div class="absolute bottom-2.5 left-2.5 right-2.5 z-10">
-                <div class="font-mono-code text-[9px] text-cyan-300 truncate">${rec.studio || 'Studio'} • ${rec.episodes || 12} EPS</div>
-                <h3 class="font-display text-sm font-bold text-white line-clamp-1 group-hover:text-cyan-300 transition-colors">${rec.title}</h3>
-              </div>
-            </div>
-            
-            <div class="p-3 space-y-2 flex-1 flex flex-col justify-between bg-slate-950/40">
-              <p class="line-clamp-2 text-[11px] text-slate-400 leading-tight">${rec.synopsis || ''}</p>
-              <div class="pt-1">
-                <button type="button" class="w-full flex items-center justify-center gap-1.5 rounded-xl bg-cyan-400/15 py-1.5 font-mono-code text-xs font-bold text-cyan-300 group-hover:bg-cyan-400 group-hover:text-slate-950 transition-all duration-200 shadow">
-                  <span>▶</span>
-                  <span>WATCH NOW</span>
-                </button>
-              </div>
-            </div>
-          `;
+            `;
 
-          card.addEventListener('click', () => {
-            selectAndPlayAnime(rec, 1, currentMode);
+            card.addEventListener('click', () => {
+              window.streamMovieOrSpecial(o);
+            });
+            ovasGrid.appendChild(card);
           });
-          recsGrid.appendChild(card);
-        });
+        } else {
+          if (ovasContainer) ovasContainer.classList.add('hidden');
+        }
+      }
+
+      // 4. Standalone check: If no next seasons, no movies, and no OVAs exist:
+      const totalCompanionCount = nextSeasons.length + movies.length + ovas.length;
+      const emptyContainer = document.getElementById('franchiseEmptyContainer');
+      if (countBadge) countBadge.textContent = totalCompanionCount > 0 ? `${totalCompanionCount} RELEASES AVAILABLE` : 'STANDALONE TITLE';
+      if (emptyContainer) {
+        if (totalCompanionCount === 0) {
+          emptyContainer.classList.remove('hidden');
+        } else {
+          emptyContainer.classList.add('hidden');
+        }
       }
     }
 

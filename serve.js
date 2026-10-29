@@ -15,6 +15,13 @@ const aniCliDir = path.join(__dirname, 'ani-cli');
 
 // Cross-referenced MyAnimeList IDs for instant failover and direct embed
 const MAL_MAP = {
+  'haikyuu lev appears': 25303,
+  'haikyuu vs failing marks': 35806,
+  'attack on titan no regrets': 25781,
+  'attack on titan ilses notebook': 18397,
+  'reincarnated as a sword special': 53914,
+  'one punch man road to hero': 31772,
+  'black clover sword of the wizard king': 48471,
   'haikyuu dumpster battle': 52742,
   'haikyuu the dumpster battle': 52742,
   'haikyuu gomisuteba no kessen': 52742,
