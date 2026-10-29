@@ -3356,7 +3356,7 @@ USER anicli`
       grid.innerHTML = '';
 
       const searchInput = document.getElementById('catalogSearchInput');
-      const searchVal = searchInput ? searchInput.value.toLowerCase().trim() : '';
+      const searchVal = (searchInput && typeof searchInput.value === 'string') ? searchInput.value.toLowerCase().trim() : '';
 
       const filtered = ANIME_CATALOG.filter((item) => {
         const matchesSource = currentSourceFilter === 'ALL' || item.source === currentSourceFilter;
@@ -3704,7 +3704,6 @@ USER anicli`
             hidePlayOverlay();
           }
         }
-      }
       } else if (currentStreamServer === 2) {
         // Server 2: AniList Official HD Stream (YouTube video embed from public-apis / Anime project)
         if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
