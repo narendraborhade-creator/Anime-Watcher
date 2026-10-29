@@ -304,6 +304,18 @@
                   allowfullscreen
                 ></iframe>
 
+                <!-- Ad-Shield Transparent Click Interceptor: Stops ALL third-party ad clicks and popups -->
+                <div
+                  id="playerClickShield"
+                  class="absolute inset-0 z-15 cursor-pointer flex items-center justify-center select-none"
+                  title="Click to Play / Pause (Zero Ads) • Double-click for Fullscreen"
+                >
+                  <!-- Quick Visual Flash Indicator on Click -->
+                  <div id="shieldPlayPauseIndicator" class="pointer-events-none transform scale-75 opacity-0 transition-all duration-300 rounded-full bg-slate-950/85 p-6 ring-2 ring-cyan-400 backdrop-blur-md shadow-2xl">
+                    <span id="shieldIndicatorIcon" class="text-4xl text-cyan-400">⏸</span>
+                  </div>
+                </div>
+
                 <!-- Mode 2: HLS Video Player (Animax / Cloud) -->
                 <video
                   id="hlsVideoElement"
@@ -1049,20 +1061,20 @@
     ]
   },
   {
-    "id": 159042,
-    "malId": 53913,
+    "id": 139587,
+    "malId": 49891,
     "source": "anilist",
-    "slug": "reincarnated-as-a-sword-season-2",
-    "title": "Reincarnated as a Sword Season 2",
-    "nativeTitle": "転生したら剣でした 第2期",
+    "slug": "reincarnated-as-a-sword",
+    "title": "Reincarnated as a Sword",
+    "nativeTitle": "転生したら剣でした",
     "genreTag": "DARK FANTASY",
     "episodes": 12,
     "score": 75,
     "studio": "C2C",
     "accentPrimary": "#f19328",
     "accentSecondary": "#6366F1",
-    "poster": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx159042-GGFwlDskc5vR.png",
-    "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/159042-X0mqyaUFBkms.jpg",
+    "poster": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx139587-n22PaoL6LHzD.jpg",
+    "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/139587-xS33yqYpU26P.jpg",
     "synopsis": "The second season of Tensei Shitara Ken Deshita.\nNote: Each episode was streamed one week in advance of the TV broadcast starting on October 1, 2026 on Abema. Regular broadcasting began on October 8, 2026.",
     "streamUrl": "https://amg01796-amg01796c19-rakuten-gb-7486.playouts.now.amagi.tv/playlist/amg01796-fastmediafast-yugioh2en-rakutengb/playlist.m3u8",
     "streamName": "Anime 24/7 Official Broadcast",
@@ -1070,8 +1082,8 @@
       "sub": "[Reincarnated as a Sword Season 2 - Japanese Audio] \"Streaming via public-apis mesh.\"",
       "dub": "[Reincarnated as a Sword Season 2 - English 5.1 Dub] \"Streaming via public-apis mesh.\""
     },
-    "anilistId": 159042,
-    "romajiTitle": "Tensei Shitara Ken Deshita 2nd Season",
+    "anilistId": 139587,
+    "romajiTitle": "Tensei Shitara Ken Deshita",
     "trailer": {
       "id": "kbtRqqa2GyA",
       "site": "youtube",
@@ -2598,6 +2610,14 @@ USER anicli`
     // SEASONS DATABASE & DYNAMIC ANILIST RELATIONS ENGINE
     // =========================================================================
     const SEASONS_DATABASE = {
+      'reincarnated-as-a-sword': [
+        { id: 139587, malId: 49891, title: 'Season 1 (Shishou & Fran)', episodes: 12, year: 2022, badge: 'S1', poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx139587-n22PaoL6LHzD.jpg' },
+        { id: 159042, malId: 53913, title: 'Season 2', episodes: 12, year: 2026, badge: 'S2', poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx159042-GGFwlDskc5vR.png' }
+      ],
+      'tensei-shitara-ken-deshita': [
+        { id: 139587, malId: 49891, title: 'Season 1 (Shishou & Fran)', episodes: 12, year: 2022, badge: 'S1', poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx139587-n22PaoL6LHzD.jpg' },
+        { id: 159042, malId: 53913, title: 'Season 2', episodes: 12, year: 2026, badge: 'S2', poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx159042-GGFwlDskc5vR.png' }
+      ],
       'haikyuu': [
         { id: 20464, malId: 20583, title: 'Season 1 (Spring High)', episodes: 25, year: 2014, badge: 'S1' },
         { id: 20992, malId: 28891, title: 'Season 2 (Tokyo Training)', episodes: 25, year: 2015, badge: 'S2' },
@@ -2984,16 +3004,32 @@ USER anicli`
       'blue lock': 49596,
       'oshi no ko': 52034,
       'dandadan': 57334,
-      'reincarnated as a sword': 53913,
+      'reincarnated as a sword season 2': 53913,
+      'reincarnated as a sword 2nd season': 53913,
+      'reincarnated as a sword season 1': 49891,
+      'reincarnated as a sword 1st season': 49891,
+      'reincarnated as a sword': 49891,
+      'tensei shitara ken deshita 2nd season': 53913,
+      'tensei shitara ken deshita season 2': 53913,
+      'tensei shitara ken deshita': 49891,
       'returners magic': 54852,
       'valkyrie': 49596
     };
 
     function resolveMalId(title) {
       const q = (title || '').toLowerCase().trim();
+      if (MAL_MAP[q]) return MAL_MAP[q];
+
       const sortedEntries = Object.entries(MAL_MAP).sort((a, b) => b[0].length - a[0].length);
       for (const [key, id] of sortedEntries) {
-        if (q.includes(key) || key.includes(q)) return id;
+        if (q.includes(key)) return id;
+      }
+      for (const [key, id] of sortedEntries) {
+        const isSeasonKey = /season|2nd|3rd|4th|part/i.test(key);
+        const hasSeasonInQuery = /season|2nd|3rd|4th|part/i.test(q);
+        if (!isSeasonKey || hasSeasonInQuery) {
+          if (key.includes(q)) return id;
+        }
       }
       return 20;
     }
@@ -3877,6 +3913,88 @@ USER anicli`
       // 5. Ad-Free Master Transport Controller Buttons (Zero Ads, Zero Popups)
       let streamIsPaused = false;
 
+      // 🛡️ AD-SHIELD HARDENED DEFENSE: Completely neutralize window.open popups
+      window.open = function(url, target, features) {
+        console.warn('[Ad-Shield] Blocked third-party popup attempt to:', url);
+        showToast('🛡️ Blocked third-party ad popup');
+        return null;
+      };
+
+      // Play/Pause Master Toggle
+      function handlePlayPauseToggle() {
+        const iframe = document.getElementById('animeIframePlayer');
+        const video = document.getElementById('hlsVideoElement');
+        const indicator = document.getElementById('shieldPlayPauseIndicator');
+        const icon = document.getElementById('shieldIndicatorIcon');
+
+        streamIsPaused = !streamIsPaused;
+
+        if (icon) icon.textContent = streamIsPaused ? '⏸' : '▶';
+        if (indicator) {
+          indicator.classList.remove('opacity-0', 'scale-75');
+          indicator.classList.add('opacity-100', 'scale-100');
+          setTimeout(() => {
+            indicator.classList.remove('opacity-100', 'scale-100');
+            indicator.classList.add('opacity-0', 'scale-75');
+          }, 450);
+        }
+
+        if (currentStreamServer === 1 || currentStreamServer === 2) {
+          if (streamIsPaused) {
+            showPlayOverlay();
+            if (iframe && iframe.contentWindow) {
+              try {
+                iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+                iframe.contentWindow.postMessage({ type: 'pause' }, '*');
+                iframe.contentWindow.postMessage('pause', '*');
+              } catch(e) {}
+            }
+            showToast('Stream Paused (Zero Ads)');
+          } else {
+            hidePlayOverlay();
+            if (iframe && (iframe.src === 'about:blank' || !iframe.src || iframe.src.endsWith('about:blank'))) {
+              loadAnimeStream(currentAnime, currentEpisode, true);
+            } else if (iframe && iframe.contentWindow) {
+              try {
+                iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+                iframe.contentWindow.postMessage({ type: 'play' }, '*');
+                iframe.contentWindow.postMessage('play', '*');
+              } catch(e) {}
+            }
+            showToast('Stream Resumed (Zero Ads)');
+          }
+        } else if (video) {
+          if (video.paused) {
+            video.play().then(hidePlayOverlay).catch(() => {});
+            showToast('Playback Active (1080p HLS)');
+          } else {
+            video.pause();
+            showPlayOverlay();
+            showToast('Playback Paused');
+          }
+        }
+      }
+
+      // Attach Click Shield Listener (Clicking the video plays/pauses locally without touching ad scripts)
+      const clickShield = document.getElementById('playerClickShield');
+      if (clickShield) {
+        clickShield.addEventListener('click', (e) => {
+          e.stopPropagation();
+          handlePlayPauseToggle();
+        });
+        clickShield.addEventListener('dblclick', (e) => {
+          e.stopPropagation();
+          const vp = document.getElementById('videoViewportContainer');
+          if (vp) {
+            if (!document.fullscreenElement) {
+              vp.requestFullscreen?.() || vp.webkitRequestFullscreen?.();
+            } else {
+              document.exitFullscreen?.() || document.webkitExitFullscreen?.();
+            }
+          }
+        });
+      }
+
       // Anti-Redirect Defense Shield: Intercepts unauthorized top.location hijacks from embeds
       let internalNavigation = false;
       window.addEventListener('beforeunload', (e) => {
@@ -3888,6 +4006,8 @@ USER anicli`
       });
 
       document.getElementById('playPauseBtn').addEventListener('click', () => {
+        handlePlayPauseToggle();
+        return;
         const iframe = document.getElementById('animeIframePlayer');
         const video = document.getElementById('hlsVideoElement');
 

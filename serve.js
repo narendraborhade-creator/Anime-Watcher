@@ -81,16 +81,32 @@ const MAL_MAP = {
   'blue lock': 49596,
   'oshi no ko': 52034,
   'dandadan': 57334,
-  'reincarnated as a sword': 53913,
+  'reincarnated as a sword season 2': 53913,
+  'reincarnated as a sword 2nd season': 53913,
+  'reincarnated as a sword season 1': 49891,
+  'reincarnated as a sword 1st season': 49891,
+  'reincarnated as a sword': 49891,
+  'tensei shitara ken deshita 2nd season': 53913,
+  'tensei shitara ken deshita season 2': 53913,
+  'tensei shitara ken deshita': 49891,
   'returners magic': 54852,
   'valkyrie': 49596
 };
 
 async function resolveMalId(query) {
   const q = (query || '').toLowerCase().trim();
+  if (MAL_MAP[q]) return MAL_MAP[q];
+
   const sortedEntries = Object.entries(MAL_MAP).sort((a, b) => b[0].length - a[0].length);
   for (const [key, id] of sortedEntries) {
-    if (q.includes(key) || key.includes(q)) return id;
+    if (q.includes(key)) return id;
+  }
+  for (const [key, id] of sortedEntries) {
+    const isSeasonKey = /season|2nd|3rd|4th|part/i.test(key);
+    const hasSeasonInQuery = /season|2nd|3rd|4th|part/i.test(q);
+    if (!isSeasonKey || hasSeasonInQuery) {
+      if (key.includes(q)) return id;
+    }
   }
   try {
     const gql = `query ($s: String) { Media(search: $s, type: ANIME) { idMal } }`;
@@ -137,13 +153,16 @@ function runAniCli(query, ep = 1, mode = 'sub') {
       const refrMatch = output.match(/Referer:\s*([^\s\r\n]+)/);
       const embedMatch = output.match(/Embed:\s*([^\s\r\n]+)/);
 
+      const isSpecificSeason = /season\s*[2-9]|2nd|3rd|4th|part\s*[2-9]|to the top|shibuya/i.test(cleanQuery);
+      const embedUrl = isSpecificSeason ? fallbackEmbed : (embedMatch ? embedMatch[1] : fallbackEmbed);
+
       resolve({
         success: true,
         query: cleanQuery,
         episode: cleanEp,
         mode: mode || 'sub',
         malId,
-        embedUrl: embedMatch ? embedMatch[1] : fallbackEmbed,
+        embedUrl,
         videoUrl: linkMatch ? linkMatch[1] : null,
         subUrl: subMatch ? subMatch[1] : null,
         referer: refrMatch ? refrMatch[1] : 'https://zokoanime.video/',
