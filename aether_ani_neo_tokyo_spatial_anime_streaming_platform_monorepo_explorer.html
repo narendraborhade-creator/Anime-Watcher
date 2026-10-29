@@ -159,15 +159,32 @@
         <!-- Dynamic Spotlight Background Image with Gradient Overlay -->
         <img
           id="homeHeroBg"
-          src="https://s4.anilist.co/file/anilistcdn/media/anime/banner/151807-3L1q6LzV8Y2U.jpg"
+          src="https://s4.anilist.co/file/anilistcdn/media/anime/banner/151807-37yfQA3ym8PA.jpg"
           alt="Featured Anime Backdrop"
           class="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-35 transition-all duration-700 filter brightness-90"
         />
         <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#06070B] via-[#06070B]/85 to-transparent"></div>
         <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#06070B] via-transparent to-transparent"></div>
 
-        <div class="relative z-10 grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-center">
-          <div class="space-y-5 lg:col-span-8">
+        <div class="relative z-10 grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-center">
+          <!-- Spotlight Cover Page: Crisp, High-Res, Perfectly Fitted -->
+          <div class="hidden sm:block lg:col-span-3">
+            <div class="relative aspect-[3/4] w-full max-w-[240px] mx-auto overflow-hidden rounded-2xl shadow-2xl ring-2 ring-cyan-400/40 border border-white/20 group">
+              <img
+                id="homeHeroCoverImg"
+                src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx151807-it355ZgzquUd.png"
+                alt="Spotlight Cover Page"
+                class="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                loading="eager"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+              <span class="absolute bottom-2.5 left-2.5 right-2.5 text-center rounded-lg bg-cyan-400/95 py-1 font-mono-code text-[10px] font-extrabold text-slate-950 shadow">
+                VERIFIED HD MASTER
+              </span>
+            </div>
+          </div>
+
+          <div class="space-y-4 lg:col-span-6">
             <div class="flex flex-wrap items-center gap-2">
               <span class="inline-flex items-center gap-1.5 rounded-full bg-cyan-500/20 px-3 py-1 font-mono-code text-[11px] font-extrabold text-cyan-300 ring-1 ring-cyan-400/40">
                 <span class="h-2 w-2 rounded-full bg-cyan-400 animate-pulse"></span>
@@ -231,7 +248,7 @@
           </div>
 
           <!-- Right: Hero Spotlight Switcher / Mini-Deck -->
-          <div class="lg:col-span-4 hud-glass-elevated rounded-2xl p-5 border border-white/15 space-y-3">
+          <div class="lg:col-span-3 hud-glass-elevated rounded-2xl p-4 border border-white/15 space-y-2.5">
             <div class="flex items-center justify-between border-b border-white/10 pb-2.5 font-mono-code text-xs">
               <span class="font-bold text-cyan-300 flex items-center gap-1.5">
                 <span>⚡</span>
@@ -370,7 +387,24 @@
         <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#06070B] via-[#06070B]/85 to-transparent"></div>
 
         <div class="relative z-10 grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-center">
-          <div class="space-y-4 lg:col-span-8">
+          <!-- Watch Screen Anime Cover Page -->
+          <div class="hidden sm:block lg:col-span-3">
+            <div class="relative aspect-[3/4] w-full max-w-[210px] mx-auto overflow-hidden rounded-2xl shadow-2xl ring-2 ring-cyan-400/40 border border-white/20">
+              <img
+                id="watchHeroCoverImg"
+                src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx20464-ooZUyBe4ptp9.png"
+                alt="Anime Cover Page"
+                class="h-full w-full object-cover object-center"
+                loading="eager"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent"></div>
+              <span class="absolute bottom-2 left-2 right-2 text-center rounded-md bg-slate-950/90 py-0.5 font-mono-code text-[9px] font-bold text-cyan-300 ring-1 ring-cyan-400/30">
+                OFFICIAL ARTWORK
+              </span>
+            </div>
+          </div>
+
+          <div class="space-y-3 lg:col-span-5">
             <div class="inline-flex flex-wrap items-center gap-2 rounded-full bg-cyan-500/10 px-3 py-1 font-mono-code text-[11px] text-cyan-300 ring-1 ring-cyan-400/30">
               <span class="h-2 w-2 rounded-full bg-cyan-400"></span>
               <span id="heroBadgeText">FEDERATED PUBLIC ANIME APIS MESH // ANILIST + KITSU + GHIBLI + TRACE.MOE + ANISKIP</span>
@@ -725,6 +759,65 @@
               </button>
             </form>
           </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- 🎬 RELATED MOVIES & SPECIALS RECOMMENDATIONS (AT THE BOTTOM)         -->
+      <!-- =================================================================== -->
+      <section id="animeMoviesSection" class="space-y-4 pt-6 border-t border-white/10">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
+          <div class="flex items-center gap-3">
+            <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-orange-600 text-slate-950 font-bold text-lg shadow-lg shadow-amber-500/20">
+              🎬
+            </span>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <h2 class="font-display text-xl font-extrabold tracking-tight text-white sm:text-2xl" id="moviesSectionTitle">
+                  RELATED MOVIES & THEATRICAL SPECIALS
+                </h2>
+                <span class="rounded-full bg-amber-500/20 px-2.5 py-0.5 font-mono-code text-[10px] font-bold text-amber-300 ring-1 ring-amber-400/30" id="moviesCountBadge">
+                  5 MOVIES AVAILABLE
+                </span>
+              </div>
+              <p class="font-mono-code text-xs text-slate-400" id="moviesSectionSubtitle">
+                Theatrical films, canonical OVAs, and cinematic climaxes for this anime
+              </p>
+            </div>
+          </div>
+          <span class="hidden sm:inline-block rounded-lg bg-cyan-500/10 px-3 py-1 font-mono-code text-xs font-bold text-cyan-300 ring-1 ring-cyan-400/30">
+            CLICK ANY MOVIE TO STREAM DIRECTLY
+          </span>
+        </div>
+        <div id="animeMoviesGrid" class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- ✨ MORE ANIME YOU MAY LIKE // COMPANION RECOMMENDATIONS (BOTTOM)    -->
+      <!-- =================================================================== -->
+      <section id="animeRecommendationsSection" class="space-y-4 pt-6 border-t border-white/10">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
+          <div class="flex items-center gap-3">
+            <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-400 to-blue-600 text-slate-950 font-bold text-lg shadow-lg shadow-cyan-500/20">
+              ✨
+            </span>
+            <div>
+              <h2 class="font-display text-xl font-extrabold tracking-tight text-white sm:text-2xl" id="recommendedSectionTitle">
+                RECOMMENDED FOR YOU
+              </h2>
+              <p class="font-mono-code text-xs text-slate-400" id="recommendedSectionSubtitle">
+                Top rated companion anime sharing genre, animation studio & intensity
+              </p>
+            </div>
+          </div>
+          <span class="hidden sm:inline-block rounded-md bg-white/5 px-2.5 py-1 font-mono-code text-[11px] text-slate-400">
+            POSITIONED CLEANLY BELOW VIDEO
+          </span>
+        </div>
+        <div id="animeRecommendationsGrid" class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+          <!-- Populated dynamically via JS -->
         </div>
       </section>
 
@@ -1202,7 +1295,7 @@
     "studio": "A-1 Pictures",
     "accentPrimary": "#3b82f6",
     "accentSecondary": "#8b5cf6",
-    "poster": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx151807-m1g5wtVpTuJg.jpg",
+    "poster": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx151807-it355ZgzquUd.png",
     "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/151807-3L1q6LzV8Y2U.jpg",
     "synopsis": "Known as the Weakest Hunter of All Mankind, E-rank hunter Sung Jinwoo is fighting for his life in low-rank dungeons to pay his mother's medical bills. After surviving a brutal double dungeon, he awakens with the unique ability to see a quest log and level up indefinitely.",
     "streamUrl": "https://amg02159-kcglobal-amg02159c1-samsung-in-521.playouts.now.amagi.tv/playlist/amg02159-kcglobal-animax-samsungin/playlist.m3u8",
@@ -1241,7 +1334,7 @@
     "studio": "MAPPA",
     "accentPrimary": "#ef4444",
     "accentSecondary": "#6366f1",
-    "poster": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx113415-bbBWj4pEFseh.jpg",
+    "poster": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx113415-LHBAeoZDIsnF.jpg",
     "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/113415-96nwrZLDYVaa.jpg",
     "synopsis": "Idly indulging in paranormal activities with the Occult Club, high schooler Yuuji Itadori spends his days visiting his bedridden grandfather. When a cursed talisman is unsealed at his school, Yuuji swallows the demon Sukuna's decaying finger to save his friends, thrusting him into the perilous world of Jujutsu Sorcery.",
     "streamUrl": "https://amg02159-kcglobal-amg02159c1-samsung-in-521.playouts.now.amagi.tv/playlist/amg02159-kcglobal-animax-samsungin/playlist.m3u8",
@@ -1280,7 +1373,7 @@
     "studio": "WIT Studio x CloverWorks",
     "accentPrimary": "#10b981",
     "accentSecondary": "#06b6d4",
-    "poster": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx140960-YrkPtHGQwNmS.jpg",
+    "poster": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx140960-Kb6R5nYQfjmP.jpg",
     "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/140960-vXm5bNd5x6N8.jpg",
     "synopsis": "Master spy Twilight must disguise himself as psychiatrist Loid Forger and build a fake family to infiltrate an elite school. Unbeknownst to him, his adopted daughter Anya is a telepath, and his fake wife Yor is a deadly assassin.",
     "streamUrl": "https://amg02159-kcglobal-amg02159c1-samsung-in-521.playouts.now.amagi.tv/playlist/amg02159-kcglobal-animax-samsungin/playlist.m3u8",
@@ -1318,7 +1411,7 @@
     "studio": "Madhouse",
     "accentPrimary": "#06b6d4",
     "accentSecondary": "#a855f7",
-    "poster": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx154587-n1fmjvsNlzre.jpg",
+    "poster": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx154587-qQTzQnEJJ3oB.jpg",
     "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/154587-iv4LG1dhwEKz.jpg",
     "synopsis": "The Demon King has been defeated, and the victorious hero party returns home before disbanding. As an elf with a lifespan of over a thousand years, Frieren sets out on a new journey to understand humanity and honor the memories of her companions.",
     "streamUrl": "https://amg02159-kcglobal-amg02159c1-samsung-in-521.playouts.now.amagi.tv/playlist/amg02159-kcglobal-animax-samsungin/playlist.m3u8",
@@ -1435,8 +1528,8 @@
     "studio": "C2C",
     "accentPrimary": "#f19328",
     "accentSecondary": "#6366F1",
-    "poster": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx139587-n22PaoL6LHzD.jpg",
-    "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/139587-xS33yqYpU26P.jpg",
+    "poster": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx139587-rbZVcigCRtHY.jpg",
+    "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/anime/banner/139587-XFbotQOPcLC4.jpg",
     "synopsis": "The second season of Tensei Shitara Ken Deshita.\nNote: Each episode was streamed one week in advance of the TV broadcast starting on October 1, 2026 on Abema. Regular broadcasting began on October 8, 2026.",
     "streamUrl": "https://amg01796-amg01796c19-rakuten-gb-7486.playouts.now.amagi.tv/playlist/amg01796-fastmediafast-yugioh2en-rakutengb/playlist.m3u8",
     "streamName": "Anime 24/7 Official Broadcast",
@@ -2934,6 +3027,12 @@ USER anicli`
         heroImg.src = anime.bannerImage || anime.poster;
       }
 
+      const watchCover = document.getElementById('watchHeroCoverImg');
+      if (watchCover && anime.poster) {
+        watchCover.src = anime.poster;
+        watchCover.onerror = () => window.handlePosterError(watchCover, anime.title);
+      }
+
       const showId = document.getElementById('telemetryShowId');
       if (showId) showId.textContent = anime.slug;
 
@@ -3579,6 +3678,7 @@ USER anicli`
       applyChameleonTheme(currentAnime);
       renderEpisodeGrid();
       renderCatalogGrid();
+      renderRelatedMoviesAndRecommendations(currentAnime);
       saveWatchState();
       loadAnimeStream(currentAnime, currentEpisode, true);
 
@@ -4113,7 +4213,411 @@ USER anicli`
       }
     };
 
-    function setHomeSpotlightAnime(anime) {
+    
+    // =========================================================================
+    // 🎬 COMPREHENSIVE ANIME MOVIES & SPECIALS DATABASE
+    // =========================================================================
+    const ANIME_MOVIES_DATABASE = {
+      'haikyuu': [
+        {
+          id: 153658,
+          malId: 52742,
+          slug: 'haikyuu-the-dumpster-battle',
+          title: 'Haikyu!! The Dumpster Battle (2024)',
+          nativeTitle: '劇場版ハイキュー!! ゴミ捨て場の決戦',
+          format: 'MOVIE',
+          duration: '1h 25m',
+          score: 86,
+          studio: 'Production I.G',
+          poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx153658-KVnjW77cQw3y.jpg',
+          bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/anime/banner/20464-PpYjO9cPN1gs.jpg',
+          synopsis: 'The fateful national tournament showdown between Karasuno High and Nekoma High. Hinata and Kageyama clash with Kenma Kozume in an official match with no second chances.',
+          genres: ['Sports', 'Drama', 'Comedy']
+        },
+        {
+          id: 111790,
+          malId: 40074,
+          slug: 'haikyuu-land-vs-air',
+          title: 'Haikyu!! Land vs. Air (Riku vs. Kuu)',
+          nativeTitle: 'ハイキュー!! 陸 VS 空',
+          format: 'OVA',
+          duration: '45m',
+          score: 81,
+          studio: 'Production I.G',
+          poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx111790-MrEJLRJxjPja.jpg',
+          bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/anime/banner/20464-PpYjO9cPN1gs.jpg',
+          synopsis: 'The Tokyo Qualifiers determine which teams advance to the Spring Tournament. Nekoma High, Fukurodani Academy, and Nohebi fight for the final berths.',
+          genres: ['Sports', 'Drama']
+        },
+        {
+          id: 98885,
+          malId: 34669,
+          slug: 'haikyuu-battle-of-concepts',
+          title: 'Haikyu!! The Movie: Battle of Concepts',
+          nativeTitle: 'ハイキュー!! コンセプトの戦い',
+          format: 'MOVIE',
+          duration: '1h 29m',
+          score: 83,
+          studio: 'Production I.G',
+          poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx98885-xzHYFUr0keBT.jpg',
+          bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/anime/banner/20464-PpYjO9cPN1gs.jpg',
+          synopsis: 'Compiles the intense Miyagi Prefecture finals between Karasuno High and Shiratorizawa Academy led by the formidable Ushijima.',
+          genres: ['Sports', 'Drama']
+        },
+        {
+          id: 98884,
+          malId: 34668,
+          slug: 'haikyuu-talent-and-sense',
+          title: 'Haikyu!! The Movie: Talent and Sense',
+          nativeTitle: 'ハイキュー!! 才能とセンス',
+          format: 'MOVIE',
+          duration: '1h 29m',
+          score: 82,
+          studio: 'Production I.G',
+          poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx98884-PCa1CawsXpjB.png',
+          bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/anime/banner/20464-PpYjO9cPN1gs.jpg',
+          synopsis: 'The fierce rematch between Karasuno and Aoba Johsai High, highlighting the tactical brilliance of Toru Oikawa.',
+          genres: ['Sports', 'Drama']
+        },
+        {
+          id: 21120,
+          malId: 29755,
+          slug: 'haikyuu-the-end-and-the-beginning',
+          title: 'Haikyu!! The Movie: The End and the Beginning',
+          nativeTitle: 'ハイキュー!! 終わりと始まり',
+          format: 'MOVIE',
+          duration: '1h 29m',
+          score: 80,
+          studio: 'Production I.G',
+          poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx21120-x1TAu6HfHnyr.jpg',
+          bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/anime/banner/20464-PpYjO9cPN1gs.jpg',
+          synopsis: 'The beginning of Karasuno revival and their first legendary practice match against the Nekoma Cats.',
+          genres: ['Sports', 'Comedy']
+        }
+      ],
+      'demon-slayer': [
+        {
+          id: 112151,
+          malId: 40456,
+          slug: 'demon-slayer-mugen-train',
+          title: 'Demon Slayer: Mugen Train (The Movie)',
+          nativeTitle: '劇場版 鬼滅の刃 無限列車編',
+          format: 'MOVIE',
+          duration: '1h 57m',
+          score: 86,
+          studio: 'ufotable',
+          poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx112151-1qlQwPB1RrJe.png',
+          bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/anime/banner/101922-33MtJGsUSxga.jpg',
+          synopsis: 'Tanjiro and Flame Hashira Kyojuro Rengoku board the Mugen Train to face the lower-rank demon Enmu and upper-rank Akaza.',
+          genres: ['Action', 'Fantasy', 'Supernatural']
+        }
+      ],
+      'jujutsu-kaisen': [
+        {
+          id: 131573,
+          malId: 48561,
+          slug: 'jujutsu-kaisen-0',
+          title: 'Jujutsu Kaisen 0 (The Movie)',
+          nativeTitle: '劇場版 呪術廻戦 0',
+          format: 'MOVIE',
+          duration: '1h 45m',
+          score: 85,
+          studio: 'MAPPA',
+          poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx131573-rpl82vDEDRm6.jpg',
+          bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/anime/banner/113415-jQBSkxWAAk83.jpg',
+          synopsis: 'Yuta Okkotsu enrolls at Tokyo Jujutsu High under Satoru Gojo to break the tragic curse binding him to Rika Orimoto.',
+          genres: ['Action', 'Fantasy', 'Supernatural']
+        }
+      ],
+      'attack-on-titan': [
+        {
+          id: 146984,
+          malId: 51535,
+          slug: 'attack-on-titan-the-final-chapters',
+          title: 'Attack on Titan: The Final Chapters (Special)',
+          nativeTitle: '進撃の巨人 The Final Season 完結編',
+          format: 'SPECIAL',
+          duration: '1h 26m',
+          score: 89,
+          studio: 'MAPPA',
+          poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx146984-GXrLeT6vQqyP.jpg',
+          bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/anime/banner/16498-8jpFCOcDmneX.jpg',
+          synopsis: 'The fate of humanity hangs in the balance as the remaining Scout Regiment makes their desperate final stand against Eren Yeager.',
+          genres: ['Action', 'Drama', 'Fantasy']
+        }
+      ],
+      'one-piece': [
+        {
+          id: 141902,
+          malId: 50410,
+          slug: 'one-piece-film-red',
+          title: 'One Piece Film: Red (2022)',
+          nativeTitle: 'ONE PIECE FILM RED',
+          format: 'MOVIE',
+          duration: '1h 55m',
+          score: 79,
+          studio: 'Toei Animation',
+          poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx141902-fTyoTk8F8qOl.jpg',
+          bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/anime/banner/21-0w3GkY0X5aV.jpg',
+          synopsis: 'Uta, the world most renowned singer and daughter of Red-Haired Shanks, reveals herself on the musical island of Elegia.',
+          genres: ['Action', 'Adventure', 'Fantasy']
+        }
+      ],
+      'spy-x-family': [
+        {
+          id: 158928,
+          malId: 53888,
+          slug: 'spy-x-family-code-white',
+          title: 'SPY x FAMILY CODE: White (2023)',
+          nativeTitle: '劇場版 SPY×FAMILY CODE: White',
+          format: 'MOVIE',
+          duration: '1h 50m',
+          score: 81,
+          studio: 'WIT Studio x CloverWorks',
+          poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx158928-xqE0euKlQMnY.jpg',
+          bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/anime/banner/140960-Z7xSvkRxHKfj.jpg',
+          synopsis: 'The Forgers embark on a winter holiday to Frigis, where Anya inadvertently swallows a microchip that could trigger a world war.',
+          genres: ['Action', 'Comedy']
+        }
+      ],
+      'bleach': [
+        {
+          id: 8247,
+          malId: 8247,
+          slug: 'bleach-hell-verse',
+          title: 'Bleach the Movie: Hell Verse',
+          nativeTitle: '劇場版 BLEACH 地獄篇',
+          format: 'MOVIE',
+          duration: '1h 34m',
+          score: 77,
+          studio: 'Studio Pierrot',
+          poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx8247-VppsQKlgXoXr.png',
+          bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/anime/banner/269-0w3GkY0X5aV.jpg',
+          synopsis: 'Sinners break loose from the gates of Hell and kidnap Ichigo sister Yuzu, forcing him down into the infernal depths.',
+          genres: ['Action', 'Adventure', 'Supernatural']
+        }
+      ],
+      'boku-no-hero-academia': [
+        {
+          id: 168013,
+          malId: 56196,
+          slug: 'my-hero-academia-youre-next',
+          title: 'My Hero Academia: You’re Next (2024)',
+          nativeTitle: '僕のヒーローアカデミア THE MOVIE ユアネクスト',
+          format: 'MOVIE',
+          duration: '1h 50m',
+          score: 81,
+          studio: 'BONES',
+          poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx168013-eeyN5L8tmYKI.png',
+          bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/anime/banner/31964-0w3GkY0X5aV.jpg',
+          synopsis: 'Deku and Class 1-A confront a fearsome villain named Dark Might who mimics All Might.',
+          genres: ['Action', 'Adventure']
+        }
+      ]
+    };
+
+    // Fallback image handler to guarantee zero broken posters
+    window.handlePosterError = function(img, title) {
+      if (!img) return;
+      img.onerror = null;
+      const cleanTitle = encodeURIComponent(title || 'Anime');
+      img.src = 'https://placehold.co/400x600/0f172a/38bdf8.png?text=' + cleanTitle;
+    };
+
+    // Stream a movie or theatrical special
+    window.streamMovieOrSpecial = function(movie) {
+      if (!movie) return;
+      currentAnime = movie;
+      currentEpisode = 1;
+      currentMode = 'sub';
+      
+      applyChameleonTheme(currentAnime);
+      renderEpisodeGrid();
+      saveWatchState();
+      loadAnimeStream(currentAnime, 1, true);
+
+      // Update badge to indicate Movie
+      const epBadge = document.getElementById('playerEpisodeBadge');
+      if (epBadge) epBadge.textContent = '🎬 ' + (movie.format || 'MOVIE');
+
+      const cinema = document.getElementById('cinemaStageSection');
+      if (cinema) cinema.scrollIntoView({ behavior: 'smooth' });
+      showToast('Now Streaming Movie: ' + movie.title);
+    };
+
+    // Render Movies & Recommendations at bottom of Watch Page
+    function renderRelatedMoviesAndRecommendations(anime) {
+      if (!anime) return;
+      const slug = (anime.slug || '').toLowerCase();
+      const titleLower = (anime.title || '').toLowerCase();
+
+      // 1. Resolve movies for current anime
+      let movies = [];
+      for (const [key, list] of Object.entries(ANIME_MOVIES_DATABASE)) {
+        if (slug.includes(key) || titleLower.includes(key.replace(/-/g, ' '))) {
+          movies = list;
+          break;
+        }
+      }
+
+      // If no static movies, fallback to high-quality anime cinema
+      if (!movies || movies.length === 0) {
+        movies = [
+          {
+            id: 90008,
+            malId: 164,
+            slug: 'princess-mononoke',
+            title: 'Princess Mononoke',
+            format: 'CINEMA',
+            duration: '2h 14m',
+            score: 85,
+            studio: 'Studio Ghibli',
+            poster: 'https://images.metahub.space/poster/medium/tt0119698/img.jpg',
+            synopsis: 'Hayao Miyazaki acclaimed cinematic epic exploring the clash between the natural gods and human industry.',
+            genres: ['Action', 'Adventure', 'Fantasy']
+          },
+          {
+            id: 80028,
+            malId: 28851,
+            slug: 'koe-no-katachi',
+            title: 'A Silent Voice (Koe no Katachi)',
+            format: 'CINEMA',
+            duration: '2h 10m',
+            score: 88,
+            studio: 'Kyoto Animation',
+            poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx20954-UMb622SjW4xH.jpg',
+            synopsis: 'A poignant masterpiece about redemption, empathy, and overcoming past regrets.',
+            genres: ['Drama', 'Romance']
+          }
+        ];
+      }
+
+      const moviesGrid = document.getElementById('animeMoviesGrid');
+      const countBadge = document.getElementById('moviesCountBadge');
+      const subTitle = document.getElementById('moviesSectionSubtitle');
+
+      if (countBadge) countBadge.textContent = movies.length + ' MOVIES & SPECIALS AVAILABLE';
+      if (subTitle) subTitle.textContent = 'Canonical movies, theatrical releases & specials for ' + anime.title;
+
+      if (moviesGrid) {
+        moviesGrid.innerHTML = '';
+        movies.forEach(m => {
+          const card = document.createElement('div');
+          card.className = 'hud-glass group cursor-pointer overflow-hidden rounded-2xl border border-white/10 hover:border-amber-400/60 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-amber-500/10 flex flex-col justify-between';
+          card.innerHTML = `
+            <div class="relative aspect-[3/4] w-full overflow-hidden bg-slate-900">
+              <img
+                src="${m.poster}"
+                alt="${m.title}"
+                class="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
+                onerror="window.handlePosterError(this, '${m.title}')"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-[#06070B] via-transparent to-transparent opacity-90"></div>
+              
+              <div class="absolute left-2.5 top-2.5 flex flex-col gap-1 z-10">
+                <span class="rounded-md bg-amber-500 px-1.5 py-0.5 font-mono-code text-[9px] font-extrabold text-slate-950 shadow">
+                  🎬 ${m.format || 'MOVIE'}
+                </span>
+                <span class="rounded-md bg-slate-950/85 px-1.5 py-0.5 font-mono-code text-[9px] font-bold text-cyan-300 ring-1 ring-white/15">
+                  ${m.duration || 'Feature'}
+                </span>
+              </div>
+              
+              <div class="absolute right-2.5 top-2.5 rounded-md bg-emerald-500/90 px-1.5 py-0.5 font-mono-code text-[10px] font-extrabold text-slate-950 shadow z-10">
+                ★ ${m.score}%
+              </div>
+              
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 z-10">
+                <div class="font-mono-code text-[9px] text-amber-300 truncate">${m.studio || 'Studio'} • THEATRICAL</div>
+                <h3 class="font-display text-sm font-bold text-white line-clamp-1 group-hover:text-amber-300 transition-colors">${m.title}</h3>
+              </div>
+            </div>
+            
+            <div class="p-3 space-y-2 flex-1 flex flex-col justify-between bg-slate-950/50">
+              <p class="line-clamp-2 text-[11px] text-slate-400 leading-tight">${m.synopsis || ''}</p>
+              <div class="pt-1">
+                <button type="button" class="w-full flex items-center justify-center gap-1.5 rounded-xl bg-amber-400/20 py-1.5 font-mono-code text-xs font-bold text-amber-300 group-hover:bg-amber-400 group-hover:text-slate-950 transition-all duration-200 shadow">
+                  <span>▶</span>
+                  <span>STREAM MOVIE</span>
+                </button>
+              </div>
+            </div>
+          `;
+
+          card.addEventListener('click', () => {
+            window.streamMovieOrSpecial(m);
+          });
+          moviesGrid.appendChild(card);
+        });
+      }
+
+      // 2. Resolve companion recommendations
+      const recsGrid = document.getElementById('animeRecommendationsGrid');
+      const recsTitle = document.getElementById('recommendedSectionTitle');
+      const recsSubtitle = document.getElementById('recommendedSectionSubtitle');
+
+      if (recsTitle) recsTitle.textContent = 'RECOMMENDED COMPANIONS FOR ' + anime.title.toUpperCase();
+      if (recsSubtitle) recsSubtitle.textContent = 'Hand-picked companion anime sharing genre, animation studio and intensity';
+
+      if (recsGrid) {
+        recsGrid.innerHTML = '';
+        // Find recommendations sharing genres or top ranked
+        const companionList = ANIME_CATALOG.filter(a => {
+          if (a.id === anime.id || a.slug === anime.slug) return false;
+          if (a.genreTag === anime.genreTag) return true;
+          if (anime.genres && a.genres && anime.genres.some(g => a.genres.includes(g))) return true;
+          return a.score >= 82;
+        }).slice(0, 6);
+
+        companionList.forEach(rec => {
+          const card = document.createElement('div');
+          card.className = 'hud-glass group cursor-pointer overflow-hidden rounded-2xl border border-white/10 hover:border-cyan-400/60 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-cyan-500/10 flex flex-col justify-between';
+          card.innerHTML = `
+            <div class="relative aspect-[3/4] w-full overflow-hidden bg-slate-900">
+              <img
+                src="${rec.poster}"
+                alt="${rec.title}"
+                class="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
+                onerror="window.handlePosterError(this, '${rec.title}')"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-[#06070B] via-transparent to-transparent opacity-90"></div>
+              
+              <div class="absolute left-2.5 top-2.5 z-10">
+                <span class="rounded-md bg-slate-950/85 px-1.5 py-0.5 font-mono-code text-[9px] font-bold text-cyan-300 ring-1 ring-white/15">
+                  ${rec.genreTag || 'ANIME'}
+                </span>
+              </div>
+              <div class="absolute right-2.5 top-2.5 rounded-md bg-emerald-500/90 px-1.5 py-0.5 font-mono-code text-[10px] font-extrabold text-slate-950 shadow z-10">
+                ★ ${rec.score}%
+              </div>
+              <div class="absolute bottom-2.5 left-2.5 right-2.5 z-10">
+                <div class="font-mono-code text-[9px] text-cyan-300 truncate">${rec.studio || 'Studio'} • ${rec.episodes || 12} EPS</div>
+                <h3 class="font-display text-sm font-bold text-white line-clamp-1 group-hover:text-cyan-300 transition-colors">${rec.title}</h3>
+              </div>
+            </div>
+            
+            <div class="p-3 space-y-2 flex-1 flex flex-col justify-between bg-slate-950/40">
+              <p class="line-clamp-2 text-[11px] text-slate-400 leading-tight">${rec.synopsis || ''}</p>
+              <div class="pt-1">
+                <button type="button" class="w-full flex items-center justify-center gap-1.5 rounded-xl bg-cyan-400/15 py-1.5 font-mono-code text-xs font-bold text-cyan-300 group-hover:bg-cyan-400 group-hover:text-slate-950 transition-all duration-200 shadow">
+                  <span>▶</span>
+                  <span>WATCH NOW</span>
+                </button>
+              </div>
+            </div>
+          `;
+
+          card.addEventListener('click', () => {
+            selectAndPlayAnime(rec, 1, currentMode);
+          });
+          recsGrid.appendChild(card);
+        });
+      }
+    }
+
+function setHomeSpotlightAnime(anime) {
       if (!anime) return;
       const bg = document.getElementById('homeHeroBg');
       const title = document.getElementById('homeHeroTitle');
@@ -4122,7 +4626,12 @@ USER anicli`
       const score = document.getElementById('homeHeroScore');
       const eps = document.getElementById('homeHeroEpisodes');
       const genres = document.getElementById('homeHeroGenres');
-      const seasonsBadge = document.getElementById('homeHeroSeasonsBadge');
+            const seasonsBadge = document.getElementById('homeHeroSeasonsBadge');
+      const coverImg = document.getElementById('homeHeroCoverImg');
+      if (coverImg && anime.poster) {
+        coverImg.src = anime.poster;
+        coverImg.onerror = () => window.handlePosterError(coverImg, anime.title);
+      }
       const watchNowBtn = document.getElementById('homeHeroWatchNowBtn');
       const viewDetailsBtn = document.getElementById('homeHeroViewDetailsBtn');
 
@@ -4424,6 +4933,7 @@ USER anicli`
       renderEpisodeGrid();
       renderCatalogGrid();
       renderHomeScreen();
+      renderRelatedMoviesAndRecommendations(currentAnime);
       initVideoAndAmbilight();
       initThreeStage();
 
