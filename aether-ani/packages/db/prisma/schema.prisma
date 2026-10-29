@@ -1,0 +1,47 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model AnimeProviderMap {
+  anilistId       Int      @id
+  malId           Int?     @unique
+  romajiTitle     String
+  englishTitle    String?
+  primarySlug     String
+  secondaryShowId String?
+  accentColorHex  String   @default("#00F0FF")
+  lastVerifiedAt  DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([romajiTitle])
+}
+
+model WatchHistory {
+  id              String   @id @default(cuid())
+  userId          String
+  anilistId       Int
+  episodeNumber   Int
+  mode            String   @default("sub")
+  progressSeconds Float    @default(0)
+  durationSeconds Float    @default(1440)
+  updatedAt       DateTime @updatedAt
+
+  @@unique([userId, anilistId])
+  @@index([userId, updatedAt])
+}
+
+model SyncPartyRoom {
+  roomCode        String   @id
+  hostUserId      String
+  anilistId       Int
+  episodeNumber   Int
+  mode            String   @default("sub")
+  isPlaying       Boolean  @default(false)
+  currentTimeSec  Float    @default(0)
+  createdAt       DateTime @default(now())
+}

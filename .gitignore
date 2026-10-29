@@ -1,0 +1,22 @@
+# Scratch and temporary directories
+scratch/
+.system_generated/
+*.log
+.DS_Store
+Thumbs.db
+
+# Executable binaries & Large Files
+bin/
+*.exe
+*.dll
+
+# Dependencies
+node_modules/
+.npm/
+
+# IDE and Environment
+.vscode/
+.idea/
+*.local
+.env
+.gemini/

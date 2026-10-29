@@ -1,0 +1,6 @@
+name = "aether-ani-edge-hls-proxy"
+main = "src/index.ts"
+compatibility_date = "2026-10-01"
+
+[vars]
+ALLOWED_ORIGIN = "*"

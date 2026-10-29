@@ -1,0 +1,23 @@
+{
+  "name": "anime-watcher",
+  "version": "1.0.0",
+  "description": "Aether-Ani: Neo-Tokyo Spatial Anime Streaming Platform powered by public anime APIs and Linux ani-cli engine",
+  "main": "serve.js",
+  "scripts": {
+    "start": "node serve.js",
+    "dev": "node serve.js",
+    "serve": "node serve.js"
+  },
+  "keywords": [
+    "anime",
+    "anime-watcher",
+    "ani-cli",
+    "streaming",
+    "anilist",
+    "kitsu",
+    "ghibli",
+    "trace-moe"
+  ],
+  "author": "NARENDRA BORHADE <narendra.borhade@nmiet.edu.in>",
+  "license": "MIT"
+}
