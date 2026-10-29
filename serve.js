@@ -20,8 +20,37 @@ const MAL_MAP = {
   'haikyu!!': 20583,
   'haikyuu!!': 20583,
   'haikyuu season 2': 28891,
+  'haikyuu 2nd season': 28891,
   'haikyuu season 3': 32935,
+  'haikyuu 3rd season': 32935,
   'haikyuu to the top': 38883,
+  'haikyuu season 4': 38883,
+  'attack on titan': 16498,
+  'attack on titan season 2': 25777,
+  'attack on titan season 3': 35760,
+  'attack on titan season 4': 40028,
+  'attack on titan final season': 40028,
+  'demon slayer': 38000,
+  'demon slayer season 2': 47778,
+  'demon slayer season 3': 51019,
+  'demon slayer season 4': 55701,
+  'jujutsu kaisen': 40748,
+  'jujutsu kaisen season 2': 51009,
+  'solo leveling': 52299,
+  'solo leveling season 2': 58567,
+  'spy x family': 50265,
+  'spy x family season 2': 53887,
+  'vinland saga': 37521,
+  'vinland saga season 2': 49387,
+  'bleach': 269,
+  'bleach tybw': 41467,
+  'my hero academia': 31964,
+  'my hero academia season 2': 35247,
+  'my hero academia season 3': 36456,
+  'my hero academia season 4': 38408,
+  'my hero academia season 5': 41587,
+  'my hero academia season 6': 49918,
+  'my hero academia season 7': 54789,
   'kuroko': 11771,
   'kuroko no basket': 11771,
   'slam dunk': 170,
@@ -59,7 +88,8 @@ const MAL_MAP = {
 
 async function resolveMalId(query) {
   const q = (query || '').toLowerCase().trim();
-  for (const [key, id] of Object.entries(MAL_MAP)) {
+  const sortedEntries = Object.entries(MAL_MAP).sort((a, b) => b[0].length - a[0].length);
+  for (const [key, id] of sortedEntries) {
     if (q.includes(key) || key.includes(q)) return id;
   }
   try {

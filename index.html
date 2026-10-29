@@ -439,7 +439,31 @@
               </div>
               <span id="episodePoolCountBadge" class="rounded-md bg-cyan-500/15 px-2 py-0.5 font-mono-code text-xs text-cyan-300">12 EPS</span>
             </div>
-            <div id="episodeGridContainer" class="grid grid-cols-4 gap-2 sm:grid-cols-6 lg:grid-cols-4">
+            <!-- Dynamic Seasons Bar -->
+            <div id="seasonSelectorSection" class="border-b border-white/10 pb-3">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-mono-code font-bold text-cyan-300">📺 AVAILABLE SEASONS:</span>
+                  <span id="seasonCountBadge" class="rounded bg-cyan-500/20 px-2 py-0.5 font-mono-code text-[10px] text-cyan-300 ring-1 ring-cyan-400/30">1 SEASON</span>
+                </div>
+                <span id="activeSeasonBadge" class="text-xs font-mono-code text-amber-300 font-bold truncate max-w-[160px]">Season 1</span>
+              </div>
+              <div id="seasonTabsContainer" class="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto pr-1">
+                <!-- Dynamically populated via JS -->
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-1">
+              <div>
+                <h2 class="font-display text-sm font-bold text-white">SELECT AN EPISODE TO PLAY</h2>
+                <p class="font-mono-code text-[11px] text-cyan-300">Click any episode below to watch instantly</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <span id="subDubIndicator" class="rounded bg-fuchsia-500/20 px-2 py-0.5 font-mono-code text-[10px] text-fuchsia-300 ring-1 ring-fuchsia-400/30">SUB (EN)</span>
+                <span id="episodePoolCountBadge" class="rounded-md bg-cyan-500/15 px-2 py-0.5 font-mono-code text-xs text-cyan-300">25 EPS</span>
+              </div>
+            </div>
+            <div id="episodeGridContainer" class="grid grid-cols-4 gap-2 sm:grid-cols-6 lg:grid-cols-4 max-h-72 overflow-y-auto pr-1">
               <!-- Populated dynamically via JS -->
             </div>
           </div>
@@ -2569,11 +2593,230 @@ USER anicli`
       if (overlayBtnText) overlayBtnText.textContent = `START WATCHING EPISODE ${currentEpisode}`;
     }
 
+    
+    // =========================================================================
+    // SEASONS DATABASE & DYNAMIC ANILIST RELATIONS ENGINE
+    // =========================================================================
+    const SEASONS_DATABASE = {
+      'haikyuu': [
+        { id: 20464, malId: 20583, title: 'Season 1 (Spring High)', episodes: 25, year: 2014, badge: 'S1' },
+        { id: 20992, malId: 28891, title: 'Season 2 (Tokyo Training)', episodes: 25, year: 2015, badge: 'S2' },
+        { id: 21698, malId: 32935, title: 'Season 3 (vs Shiratorizawa)', episodes: 10, year: 2016, badge: 'S3' },
+        { id: 106625, malId: 38883, title: 'Season 4 (To The Top Pt 1)', episodes: 13, year: 2020, badge: 'S4' },
+        { id: 113538, malId: 40776, title: 'Season 4 (To The Top Pt 2)', episodes: 12, year: 2020, badge: 'S4-2' },
+        { id: 153658, malId: 52742, title: 'Movie (Dumpster Battle)', episodes: 1, year: 2024, badge: 'MOVIE' }
+      ],
+      'attack-on-titan': [
+        { id: 16498, malId: 16498, title: 'Season 1 (Fall of Shiganshina)', episodes: 25, year: 2013, badge: 'S1' },
+        { id: 20958, malId: 25777, title: 'Season 2 (Beast Titan)', episodes: 12, year: 2017, badge: 'S2' },
+        { id: 99147, malId: 35760, title: 'Season 3 Part 1 (Uprising)', episodes: 12, year: 2018, badge: 'S3' },
+        { id: 104578, malId: 38524, title: 'Season 3 Part 2 (Return to Shiganshina)', episodes: 10, year: 2019, badge: 'S3-2' },
+        { id: 110277, malId: 40028, title: 'The Final Season Part 1', episodes: 16, year: 2020, badge: 'S4' },
+        { id: 131681, malId: 48583, title: 'The Final Season Part 2', episodes: 12, year: 2022, badge: 'S4-2' },
+        { id: 146065, malId: 51535, title: 'The Final Chapters', episodes: 2, year: 2023, badge: 'FINAL' }
+      ],
+      'demon-slayer': [
+        { id: 101922, malId: 38000, title: 'Season 1 (Tanjiro Kamado Arc)', episodes: 26, year: 2019, badge: 'S1' },
+        { id: 129874, malId: 49926, title: 'Mugen Train Arc (TV Cut)', episodes: 7, year: 2021, badge: 'S2-A' },
+        { id: 142329, malId: 47778, title: 'Season 2 (Entertainment District)', episodes: 11, year: 2021, badge: 'S2-B' },
+        { id: 145139, malId: 51019, title: 'Season 3 (Swordsmith Village)', episodes: 11, year: 2023, badge: 'S3' },
+        { id: 166240, malId: 55701, title: 'Season 4 (Hashira Training)', episodes: 8, year: 2024, badge: 'S4' }
+      ],
+      'jujutsu-kaisen': [
+        { id: 113415, malId: 40748, title: 'Season 1 (Curse Womb Must Die)', episodes: 24, year: 2020, badge: 'S1' },
+        { id: 131573, malId: 48561, title: 'Movie 0 (Yuta Okkotsu)', episodes: 1, year: 2021, badge: 'MOVIE' },
+        { id: 145064, malId: 51009, title: 'Season 2 (Hidden Inventory & Shibuya)', episodes: 23, year: 2023, badge: 'S2' }
+      ],
+      'solo-leveling': [
+        { id: 151807, malId: 52299, title: 'Season 1 (Awakening)', episodes: 12, year: 2024, badge: 'S1' },
+        { id: 176161, malId: 58567, title: 'Season 2 (Arise from the Shadow)', episodes: 13, year: 2025, badge: 'S2' }
+      ],
+      'spy-x-family': [
+        { id: 140960, malId: 50265, title: 'Season 1 Part 1', episodes: 12, year: 2022, badge: 'S1' },
+        { id: 142838, malId: 50602, title: 'Season 1 Part 2', episodes: 13, year: 2022, badge: 'S1-2' },
+        { id: 158870, malId: 53887, title: 'Season 2', episodes: 12, year: 2023, badge: 'S2' }
+      ],
+      'bleach': [
+        { id: 269, malId: 269, title: 'Bleach Classic (Substitute Shinigami)', episodes: 366, year: 2004, badge: 'CLASSIC' },
+        { id: 114446, malId: 41467, title: 'TYBW Part 1 (Blood War)', episodes: 13, year: 2022, badge: 'TYBW-1' },
+        { id: 159322, malId: 53998, title: 'TYBW Part 2 (The Separation)', episodes: 13, year: 2023, badge: 'TYBW-2' },
+        { id: 171018, malId: 56784, title: 'TYBW Part 3 (The Conflict)', episodes: 13, year: 2024, badge: 'TYBW-3' }
+      ],
+      'my-hero-academia': [
+        { id: 21459, malId: 31964, title: 'Season 1', episodes: 13, year: 2016, badge: 'S1' },
+        { id: 21856, malId: 35247, title: 'Season 2', episodes: 25, year: 2017, badge: 'S2' },
+        { id: 100166, malId: 36456, title: 'Season 3', episodes: 25, year: 2018, badge: 'S3' },
+        { id: 104276, malId: 38408, title: 'Season 4', episodes: 25, year: 2019, badge: 'S4' },
+        { id: 117193, malId: 41587, title: 'Season 5', episodes: 25, year: 2021, badge: 'S5' },
+        { id: 139630, malId: 49918, title: 'Season 6', episodes: 25, year: 2022, badge: 'S6' },
+        { id: 163139, malId: 54789, title: 'Season 7', episodes: 21, year: 2024, badge: 'S7' }
+      ],
+      'vinland-saga': [
+        { id: 101348, malId: 37521, title: 'Season 1 (War in England)', episodes: 24, year: 2019, badge: 'S1' },
+        { id: 136430, malId: 49387, title: 'Season 2 (Farmland Arc)', episodes: 24, year: 2023, badge: 'S2' }
+      ],
+      'blue-lock': [
+        { id: 137822, malId: 49596, title: 'Season 1 (Blue Lock Selection)', episodes: 24, year: 2022, badge: 'S1' },
+        { id: 163148, malId: 54865, title: 'Season 2 (vs U-20 Japan)', episodes: 14, year: 2024, badge: 'S2' }
+      ],
+      'kuroko': [
+        { id: 11771, malId: 11771, title: 'Season 1', episodes: 25, year: 2012, badge: 'S1' },
+        { id: 16894, malId: 16894, title: 'Season 2', episodes: 25, year: 2013, badge: 'S2' },
+        { id: 20732, malId: 24415, title: 'Season 3', episodes: 25, year: 2015, badge: 'S3' }
+      ],
+      'one-punch-man': [
+        { id: 21087, malId: 30276, title: 'Season 1', episodes: 12, year: 2015, badge: 'S1' },
+        { id: 97668, malId: 34134, title: 'Season 2', episodes: 12, year: 2019, badge: 'S2' }
+      ]
+    };
+
+    let activeSeasonIndex = 0;
+
+    async function fetchSeasonsForAnime(anime) {
+      if (anime.seasons && anime.seasons.length > 0) {
+        return anime.seasons;
+      }
+
+      // Check pre-computed static seasons by slug or title match
+      const slugKey = (anime.slug || '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      for (const [key, list] of Object.entries(SEASONS_DATABASE)) {
+        if (slugKey.includes(key) || key.includes(slugKey) || anime.title.toLowerCase().includes(key.replace(/-/g, ' '))) {
+          anime.seasons = list;
+          return list;
+        }
+      }
+
+      // Dynamic AniList GraphQL Relations Query for any unknown anime
+      try {
+        const query = `
+          query ($id: Int) {
+            Media(id: $id, type: ANIME) {
+              id idMal title { english romaji } format episodes seasonYear coverImage { large }
+              relations {
+                edges {
+                  relationType
+                  node {
+                    id idMal format type title { english romaji } episodes seasonYear coverImage { large }
+                  }
+                }
+              }
+            }
+          }
+        `;
+        const res = await fetch('https://graphql.anilist.co', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query, variables: { id: anime.anilistId || anime.id || 20464 } })
+        });
+        const d = await res.json();
+        const m = d.data?.Media;
+        if (m) {
+          const list = [
+            {
+              id: m.id,
+              malId: m.idMal || anime.malId || 20,
+              title: m.title.english || m.title.romaji || anime.title,
+              episodes: m.episodes || anime.episodes || 24,
+              year: m.seasonYear || 2020,
+              badge: 'S1'
+            }
+          ];
+
+          const rels = m.relations?.edges || [];
+          let seasonNum = 2;
+          for (const edge of rels) {
+            const node = edge.node;
+            if (node && node.type === 'ANIME' && ['TV', 'TV_SHORT', 'ONA', 'MOVIE'].includes(node.format)) {
+              if (['SEQUEL', 'PREQUEL', 'SIDE_STORY', 'ALTERNATIVE', 'PARENT'].includes(edge.relationType)) {
+                list.push({
+                  id: node.id,
+                  malId: node.idMal || m.idMal,
+                  title: node.title.english || node.title.romaji,
+                  episodes: node.episodes || 12,
+                  year: node.seasonYear || 2021,
+                  badge: node.format === 'MOVIE' ? 'MOVIE' : ('S' + (seasonNum++))
+                });
+              }
+            }
+          }
+
+          list.sort((a, b) => (a.year || 0) - (b.year || 0));
+          anime.seasons = list;
+          return list;
+        }
+      } catch(e) {
+        console.warn('Seasons lookup error:', e);
+      }
+
+      // Default single season fallback
+      anime.seasons = [
+        {
+          id: anime.id,
+          malId: anime.malId || 20,
+          title: anime.title + ' (Season 1)',
+          episodes: anime.episodes || 24,
+          year: 2020,
+          badge: 'S1'
+        }
+      ];
+      return anime.seasons;
+    }
+
+    function renderSeasons() {
+      const container = document.getElementById('seasonTabsContainer');
+      const countBadge = document.getElementById('seasonCountBadge');
+      const activeBadge = document.getElementById('activeSeasonBadge');
+      if (!container) return;
+
+      container.innerHTML = '';
+      const seasons = currentAnime.seasons || [
+        { malId: currentAnime.malId || 20, title: currentAnime.title, episodes: currentAnime.episodes || 24, badge: 'S1' }
+      ];
+
+      if (countBadge) {
+        countBadge.textContent = seasons.length + (seasons.length === 1 ? ' SEASON' : ' SEASONS');
+      }
+
+      const activeSeason = seasons[activeSeasonIndex] || seasons[0];
+      if (activeBadge) {
+        activeBadge.textContent = activeSeason.title;
+      }
+
+      seasons.forEach((season, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        const isActive = idx === activeSeasonIndex;
+        btn.className = isActive
+          ? 'rounded-lg bg-cyan-400 px-3 py-1 font-mono-code text-[11px] font-extrabold text-slate-950 shadow-md shadow-cyan-400/30 ring-1 ring-cyan-300 transition flex items-center gap-1.5'
+          : 'rounded-lg bg-white/10 px-2.5 py-1 font-mono-code text-[11px] font-semibold text-slate-300 ring-1 ring-white/15 hover:bg-white/15 hover:text-white transition flex items-center gap-1.5';
+
+        btn.innerHTML = `
+          <span class="rounded bg-black/30 px-1 py-0.2 text-[9px] font-bold">${season.badge || ('S' + (idx + 1))}</span>
+          <span class="truncate max-w-[140px]">${season.title}</span>
+        `;
+
+        btn.addEventListener('click', () => {
+          activeSeasonIndex = idx;
+          currentAnime.malId = season.malId;
+          currentAnime.episodes = season.episodes;
+          currentEpisode = 1;
+          renderSeasons();
+          renderEpisodeGrid();
+          loadAnimeStream(currentAnime, 1, true);
+          showToast(`Switched to ${season.title} (Ep 1) - ${currentMode.toUpperCase()}`);
+        });
+
+        container.appendChild(btn);
+      });
+    }
+
     function renderEpisodeGrid() {
       const container = document.getElementById('episodeGridContainer');
       if (!container) return;
       container.innerHTML = '';
-      const totalEps = Math.min(currentAnime.episodes || 24, 24);
+      const totalEps = Math.min(currentAnime.episodes || 24, 500);
+      const poolBadge = document.getElementById('episodePoolCountBadge');
+      if (poolBadge) poolBadge.textContent = `${totalEps} EPS`;
       for (let ep = 1; ep <= totalEps; ep++) {
         const btn = document.createElement('button');
         btn.type = 'button';
@@ -2748,7 +2991,8 @@ USER anicli`
 
     function resolveMalId(title) {
       const q = (title || '').toLowerCase().trim();
-      for (const [key, id] of Object.entries(MAL_MAP)) {
+      const sortedEntries = Object.entries(MAL_MAP).sort((a, b) => b[0].length - a[0].length);
+      for (const [key, id] of sortedEntries) {
         if (q.includes(key) || key.includes(q)) return id;
       }
       return 20;
@@ -2910,7 +3154,11 @@ USER anicli`
     function playEpisode(epNumber) {
       currentEpisode = Math.max(1, Math.min(currentAnime.episodes || 24, epNumber));
       applyChameleonTheme(currentAnime);
-      renderEpisodeGrid();
+      activeSeasonIndex = 0;
+      fetchSeasonsForAnime(currentAnime).then(() => {
+        renderSeasons();
+        renderEpisodeGrid();
+      });
       saveWatchState();
       hidePlayOverlay();
 
@@ -3755,15 +4003,20 @@ USER anicli`
         }
 
         if (pct >= 0.8) {
-          document.getElementById('telemetryPrewarm').textContent = 'PRE-WARMED EP ' + (currentEpisode + 1) + ' (0ms Ready)';
+          const telemPre = document.getElementById('telemetryPrewarm');
+          if (telemPre) telemPre.textContent = 'PRE-WARMED EP ' + (currentEpisode + 1) + ' (0ms Ready)';
         }
       });
 
-      document.getElementById('prewarmNextEpBtn').addEventListener('click', () => {
-        const nextEp = currentEpisode < currentAnime.episodes ? currentEpisode + 1 : 1;
-        document.getElementById('telemetryPrewarm').textContent = 'CACHED EP ' + nextEp + ' IN REDIS L2';
-        showToast('Pre-warmed Episode ' + nextEp + ' manifest & segments in Redis L2 cache');
-      });
+      const prewarmBtn = document.getElementById('prewarmNextEpBtn');
+      if (prewarmBtn) {
+        prewarmBtn.addEventListener('click', () => {
+          const nextEp = currentEpisode < currentAnime.episodes ? currentEpisode + 1 : 1;
+          const telemPre = document.getElementById('telemetryPrewarm');
+          if (telemPre) telemPre.textContent = 'CACHED EP ' + nextEp + ' IN REDIS L2';
+          showToast('Pre-warmed Episode ' + nextEp + ' manifest & segments in Redis L2 cache');
+        });
+      }
 
       // 8. Toggles: Anime4K, Ambilight, Sub/Dub Hot-Swap
       document.getElementById('toggleAnime4kBtn').addEventListener('click', (e) => {
@@ -3785,13 +4038,28 @@ USER anicli`
         e.currentTarget.textContent = 'Ambilight: ' + (ambilightActive ? 'ON' : 'OFF');
       });
 
-      document.getElementById('hotSwapSubDubBtn').addEventListener('click', (e) => {
-        currentMode = currentMode === 'sub' ? 'dub' : 'sub';
-        e.currentTarget.textContent = '⇄ Hot-Swap: ' + currentMode.toUpperCase();
-        applyChameleonTheme(currentAnime);
-        saveWatchState();
-        showToast('Zero-reload audio track hot-swapped to ' + currentMode.toUpperCase() + ' at exact timestamp');
-      });
+      const hotSwapBtn = document.getElementById('hotSwapSubDubBtn');
+      if (hotSwapBtn) {
+        hotSwapBtn.addEventListener('click', (e) => {
+          currentMode = currentMode === 'sub' ? 'dub' : 'sub';
+          e.currentTarget.textContent = '⇄ Hot-Swap: ' + currentMode.toUpperCase();
+          
+          const ind = document.getElementById('subDubIndicator');
+          if (ind) {
+            ind.textContent = currentMode === 'sub' ? 'SUB (EN)' : 'DUB (EN)';
+            ind.className = currentMode === 'sub'
+              ? 'rounded bg-fuchsia-500/20 px-2 py-0.5 font-mono-code text-[10px] text-fuchsia-300 ring-1 ring-fuchsia-400/30'
+              : 'rounded bg-amber-500/20 px-2 py-0.5 font-mono-code text-[10px] text-amber-300 ring-1 ring-amber-400/30';
+          }
+
+          loadAnimeStream(currentAnime, currentEpisode, true);
+          applyChameleonTheme(currentAnime);
+          saveWatchState();
+          showToast(currentMode === 'sub' 
+            ? 'Playing Japanese Audio with English Subtitles' 
+            : 'Playing English Dub Audio (Falls back to Sub with English Subtitles if dub unavailable)');
+        });
+      }
 
       // 9. Sync-Pod Chat
       document.getElementById('toggleSyncPodBtn').addEventListener('click', () => {
