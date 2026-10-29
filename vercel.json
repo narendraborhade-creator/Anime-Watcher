@@ -1,29 +1,20 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "services": {
-    "stream-api": {
-      "root": "aether-ani/apps/stream-api",
-      "framework": "fastify"
-    },
-    "web": {
-      "root": "aether-ani/apps/web",
-      "framework": "nextjs",
-      "bindings": [
-        {
-          "type": "service",
-          "service": "stream-api",
-          "format": "url",
-          "env": "STREAM_API_URL"
-        }
-      ]
-    }
-  },
+  "version": 2,
+  "cleanUrls": true,
   "rewrites": [
+    { "source": "/api/anicli/run", "destination": "/api/anicli/run.js" },
+    { "source": "/api/health", "destination": "/api/health.js" },
+    { "source": "/api/proxy/hls", "destination": "/api/proxy/hls.js" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "headers": [
     {
-      "source": "/(.*)",
-      "destination": {
-        "service": "web"
-      }
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "*" }
+      ]
     }
   ]
 }

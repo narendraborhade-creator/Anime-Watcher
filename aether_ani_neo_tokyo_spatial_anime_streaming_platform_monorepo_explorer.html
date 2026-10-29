@@ -3805,6 +3805,13 @@ USER anicli`
       saveWatchState();
       hidePlayOverlay();
 
+      // Ensure view switches from Home to Cinema Stream
+      const tabStream = document.getElementById('navTabStream');
+      const viewStream = document.getElementById('viewStream');
+      if (window.switchView && tabStream && viewStream) {
+        window.switchView(tabStream, viewStream);
+      }
+
       loadAnimeStream(currentAnime, currentEpisode, true);
 
       const cinema = document.getElementById('cinemaStageSection');
@@ -3823,6 +3830,14 @@ USER anicli`
       renderCatalogGrid();
       renderRelatedMoviesAndRecommendations(currentAnime);
       saveWatchState();
+
+      // Ensure view switches from Home to Cinema Stream
+      const tabStream = document.getElementById('navTabStream');
+      const viewStream = document.getElementById('viewStream');
+      if (window.switchView && tabStream && viewStream) {
+        window.switchView(tabStream, viewStream);
+      }
+
       loadAnimeStream(currentAnime, currentEpisode, true);
 
       const cinema = document.getElementById('cinemaStageSection');
