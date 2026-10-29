@@ -152,7 +152,7 @@ export class FederatedMetadataMesh {
         res = await fetch(this.traceMoeEndpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'image/jpeg' },
-          body: imageInput,
+          body: new Uint8Array(imageInput) as any,
         });
       } else if (typeof imageInput === 'string' && imageInput.startsWith('data:image')) {
         const base64Data = imageInput.split(',')[1] || '';
@@ -160,7 +160,7 @@ export class FederatedMetadataMesh {
         res = await fetch(this.traceMoeEndpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'image/jpeg' },
-          body: buffer,
+          body: new Uint8Array(buffer) as any,
         });
       } else {
         const endpoint = `${this.traceMoeEndpoint}?url=${encodeURIComponent(String(imageInput))}`;
