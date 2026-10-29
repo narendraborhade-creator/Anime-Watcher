@@ -1,7 +1,11 @@
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
-  content: ['./app/**/*.{ts,tsx}', './components/**/*.{ts,tsx}'],
+  content: [
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+  ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -12,7 +16,7 @@ const config: Config = {
         neonMagenta: '#FF2A85',
       },
       fontFamily: {
-        display: ['Space Grotesk', 'Inter', 'sans-serif'],
+        display: ['Orbitron', 'Space Grotesk', 'sans-serif'],
         sans: ['Inter', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
