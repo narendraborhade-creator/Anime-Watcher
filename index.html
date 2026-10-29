@@ -530,9 +530,14 @@
                     <span>📡</span> SERVER 4: CLOUD STREAM (HLS)
                   </button>
                 </div>
-                <div id="playerStreamSourceStatus" class="text-emerald-400 text-[11px] font-semibold flex items-center gap-1">
-                  <span class="h-2 w-2 rounded-full bg-emerald-400 animate-ping"></span>
-                  <span>Official HD Stream • Audio Enabled</span>
+                <div id="playerStreamSourceStatus" class="text-emerald-400 text-[11px] font-semibold flex items-center gap-2">
+                  <span class="flex items-center gap-1">
+                    <span class="h-2 w-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span>Official HD Stream • Audio Enabled</span>
+                  </span>
+                  <a id="popoutExternalPlayerBtn" href="https://zokoanime.video/stream/mal/20583/1/sub" target="_blank" rel="noopener noreferrer" class="hidden sm:inline-flex items-center gap-1 rounded bg-slate-800 px-2 py-0.5 text-[10px] text-cyan-300 ring-1 ring-cyan-500/30 hover:bg-slate-700 hover:text-cyan-200 transition" title="Open Stream in Dedicated External Browser Window">
+                    <span>↗ Dedicated Tab</span>
+                  </a>
                 </div>
               </div>
               <!-- Video Viewport + Procedural Anime Scene Canvas Fallback + Floating Skip Button -->
@@ -541,7 +546,7 @@
                 <iframe
                   id="animeIframePlayer"
                   class="absolute inset-0 z-10 w-full h-full border-0 block"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; orientation-lock; screen-wake-lock; fullscreen"
                   allowfullscreen
                 ></iframe>
 
@@ -3576,21 +3581,130 @@ USER anicli`
       const resBadge = document.getElementById('playerResolutionBadge');
       if (resBadge) resBadge.textContent = currentStreamServer === 1 ? '1080p 60fps' : '1080p HD';
 
-      if (currentStreamServer === 1) {
-        // Server 1: ani-cli Real Full Anime Episode Stream (via ZokoAnime / ani-cli embed engine)
+      // Silent idle state on initial page visit
+      if (!autoPlay) {
         if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
-        if (video) { video.pause(); video.classList.add('hidden'); }
-        if (iframe) {
-          iframe.classList.remove('hidden');
-          const malId = anime.malId || resolveMalId(anime.title) || 20;
-          const embedUrl = `https://zokoanime.video/stream/mal/${malId}/${episodeNumber}/${currentMode || 'sub'}`;
-          if (iframe.src !== embedUrl) {
-            iframe.src = embedUrl;
-          }
-          hidePlayOverlay();
-          const unmute = document.getElementById('unmutePromptBanner');
-          if (unmute) unmute.classList.add('hidden');
+        if (video) { video.pause(); video.src = ''; }
+        if (iframe) { iframe.src = 'about:blank'; }
+        showPlayOverlay();
+        const unmute = document.getElementById('unmutePromptBanner');
+        if (unmute) unmute.classList.add('hidden');
+        return;
+      }
+
+      if (currentStreamServer === 1) {
+        // Server 1: Ultra-Clean Direct 1080p Stream (Zero Ads, No Sandbox/Embed Blocked Restrictions)
+        if (iframe) { iframe.src = 'about:blank'; iframe.classList.add('hidden'); }
+        if (video) { video.classList.remove('hidden'); }
+
+        const malId = anime.malId || resolveMalId(anime.title) || 20;
+        const query = anime.title;
+        const mode = currentMode || 'sub';
+
+        // Update dedicated tab link
+        const popoutBtn = document.getElementById('popoutExternalPlayerBtn');
+        if (popoutBtn) {
+          popoutBtn.href = `https://zokoanime.video/stream/mal/${malId}/${episodeNumber}/${mode}`;
         }
+
+        const overlayText = document.getElementById('overlayBtnText');
+        if (overlayText) overlayText.textContent = `CONNECTING TO EPISODE ${episodeNumber}...`;
+
+        fetch(`/api/anicli/run?q=${encodeURIComponent(query)}&ep=${episodeNumber}&mode=${mode}`)
+          .then(r => r.json())
+          .then(data => {
+            if (data && data.videoUrl) {
+              if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
+
+              // Clear previous subtitle tracks
+              while (video.querySelector('track')) {
+                video.querySelector('track').remove();
+              }
+
+              // Attach direct English VTT subtitle track if available
+              if (data.subUrl) {
+                const track = document.createElement('track');
+                track.kind = 'subtitles';
+                track.label = 'English';
+                track.srclang = 'en';
+                track.src = `/api/proxy/hls?url=${encodeURIComponent(data.subUrl)}&referer=${encodeURIComponent(data.referer || 'https://zokoanime.video/')}`;
+                track.default = true;
+                video.appendChild(track);
+              }
+
+              // Synchronize OP / ED skip timestamps if present
+              if (data.skip && data.skip.intro) {
+                activeSkipTimes = {
+                  op: { start: data.skip.intro.start, end: data.skip.intro.end },
+                  ed: data.skip.outro ? { start: data.skip.outro.start, end: data.skip.outro.end } : null
+                };
+              }
+
+              const proxyStreamUrl = `/api/proxy/hls?url=${encodeURIComponent(data.videoUrl)}&referer=${encodeURIComponent(data.referer || 'https://zokoanime.video/')}`;
+
+              function startHlsPlayback() {
+                video.muted = false;
+                video.play()
+                  .then(() => {
+                    hidePlayOverlay();
+                    const unmute = document.getElementById('unmutePromptBanner');
+                    if (unmute) unmute.classList.add('hidden');
+                  })
+                  .catch(() => {
+                    video.muted = true;
+                    video.play()
+                      .then(() => {
+                        hidePlayOverlay();
+                        const unmute = document.getElementById('unmutePromptBanner');
+                        if (unmute) unmute.classList.remove('hidden');
+                      })
+                      .catch(() => showPlayOverlay());
+                  });
+              }
+
+              if (window.Hls && window.Hls.isSupported()) {
+                hlsInstance = new window.Hls({
+                  maxBufferLength: 30,
+                  maxMaxBufferLength: 60,
+                  enableWorker: true,
+                  lowLatencyMode: false
+                });
+                hlsInstance.loadSource(proxyStreamUrl);
+                hlsInstance.attachMedia(video);
+                hlsInstance.on(window.Hls.Events.MANIFEST_PARSED, () => {
+                  startHlsPlayback();
+                });
+                hlsInstance.on(window.Hls.Events.ERROR, (_, errData) => {
+                  if (errData.fatal) {
+                    console.warn('Direct stream fatal error, falling back to clean embed:', errData);
+                    loadFallbackEmbed(malId, episodeNumber, mode);
+                  }
+                });
+              } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = proxyStreamUrl;
+                startHlsPlayback();
+              }
+            } else {
+              loadFallbackEmbed(malId, episodeNumber, mode);
+            }
+          })
+          .catch(err => {
+            console.warn('API error, falling back to embed:', err);
+            loadFallbackEmbed(malId, episodeNumber, mode);
+          });
+
+        function loadFallbackEmbed(mId, epNum, mMode) {
+          if (video) { video.pause(); video.classList.add('hidden'); }
+          if (iframe) {
+            iframe.classList.remove('hidden');
+            const embedUrl = `https://zokoanime.video/stream/mal/${mId}/${epNum}/${mMode}`;
+            if (iframe.src !== embedUrl) {
+              iframe.src = embedUrl;
+            }
+            hidePlayOverlay();
+          }
+        }
+      }
       } else if (currentStreamServer === 2) {
         // Server 2: AniList Official HD Stream (YouTube video embed from public-apis / Anime project)
         if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
@@ -3895,11 +4009,15 @@ USER anicli`
       const shaderCanvas = document.getElementById('shaderVisualizerCanvas');
       if (!video) return;
 
-      // Auto-start video playback (muted initially to bypass browser autoplay restrictions)
+      // Initial page visit: Player stays completely silent and idle.
+      // Video only streams when the user explicitly clicks an anime, episode, or play button.
       video.muted = true;
-      loadAnimeStream(currentAnime, currentEpisode, true);
+      video.pause();
+      const iframe = document.getElementById('animeIframePlayer');
+      if (iframe) iframe.src = 'about:blank';
+      showPlayOverlay();
       const unmutePrompt = document.getElementById('unmutePromptBanner');
-      if (unmutePrompt) unmutePrompt.classList.remove('hidden');
+      if (unmutePrompt) unmutePrompt.classList.add('hidden');
 
       video.addEventListener('timeupdate', () => {
         const cur = video.currentTime;

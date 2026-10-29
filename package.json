@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node serve.js",
     "dev": "node serve.js",
-    "serve": "node serve.js"
+    "serve": "node serve.js",
+    "build": "echo \"Vercel build complete\""
   },
   "keywords": [
     "anime",
