@@ -690,15 +690,8 @@
         <div class="space-y-4 lg:col-span-4">
           <!-- Episode Selector Matrix (Replaces episodes_list + nth) -->
           <div class="hud-glass rounded-2xl p-4">
-            <div class="mb-3 flex items-center justify-between">
-              <div>
-                <h2 class="font-display text-sm font-bold text-white">SELECT AN EPISODE TO PLAY</h2>
-                <p class="font-mono-code text-[11px] text-cyan-300">Click any episode below to watch instantly</p>
-              </div>
-              <span id="episodePoolCountBadge" class="rounded-md bg-cyan-500/15 px-2 py-0.5 font-mono-code text-xs text-cyan-300">12 EPS</span>
-            </div>
             <!-- Dynamic Seasons Bar -->
-            <div id="seasonSelectorSection" class="border-b border-white/10 pb-3">
+            <div id="seasonSelectorSection" class="border-b border-white/10 pb-3 mb-3">
               <div class="flex items-center justify-between mb-2">
                 <div class="flex items-center gap-2">
                   <span class="text-xs font-mono-code font-bold text-cyan-300">📺 AVAILABLE SEASONS:</span>
@@ -711,14 +704,15 @@
               </div>
             </div>
 
-            <div class="flex items-center justify-between pt-1">
+            <!-- Episode Selector Matrix -->
+            <div class="flex items-center justify-between mb-2.5">
               <div>
                 <h2 class="font-display text-sm font-bold text-white">SELECT AN EPISODE TO PLAY</h2>
                 <p class="font-mono-code text-[11px] text-cyan-300">Click any episode below to watch instantly</p>
               </div>
               <div class="flex items-center gap-2">
                 <span id="subDubIndicator" class="rounded bg-fuchsia-500/20 px-2 py-0.5 font-mono-code text-[10px] text-fuchsia-300 ring-1 ring-fuchsia-400/30">SUB (EN)</span>
-                <span id="episodePoolCountBadge" class="rounded-md bg-cyan-500/15 px-2 py-0.5 font-mono-code text-xs text-cyan-300">25 EPS</span>
+                <span id="episodePoolCountBadge" class="rounded-md bg-cyan-500/15 px-2 py-0.5 font-mono-code text-xs text-cyan-300">12 EPS</span>
               </div>
             </div>
             <div id="episodeGridContainer" class="grid grid-cols-4 gap-2 sm:grid-cols-6 lg:grid-cols-4 max-h-72 overflow-y-auto pr-1">
@@ -3108,6 +3102,14 @@ USER anicli`
     // SEASONS DATABASE & DYNAMIC ANILIST RELATIONS ENGINE
     // =========================================================================
     const SEASONS_DATABASE = {
+      'frieren': [
+        { id: 154587, malId: 52991, title: 'Season 1 (Beyond Journey)', episodes: 28, year: 2023, badge: 'S1', poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx154587-n23dWigSKrSv.jpg' },
+        { id: 181958, malId: 60165, title: 'Season 2 (Announced)', episodes: 12, year: 2026, badge: 'S2', poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx181958-lD9l5d5vI1mS.jpg' }
+      ],
+      'sousou-no-frieren': [
+        { id: 154587, malId: 52991, title: 'Season 1 (Beyond Journey)', episodes: 28, year: 2023, badge: 'S1', poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx154587-n23dWigSKrSv.jpg' },
+        { id: 181958, malId: 60165, title: 'Season 2 (Announced)', episodes: 12, year: 2026, badge: 'S2', poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx181958-lD9l5d5vI1mS.jpg' }
+      ],
       'reincarnated-as-a-sword': [
         { id: 139587, malId: 49891, title: 'Season 1 (Shishou & Fran)', episodes: 12, year: 2022, badge: 'S1', poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx139587-n22PaoL6LHzD.jpg' },
         { id: 159042, malId: 53913, title: 'Season 2', episodes: 12, year: 2026, badge: 'S2', poster: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx159042-GGFwlDskc5vR.png' }
@@ -3241,24 +3243,33 @@ USER anicli`
           ];
 
           const rels = m.relations?.edges || [];
-          let seasonNum = 2;
           for (const edge of rels) {
             const node = edge.node;
             if (node && node.type === 'ANIME' && ['TV', 'TV_SHORT', 'ONA', 'MOVIE'].includes(node.format)) {
               if (['SEQUEL', 'PREQUEL', 'SIDE_STORY', 'ALTERNATIVE', 'PARENT'].includes(edge.relationType)) {
-                list.push({
-                  id: node.id,
-                  malId: node.idMal || m.idMal,
-                  title: node.title.english || node.title.romaji,
-                  episodes: node.episodes || 12,
-                  year: node.seasonYear || 2021,
-                  badge: node.format === 'MOVIE' ? 'MOVIE' : ('S' + (seasonNum++))
-                });
+                if (!list.some(existing => existing.id === node.id || (node.idMal && existing.malId === node.idMal))) {
+                  list.push({
+                    id: node.id,
+                    malId: node.idMal || m.idMal,
+                    title: node.title.english || node.title.romaji,
+                    episodes: node.episodes || 12,
+                    year: node.seasonYear || (m.seasonYear ? m.seasonYear + 1 : 2024),
+                    format: node.format
+                  });
+                }
               }
             }
           }
 
           list.sort((a, b) => (a.year || 0) - (b.year || 0));
+          let sCount = 1;
+          list.forEach((item) => {
+            if (item.format === 'MOVIE') {
+              item.badge = 'MOVIE';
+            } else {
+              item.badge = 'S' + (sCount++);
+            }
+          });
           anime.seasons = list;
           return list;
         }
@@ -3293,6 +3304,10 @@ USER anicli`
 
       if (countBadge) {
         countBadge.textContent = seasons.length + (seasons.length === 1 ? ' SEASON' : ' SEASONS');
+      }
+
+      if (activeSeasonIndex >= seasons.length || activeSeasonIndex < 0) {
+        activeSeasonIndex = 0;
       }
 
       const activeSeason = seasons[activeSeasonIndex] || seasons[0];
@@ -3796,11 +3811,7 @@ USER anicli`
     function playEpisode(epNumber) {
       currentEpisode = Math.max(1, Math.min(currentAnime.episodes || 24, epNumber));
       applyChameleonTheme(currentAnime);
-      activeSeasonIndex = 0;
-      fetchSeasonsForAnime(currentAnime).then(() => {
-        renderSeasons();
-        renderEpisodeGrid();
-      });
+      renderEpisodeGrid();
       saveWatchState();
       hidePlayOverlay();
 
@@ -3824,8 +3835,19 @@ USER anicli`
       currentAnime = anime;
       currentEpisode = ep;
       currentMode = mode;
+      activeSeasonIndex = 0;
       applyChameleonTheme(currentAnime);
-      renderEpisodeGrid();
+
+      // Dynamically fetch and render seasons and episode matrix for selected anime
+      fetchSeasonsForAnime(currentAnime).then(() => {
+        if (currentAnime.seasons && currentAnime.seasons[0]) {
+          currentAnime.malId = currentAnime.seasons[0].malId || currentAnime.malId;
+          currentAnime.episodes = currentAnime.seasons[0].episodes || currentAnime.episodes;
+        }
+        renderSeasons();
+        renderEpisodeGrid();
+      });
+
       renderCatalogGrid();
       renderRelatedMoviesAndRecommendations(currentAnime);
       saveWatchState();
@@ -5342,7 +5364,10 @@ function setHomeSpotlightAnime(anime) {
       } catch (e) {}
 
       applyChameleonTheme(currentAnime);
-      renderEpisodeGrid();
+      fetchSeasonsForAnime(currentAnime).then(() => {
+        renderSeasons();
+        renderEpisodeGrid();
+      });
       renderCatalogGrid();
       renderHomeScreen();
       renderRelatedMoviesAndRecommendations(currentAnime);
