@@ -198,20 +198,37 @@ function runAniCli(query, ep = 1, mode = 'sub') {
     const fallbackEmbed = `https://zokoanime.video/stream/mal/${malId}/${cleanEp}/${mode || 'sub'}`;
 
     // 1. Ultra-fast direct HLS resolver (~150ms pure JS)
-    const directHls = await resolveDirectHls(malId, cleanEp, mode);
+    let directHls = await resolveDirectHls(malId, cleanEp, mode);
+    let resolvedMode = mode;
+    let dubUnavailable = false;
+
+    if ((!directHls || !directHls.src) && mode === 'dub') {
+      const subHls = await resolveDirectHls(malId, cleanEp, 'sub');
+      if (subHls && subHls.src) {
+        directHls = subHls;
+        resolvedMode = 'sub';
+        dubUnavailable = true;
+      }
+    }
+
     if (directHls && directHls.src) {
       return resolve({
         success: true,
         query: cleanQuery,
         episode: cleanEp,
-        mode: mode || 'sub',
+        mode: resolvedMode,
+        requestedMode: mode,
+        dubUnavailable,
+        hasDub: !dubUnavailable,
         malId,
-        embedUrl: fallbackEmbed,
+        embedUrl: `https://zokoanime.video/stream/mal/${malId}/${cleanEp}/${resolvedMode}`,
         videoUrl: directHls.src,
         subUrl: directHls.subUrl,
         skip: directHls.skip,
         referer: 'https://zokoanime.video/',
-        logs: `[DIRECT-HLS] Resolved 1080p stream for ${cleanQuery} (Ep ${cleanEp}) in ~150ms.`
+        logs: dubUnavailable
+          ? `[DIRECT-HLS] English Dub unavailable for ${cleanQuery} (Ep ${cleanEp}). Smoothly playing Japanese with English Subtitles.`
+          : `[DIRECT-HLS] Resolved 1080p ${resolvedMode.toUpperCase()} stream for ${cleanQuery} (Ep ${cleanEp}) in ~150ms.`
       });
     }
 

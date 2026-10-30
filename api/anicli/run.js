@@ -188,20 +188,37 @@ module.exports = async (req, res) => {
   const fallbackEmbed = `https://zokoanime.video/stream/mal/${malId}/${ep}/${mode}`;
 
   try {
-    const streamInfo = await resolveDirectHls(malId, ep, mode);
+    let streamInfo = await resolveDirectHls(malId, ep, mode);
+    let resolvedMode = mode;
+    let dubUnavailable = false;
+
+    if ((!streamInfo || !streamInfo.src) && mode === 'dub') {
+      const subInfo = await resolveDirectHls(malId, ep, 'sub');
+      if (subInfo && subInfo.src) {
+        streamInfo = subInfo;
+        resolvedMode = 'sub';
+        dubUnavailable = true;
+      }
+    }
+
     if (streamInfo && streamInfo.src) {
       return res.status(200).json({
         success: true,
         query: cleanQuery,
         episode: ep,
-        mode,
+        mode: resolvedMode,
+        requestedMode: mode,
+        dubUnavailable,
+        hasDub: !dubUnavailable,
         malId,
-        embedUrl: fallbackEmbed,
+        embedUrl: `https://zokoanime.video/stream/mal/${malId}/${ep}/${resolvedMode}`,
         videoUrl: streamInfo.src,
         subUrl: streamInfo.subUrl,
         skip: streamInfo.skip,
         referer: 'https://zokoanime.video/',
-        logs: `Resolved 1080p stream for ${cleanQuery} (Ep ${ep}) via POSIX stream mesh.`
+        logs: dubUnavailable
+          ? `English dub not available for ${cleanQuery} (Ep ${ep}). Seamlessly playing in Japanese with English Subtitles.`
+          : `Resolved 1080p ${resolvedMode.toUpperCase()} stream for ${cleanQuery} (Ep ${ep}) via POSIX stream mesh.`
       });
     }
 
@@ -209,7 +226,10 @@ module.exports = async (req, res) => {
       success: true,
       query: cleanQuery,
       episode: ep,
-      mode,
+      mode: resolvedMode,
+      requestedMode: mode,
+      dubUnavailable,
+      hasDub: !dubUnavailable,
       malId,
       embedUrl: fallbackEmbed,
       videoUrl: null,

@@ -193,9 +193,25 @@
               <span id="homeHeroSeasonsBadge" class="rounded-full bg-amber-500/20 px-3 py-1 font-mono-code text-[11px] font-extrabold text-amber-300 ring-1 ring-amber-400/40">
                 ⚡ 2 SEASONS AVAILABLE
               </span>
-              <span class="rounded-full bg-fuchsia-500/20 px-3 py-1 font-mono-code text-[11px] font-extrabold text-fuchsia-300 ring-1 ring-fuchsia-400/40">
-                SUB + DUB (EN)
-              </span>
+              <!-- Interactive Audio Track Switcher on Hero -->
+              <div class="flex items-center gap-1 rounded-full bg-slate-900/90 p-0.5 ring-1 ring-white/15 font-mono-code text-xs" id="homeHeroAudioSwitcher">
+                <button
+                  id="homePrefSubBtn"
+                  type="button"
+                  class="rounded-full px-3 py-1 font-bold transition cursor-pointer bg-fuchsia-500 text-white shadow-md shadow-fuchsia-500/30 text-[11px]"
+                  title="Watch in Original Japanese Audio with English Subtitles"
+                >
+                  🇯🇵 SUB (JA)
+                </button>
+                <button
+                  id="homePrefDubBtn"
+                  type="button"
+                  class="rounded-full px-3 py-1 font-semibold text-slate-400 hover:text-white transition cursor-pointer text-[11px]"
+                  title="Watch in English Dub Audio (if available)"
+                >
+                  🇬🇧 ENG DUB
+                </button>
+              </div>
             </div>
 
             <div>
@@ -501,7 +517,32 @@
                   <span class="text-slate-400">WATCHING:</span>
                   <span id="playerNowPlayingTitle" class="font-bold text-white text-sm">Attack on Titan</span>
                   <span id="playerEpisodeBadge" class="rounded bg-cyan-500/20 px-2.5 py-0.5 text-cyan-300 font-extrabold ring-1 ring-cyan-400/30">EPISODE 01</span>
+                  
+                  <!-- Interactive Audio Language Track Switcher (SUB vs DUB) -->
+                  <div class="flex items-center gap-1 rounded-xl bg-slate-900/90 p-0.5 ring-1 ring-white/15" id="topAudioLanguageSelector">
+                    <button
+                      id="topAudioSubBtn"
+                      type="button"
+                      class="flex items-center gap-1.5 rounded-lg px-2.5 py-1 font-mono-code text-[11px] font-bold transition cursor-pointer bg-fuchsia-500 text-white shadow-md shadow-fuchsia-500/30 ring-1 ring-fuchsia-400/50"
+                      title="Switch to Original Japanese Audio with English Subtitles"
+                    >
+                      <span>🇯🇵</span>
+                      <span>SUB (JA)</span>
+                    </button>
+                    <button
+                      id="topAudioDubBtn"
+                      type="button"
+                      class="flex items-center gap-1.5 rounded-lg px-2.5 py-1 font-mono-code text-[11px] font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white cursor-pointer"
+                      title="Switch to English Dub Audio (if available)"
+                    >
+                      <span>🇬🇧</span>
+                      <span>ENG DUB</span>
+                    </button>
+                  </div>
+
                   <span id="playerAudioBadge" class="rounded bg-fuchsia-500/20 px-2 py-0.5 text-fuchsia-300">SUB (JA-JP)</span>
+                  <span id="playerShaderStatus" class="hidden sm:inline-block rounded bg-cyan-500/15 px-2 py-0.5 font-mono-code text-[10px] text-cyan-300">WebGPU Anime4K: ACTIVE</span>
+                  <span id="telemetryShowId" class="hidden"></span>
                 </div>
                 <div class="flex items-center gap-2">
                   <button id="playerPrevEpBtn" type="button" class="rounded-lg bg-white/10 px-2.5 py-1 text-slate-300 hover:bg-cyan-500/20 hover:text-cyan-300 transition text-[11px] font-bold">
@@ -667,8 +708,9 @@
                   <button id="toggleAmbilightBtn" type="button" class="rounded-xl bg-indigo-500/20 px-3 py-1.5 font-mono-code text-xs text-indigo-300 ring-1 ring-indigo-400/40 transition">
                     Ambilight: ON
                   </button>
-                  <button id="hotSwapSubDubBtn" type="button" class="rounded-xl bg-fuchsia-500/20 px-3 py-1.5 font-mono-code text-xs font-semibold text-fuchsia-300 ring-1 ring-fuchsia-400/40 transition hover:bg-fuchsia-500/30">
-                    ⇄ Hot-Swap: SUB
+                  <button id="hotSwapSubDubBtn" type="button" class="flex items-center gap-1.5 rounded-xl bg-fuchsia-500/20 px-3.5 py-1.5 font-mono-code text-xs font-bold text-fuchsia-300 ring-1 ring-fuchsia-400/40 transition hover:bg-fuchsia-500/30 cursor-pointer shadow-sm" title="Toggle Audio: Japanese Subtitles vs English Dub">
+                    <span>🎧 AUDIO:</span>
+                    <span id="hotSwapSubDubText">🇯🇵 SUB (JA)</span>
                   </button>
                 </div>
               </div>
@@ -705,12 +747,21 @@
             </div>
 
             <!-- Episode Selector Matrix -->
-            <div class="flex items-center justify-between mb-2.5">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
               <div>
                 <h2 class="font-display text-sm font-bold text-white">SELECT AN EPISODE TO PLAY</h2>
                 <p class="font-mono-code text-[11px] text-cyan-300">Click any episode below to watch instantly</p>
               </div>
               <div class="flex items-center gap-2">
+                <!-- Interactive Audio Switcher in Matrix -->
+                <div class="flex items-center gap-0.5 rounded-lg bg-slate-900/90 p-0.5 ring-1 ring-white/15" id="matrixAudioSwitch">
+                  <button id="matrixSubBtn" type="button" class="rounded px-2.5 py-1 font-mono-code text-[10px] font-bold transition cursor-pointer bg-fuchsia-500 text-white shadow" title="Switch to Japanese Audio with English Subtitles">
+                    🇯🇵 SUB
+                  </button>
+                  <button id="matrixDubBtn" type="button" class="rounded px-2.5 py-1 font-mono-code text-[10px] font-semibold transition cursor-pointer text-slate-400 hover:text-white" title="Switch to English Dub Audio (if available)">
+                    🇬🇧 DUB
+                  </button>
+                </div>
                 <span id="subDubIndicator" class="rounded bg-fuchsia-500/20 px-2 py-0.5 font-mono-code text-[10px] text-fuchsia-300 ring-1 ring-fuchsia-400/30">SUB (EN)</span>
                 <span id="episodePoolCountBadge" class="rounded-md bg-cyan-500/15 px-2 py-0.5 font-mono-code text-xs text-cyan-300">12 EPS</span>
               </div>
@@ -923,7 +974,7 @@
       </section>
 
       <!-- Seasonal Anime Catalog Grid (Chameleon Color Morph Cards) -->
-      <section class="space-y-4">
+      <section id="catalogMatrixSection" class="space-y-4">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-white/10 pb-4">
           <div>
             <h2 class="font-display text-xl font-bold text-white">FEDERATED PUBLIC ANIME CATALOG</h2>
@@ -3027,6 +3078,103 @@ USER anicli`
       } catch (e) {}
     }
 
+    function updateAudioUI() {
+      const isSub = currentMode === 'sub';
+
+      // 1. Top player audio buttons
+      const topSub = document.getElementById('topAudioSubBtn');
+      const topDub = document.getElementById('topAudioDubBtn');
+      if (topSub) {
+        topSub.className = isSub
+          ? 'flex items-center gap-1.5 rounded-lg px-2.5 py-1 font-mono-code text-[11px] font-bold transition cursor-pointer bg-fuchsia-500 text-white shadow-md shadow-fuchsia-500/30 ring-1 ring-fuchsia-400/50'
+          : 'flex items-center gap-1.5 rounded-lg px-2.5 py-1 font-mono-code text-[11px] font-semibold text-slate-400 transition hover:bg-white/10 hover:text-white cursor-pointer';
+      }
+      if (topDub) {
+        topDub.className = !isSub
+          ? 'flex items-center gap-1.5 rounded-lg px-2.5 py-1 font-mono-code text-[11px] font-bold transition cursor-pointer bg-amber-500 text-slate-950 shadow-md shadow-amber-500/30 ring-1 ring-amber-300'
+          : 'flex items-center gap-1.5 rounded-lg px-2.5 py-1 font-mono-code text-[11px] font-semibold text-slate-400 transition hover:bg-white/10 hover:text-white cursor-pointer';
+      }
+
+      // 2. Matrix selector buttons
+      const matSub = document.getElementById('matrixSubBtn');
+      const matDub = document.getElementById('matrixDubBtn');
+      if (matSub) {
+        matSub.className = isSub
+          ? 'rounded px-2.5 py-1 font-mono-code text-[10px] font-bold transition cursor-pointer bg-fuchsia-500 text-white shadow'
+          : 'rounded px-2.5 py-1 font-mono-code text-[10px] font-semibold transition cursor-pointer text-slate-400 hover:text-white';
+      }
+      if (matDub) {
+        matDub.className = !isSub
+          ? 'rounded px-2.5 py-1 font-mono-code text-[10px] font-bold transition cursor-pointer bg-amber-500 text-slate-950 shadow'
+          : 'rounded px-2.5 py-1 font-mono-code text-[10px] font-semibold transition cursor-pointer text-slate-400 hover:text-white';
+      }
+
+      // 3. Hot-Swap button text & styling
+      const hotSwapBtn = document.getElementById('hotSwapSubDubBtn');
+      const hotSwapText = document.getElementById('hotSwapSubDubText');
+      if (hotSwapBtn) {
+        hotSwapBtn.className = isSub
+          ? 'flex items-center gap-1.5 rounded-xl bg-fuchsia-500/20 px-3.5 py-1.5 font-mono-code text-xs font-bold text-fuchsia-300 ring-1 ring-fuchsia-400/40 transition hover:bg-fuchsia-500/30 cursor-pointer shadow-sm'
+          : 'flex items-center gap-1.5 rounded-xl bg-amber-500/20 px-3.5 py-1.5 font-mono-code text-xs font-bold text-amber-300 ring-1 ring-amber-400/40 transition hover:bg-amber-500/30 cursor-pointer shadow-sm';
+      }
+      if (hotSwapText) {
+        hotSwapText.textContent = isSub ? '🇯🇵 SUB (JA)' : '🇬🇧 DUB (EN)';
+      }
+
+      // 4. Player audio badge
+      const audioBadge = document.getElementById('playerAudioBadge');
+      if (audioBadge) {
+        audioBadge.textContent = isSub ? 'SUB (JA-JP)' : 'DUB (EN-US)';
+        audioBadge.className = isSub
+          ? 'rounded bg-fuchsia-500/20 px-2 py-0.5 text-fuchsia-300'
+          : 'rounded bg-amber-500/20 px-2 py-0.5 text-amber-300';
+      }
+
+      // 5. Matrix indicator badge
+      const ind = document.getElementById('subDubIndicator');
+      if (ind) {
+        ind.textContent = isSub ? 'SUB (EN)' : 'DUB (EN)';
+        ind.className = isSub
+          ? 'rounded bg-fuchsia-500/20 px-2 py-0.5 font-mono-code text-[10px] text-fuchsia-300 ring-1 ring-fuchsia-400/30'
+          : 'rounded bg-amber-500/20 px-2 py-0.5 font-mono-code text-[10px] text-amber-300 ring-1 ring-amber-400/30';
+      }
+
+      // 6. Home Hero buttons
+      const homeSub = document.getElementById('homePrefSubBtn');
+      const homeDub = document.getElementById('homePrefDubBtn');
+      if (homeSub) {
+        homeSub.className = isSub
+          ? 'rounded-full px-3 py-1 font-bold transition cursor-pointer bg-fuchsia-500 text-white shadow-md shadow-fuchsia-500/30 text-[11px]'
+          : 'rounded-full px-3 py-1 font-semibold text-slate-400 hover:text-white transition cursor-pointer text-[11px]';
+      }
+      if (homeDub) {
+        homeDub.className = !isSub
+          ? 'rounded-full px-3 py-1 font-bold transition cursor-pointer bg-amber-500 text-slate-950 shadow-md shadow-amber-500/30 text-[11px]'
+          : 'rounded-full px-3 py-1 font-semibold text-slate-400 hover:text-white transition cursor-pointer text-[11px]';
+      }
+    }
+
+    window.switchAudioLanguage = function(mode, preserveTime = true) {
+      if (mode !== 'sub' && mode !== 'dub') return;
+      currentMode = mode;
+      saveWatchState();
+      updateAudioUI();
+
+      const video = document.getElementById('hlsVideoElement');
+      let resumeTime = 0;
+      if (preserveTime && video && !isNaN(video.currentTime) && video.currentTime > 0) {
+        resumeTime = video.currentTime;
+      }
+
+      loadAnimeStream(currentAnime, currentEpisode, true, resumeTime);
+
+      if (mode === 'dub') {
+        showToast(`🇬🇧 Switched to English Dub for ${currentAnime.title}`);
+      } else {
+        showToast(`🇯🇵 Switched to Japanese Audio with English Subtitles`);
+      }
+    };
+
     function hidePlayOverlay() {
       const overlay = document.getElementById('videoPlayOverlay');
       if (overlay) overlay.classList.add('hidden');
@@ -3075,6 +3223,7 @@ USER anicli`
 
       const audioBadge = document.getElementById('playerAudioBadge');
       if (audioBadge) audioBadge.textContent = currentMode === 'sub' ? 'SUB (JA-JP)' : 'DUB (EN-US 5.1)';
+      if (typeof updateAudioUI === 'function') updateAudioUI();
 
       const subOverlay = document.getElementById('subtitleOverlayText');
       if (subOverlay && anime.subtitles) {
@@ -3583,7 +3732,7 @@ USER anicli`
       showToast(`Switched to Server ${serverNum}: ${names[serverNum - 1]}`);
     }
 
-    function loadAnimeStream(anime, episodeNumber = 1, autoPlay = true) {
+    function loadAnimeStream(anime, episodeNumber = 1, autoPlay = true, seekToTime = 0) {
       const iframe = document.getElementById('animeIframePlayer');
       const video = document.getElementById('hlsVideoElement');
       if (!iframe && !video) return;
@@ -3595,6 +3744,10 @@ USER anicli`
       if (epBadge) epBadge.textContent = `EPISODE ${String(episodeNumber).padStart(2, '0')}`;
       const resBadge = document.getElementById('playerResolutionBadge');
       if (resBadge) resBadge.textContent = currentStreamServer === 1 ? '1080p 60fps' : '1080p HD';
+
+      if (typeof updateAudioUI === 'function') {
+        updateAudioUI();
+      }
 
       // Silent idle state on initial page visit
       if (!autoPlay) {
@@ -3623,11 +3776,20 @@ USER anicli`
         }
 
         const overlayText = document.getElementById('overlayBtnText');
-        if (overlayText) overlayText.textContent = `CONNECTING TO EPISODE ${episodeNumber}...`;
+        if (overlayText) overlayText.textContent = `CONNECTING TO EPISODE ${episodeNumber} (${mode.toUpperCase()})...`;
 
         fetch(`/api/anicli/run?q=${encodeURIComponent(query)}&ep=${episodeNumber}&mode=${mode}`)
           .then(r => r.json())
           .then(data => {
+            if (data && data.dubUnavailable) {
+              showToast(`⚠️ English Dub is unavailable for ${anime.title} (Ep ${episodeNumber}) — playing in Japanese with English Subtitles.`, 4500);
+              currentMode = 'sub';
+              if (typeof updateAudioUI === 'function') updateAudioUI();
+            } else if (data && data.mode) {
+              currentMode = data.mode;
+              if (typeof updateAudioUI === 'function') updateAudioUI();
+            }
+
             if (data && data.videoUrl) {
               if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
 
@@ -3637,7 +3799,7 @@ USER anicli`
               }
 
               // Attach direct English VTT subtitle track if available
-              if (data.subUrl) {
+              if (data.subUrl && currentMode === 'sub') {
                 const track = document.createElement('track');
                 track.kind = 'subtitles';
                 track.label = 'English';
@@ -3659,6 +3821,9 @@ USER anicli`
 
               function startHlsPlayback() {
                 video.muted = false;
+                if (seekToTime && seekToTime > 0) {
+                  try { video.currentTime = seekToTime; } catch(e) {}
+                }
                 video.play()
                   .then(() => {
                     hidePlayOverlay();
@@ -3688,6 +3853,9 @@ USER anicli`
                 hlsInstance.attachMedia(video);
                 hlsInstance.on(window.Hls.Events.MANIFEST_PARSED, () => {
                   startHlsPlayback();
+                  if (seekToTime && seekToTime > 0) {
+                    try { video.currentTime = seekToTime; } catch(e) {}
+                  }
                 });
                 hlsInstance.on(window.Hls.Events.ERROR, (_, errData) => {
                   if (errData.fatal) {
@@ -5100,7 +5268,7 @@ function setHomeSpotlightAnime(anime) {
 
       card.innerHTML = `
         <div class="relative aspect-[3/4] w-full overflow-hidden bg-slate-900">
-          <img src="${anime.poster}" alt="${anime.title}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+          <img src="${anime.poster}" alt="${anime.title}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" onerror="window.handlePosterError(this, '${(anime.title || '').replace(/'/g, "\\'")}')">
           <div class="absolute inset-0 bg-gradient-to-t from-[#06070B] via-transparent to-transparent opacity-90"></div>
           
           <div class="absolute left-2.5 top-2.5 flex flex-col gap-1 z-10">
@@ -5728,28 +5896,38 @@ function setHomeSpotlightAnime(anime) {
         e.currentTarget.textContent = 'Ambilight: ' + (ambilightActive ? 'ON' : 'OFF');
       });
 
+      // 8. Toggles: Anime4K, Ambilight, Sub/Dub Audio Switchers
+      const topAudioSub = document.getElementById('topAudioSubBtn');
+      if (topAudioSub) topAudioSub.addEventListener('click', () => window.switchAudioLanguage('sub'));
+
+      const topAudioDub = document.getElementById('topAudioDubBtn');
+      if (topAudioDub) topAudioDub.addEventListener('click', () => window.switchAudioLanguage('dub'));
+
+      const matrixSub = document.getElementById('matrixSubBtn');
+      if (matrixSub) matrixSub.addEventListener('click', () => window.switchAudioLanguage('sub'));
+
+      const matrixDub = document.getElementById('matrixDubBtn');
+      if (matrixDub) matrixDub.addEventListener('click', () => window.switchAudioLanguage('dub'));
+
+      const homeSub = document.getElementById('homePrefSubBtn');
+      if (homeSub) homeSub.addEventListener('click', () => window.switchAudioLanguage('sub'));
+
+      const homeDub = document.getElementById('homePrefDubBtn');
+      if (homeDub) homeDub.addEventListener('click', () => window.switchAudioLanguage('dub'));
+
+      const audioBadge = document.getElementById('playerAudioBadge');
+      if (audioBadge) {
+        audioBadge.classList.add('cursor-pointer', 'hover:opacity-80', 'transition');
+        audioBadge.title = 'Click to switch between Japanese Sub and English Dub';
+        audioBadge.addEventListener('click', () => window.switchAudioLanguage(currentMode === 'sub' ? 'dub' : 'sub'));
+      }
+
       const hotSwapBtn = document.getElementById('hotSwapSubDubBtn');
       if (hotSwapBtn) {
-        hotSwapBtn.addEventListener('click', (e) => {
-          currentMode = currentMode === 'sub' ? 'dub' : 'sub';
-          e.currentTarget.textContent = '⇄ Hot-Swap: ' + currentMode.toUpperCase();
-          
-          const ind = document.getElementById('subDubIndicator');
-          if (ind) {
-            ind.textContent = currentMode === 'sub' ? 'SUB (EN)' : 'DUB (EN)';
-            ind.className = currentMode === 'sub'
-              ? 'rounded bg-fuchsia-500/20 px-2 py-0.5 font-mono-code text-[10px] text-fuchsia-300 ring-1 ring-fuchsia-400/30'
-              : 'rounded bg-amber-500/20 px-2 py-0.5 font-mono-code text-[10px] text-amber-300 ring-1 ring-amber-400/30';
-          }
-
-          loadAnimeStream(currentAnime, currentEpisode, true);
-          applyChameleonTheme(currentAnime);
-          saveWatchState();
-          showToast(currentMode === 'sub' 
-            ? 'Playing Japanese Audio with English Subtitles' 
-            : 'Playing English Dub Audio (Falls back to Sub with English Subtitles if dub unavailable)');
-        });
+        hotSwapBtn.addEventListener('click', () => window.switchAudioLanguage(currentMode === 'sub' ? 'dub' : 'sub'));
       }
+
+      updateAudioUI();
 
       // 9. Sync-Pod Chat
       document.getElementById('toggleSyncPodBtn').addEventListener('click', () => {
