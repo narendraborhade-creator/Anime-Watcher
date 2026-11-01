@@ -184,7 +184,8 @@ module.exports = async (req, res) => {
   const mode = query.mode || body.mode || 'sub';
 
   const cleanQuery = q.replace(/[^a-zA-Z0-9\s\-_]/g, '').trim() || 'haikyuu';
-  const malId = resolveMalId(cleanQuery);
+  const explicitMalId = parseInt(query.malId || body.malId, 10);
+  const malId = (!isNaN(explicitMalId) && explicitMalId > 0) ? explicitMalId : resolveMalId(cleanQuery);
   const fallbackEmbed = `https://zokoanime.video/stream/mal/${malId}/${ep}/${mode}`;
 
   try {

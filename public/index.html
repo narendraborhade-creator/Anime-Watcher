@@ -392,109 +392,6 @@
         </button>
       </div>
 
-      <!-- 2.5D Parallax Hero Banner -->
-      <section id="heroStageCard" class="hud-glass relative overflow-hidden rounded-3xl border border-white/10 p-6 md:p-10">
-        <img
-          id="heroBgImage"
-          src="https://s4.anilist.co/file/anilistcdn/media/anime/banner/16498-8jpFCOcDmneX.jpg"
-          alt="Neo-Tokyo Spatial Streaming Hero"
-          class="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-35 transition-transform duration-300 ease-out"
-        >
-        <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#06070B] via-[#06070B]/85 to-transparent"></div>
-
-        <div class="relative z-10 grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-center">
-          <!-- Watch Screen Anime Cover Page -->
-          <div class="hidden sm:block lg:col-span-3">
-            <div class="relative aspect-[3/4] w-full max-w-[210px] mx-auto overflow-hidden rounded-2xl shadow-2xl ring-2 ring-cyan-400/40 border border-white/20">
-              <img
-                id="watchHeroCoverImg"
-                src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx20464-ooZUyBe4ptp9.png"
-                alt="Anime Cover Page"
-                class="h-full w-full object-cover object-center"
-                loading="eager"
-              />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent"></div>
-              <span class="absolute bottom-2 left-2 right-2 text-center rounded-md bg-slate-950/90 py-0.5 font-mono-code text-[9px] font-bold text-cyan-300 ring-1 ring-cyan-400/30">
-                OFFICIAL ARTWORK
-              </span>
-            </div>
-          </div>
-
-          <div class="space-y-3 lg:col-span-5">
-            <div class="inline-flex flex-wrap items-center gap-2 rounded-full bg-cyan-500/10 px-3 py-1 font-mono-code text-[11px] text-cyan-300 ring-1 ring-cyan-400/30">
-              <span class="h-2 w-2 rounded-full bg-cyan-400"></span>
-              <span id="heroBadgeText">FEDERATED PUBLIC ANIME APIS MESH // ANILIST + KITSU + GHIBLI + TRACE.MOE + ANISKIP</span>
-            </div>
-            <h1 id="heroTitle" class="font-display text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
-              Attack on Titan
-            </h1>
-            <p id="heroSynopsis" class="max-w-2xl text-sm leading-relaxed text-slate-300 sm:text-base">
-              Several hundred years ago, humans were nearly exterminated by titans. Titans are typically several stories tall, seem to have no intelligence, devour human beings and, worst of all, seem to do it for the pleasure rather than as a food sourc
-            </p>
-            <div id="heroMetaTags" class="flex flex-wrap items-center gap-2 font-mono-code text-xs">
-              <span class="rounded-md bg-white/10 px-2.5 py-1 text-white">SCORE: 94%</span>
-              <span class="rounded-md bg-cyan-500/15 px-2.5 py-1 text-cyan-300">1080p HEVC • 8.4 Mbps</span>
-              <span class="rounded-md bg-fuchsia-500/15 px-2.5 py-1 text-fuchsia-300">SUB &amp; DUB HOT-SWAP</span>
-              <span class="rounded-md bg-emerald-500/15 px-2.5 py-1 text-emerald-300">ANISKIP READY</span>
-            </div>
-            <div class="flex flex-wrap items-center gap-3 pt-2">
-              <button id="heroPlayNowBtn" type="button" class="group flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-cyan-400 to-indigo-500 px-6 py-3 font-mono-code text-sm font-extrabold text-slate-950 shadow-xl shadow-cyan-400/30 transition hover:scale-105 hover:from-cyan-300 hover:to-indigo-400">
-                <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-slate-950/20 text-xs">▶</span>
-                <span id="heroPlayBtnText">PLAY EPISODE 1 NOW</span>
-              </button>
-              <button id="heroSelectEpBtn" type="button" class="flex items-center gap-2 rounded-xl bg-white/10 px-5 py-3 font-mono-code text-xs font-semibold text-white ring-1 ring-white/15 transition hover:bg-white/20">
-                <span>📋</span>
-                <span>CHOOSE EPISODE (1–24)</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Right Episode Guide & Quick Jump Card -->
-          <div class="hud-glass-elevated rounded-2xl p-5 font-mono-code text-xs lg:col-span-4 border border-cyan-500/20">
-            <div class="mb-3 flex items-center justify-between border-b border-white/10 pb-2.5 text-xs text-cyan-300">
-              <span class="font-bold flex items-center gap-1.5">
-                <span class="h-2 w-2 rounded-full bg-cyan-400 animate-pulse"></span>
-                <span>EPISODE STREAM READY</span>
-              </span>
-              <span class="text-emerald-400 font-bold">1080p HD</span>
-            </div>
-            <div class="space-y-2.5 text-xs text-slate-300">
-              <div class="flex justify-between items-center">
-                <span class="text-slate-400">Selected Anime:</span>
-                <span id="guideAnimeName" class="text-white font-bold truncate max-w-[170px]">Attack on Titan</span>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-slate-400">Current Episode:</span>
-                <span id="guideEpNumber" class="text-cyan-300 font-bold">Episode 1 of 25</span>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-slate-400">Audio / Language:</span>
-                <span id="guideAudioTrack" class="text-fuchsia-300 font-semibold">Sub (JA-JP) + Dub (EN)</span>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-slate-400">Stream Status:</span>
-                <span class="text-emerald-300 font-semibold flex items-center gap-1">
-                  <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
-                  <span>Instant Playback Ready</span>
-                </span>
-              </div>
-            </div>
-
-            <!-- Quick Episode Jump Buttons -->
-            <div class="mt-4 pt-3 border-t border-white/10">
-              <div class="mb-2 text-[11px] text-slate-400">QUICK EPISODE SELECT:</div>
-              <div class="flex flex-wrap gap-1.5 font-mono-code text-xs">
-                <button type="button" class="quick-ep-chip rounded-lg bg-cyan-500/20 px-2.5 py-1 text-cyan-300 ring-1 ring-cyan-400/40 hover:bg-cyan-500/30" data-ep="1">EP 1</button>
-                <button type="button" class="quick-ep-chip rounded-lg bg-white/5 px-2.5 py-1 text-slate-300 hover:bg-white/10" data-ep="2">EP 2</button>
-                <button type="button" class="quick-ep-chip rounded-lg bg-white/5 px-2.5 py-1 text-slate-300 hover:bg-white/10" data-ep="3">EP 3</button>
-                <button type="button" class="quick-ep-chip rounded-lg bg-white/5 px-2.5 py-1 text-slate-300 hover:bg-white/10" data-ep="4">EP 4</button>
-                <button type="button" class="quick-ep-chip rounded-lg bg-white/5 px-2.5 py-1 text-slate-300 hover:bg-white/10" data-ep="5">EP 5</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <!-- Cinema Stage Grid: Ambilight Video Player + Episode Matrix / Sync-Pod -->
       <section id="cinemaStageSection" class="grid grid-cols-1 gap-6 lg:grid-cols-12">
 
@@ -542,6 +439,7 @@
 
                   <span id="playerAudioBadge" class="rounded bg-fuchsia-500/20 px-2 py-0.5 text-fuchsia-300">SUB (JA-JP)</span>
                   <span id="playerShaderStatus" class="hidden sm:inline-block rounded bg-cyan-500/15 px-2 py-0.5 font-mono-code text-[10px] text-cyan-300">WebGPU Anime4K: ACTIVE</span>
+                  <span id="telemetryPrewarm" class="hidden md:inline-block rounded bg-emerald-500/15 px-2 py-0.5 font-mono-code text-[10px] text-emerald-300">L2 PRE-WARM: READY</span>
                   <span id="telemetryShowId" class="hidden"></span>
                 </div>
                 <div class="flex items-center gap-2">
@@ -594,7 +492,7 @@
                 <!-- Ad-Shield Transparent Click Interceptor: Stops ALL third-party ad clicks and popups -->
                 <div
                   id="playerClickShield"
-                  class="absolute inset-0 z-15 cursor-pointer flex items-center justify-center select-none"
+                  class="absolute top-0 left-0 right-0 bottom-12 z-15 cursor-pointer flex items-center justify-center select-none"
                   title="Click to Play / Pause (Zero Ads) • Double-click for Fullscreen"
                 >
                   <!-- Quick Visual Flash Indicator on Click -->
@@ -683,6 +581,7 @@
                   <button id="playPauseBtn" type="button" class="rounded-xl bg-cyan-400 px-5 py-1.5 font-mono-code text-xs font-extrabold text-slate-950 transition hover:bg-cyan-300 shadow-lg shadow-cyan-400/20">
                     ▶ PLAY / PAUSE
                   </button>
+                  <button id="prewarmNextEpBtn" type="button" class="rounded-xl bg-emerald-500/15 px-3 py-1.5 font-mono-code text-xs font-semibold text-emerald-300 ring-1 ring-emerald-400/30 transition hover:bg-emerald-500/25" title="Pre-warm next episode stream">⚡ Pre-Warm Ep</button>
                   <button id="replayEpBtn" type="button" class="rounded-xl bg-amber-500/20 px-3.5 py-1.5 font-mono-code text-xs font-bold text-amber-300 ring-1 ring-amber-400/30 transition hover:bg-amber-500/30">
                     ↺ REPLAY (0:00)
                   </button>
@@ -808,6 +707,109 @@
                 SEND
               </button>
             </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2.5D Parallax Hero Banner -->
+      <section id="heroStageCard" class="hud-glass relative overflow-hidden rounded-3xl border border-white/10 p-6 md:p-10">
+        <img
+          id="heroBgImage"
+          src="https://s4.anilist.co/file/anilistcdn/media/anime/banner/16498-8jpFCOcDmneX.jpg"
+          alt="Neo-Tokyo Spatial Streaming Hero"
+          class="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-35 transition-transform duration-300 ease-out"
+        >
+        <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#06070B] via-[#06070B]/85 to-transparent"></div>
+
+        <div class="relative z-10 grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-center">
+          <!-- Watch Screen Anime Cover Page -->
+          <div class="hidden sm:block lg:col-span-3">
+            <div class="relative aspect-[3/4] w-full max-w-[210px] mx-auto overflow-hidden rounded-2xl shadow-2xl ring-2 ring-cyan-400/40 border border-white/20">
+              <img
+                id="watchHeroCoverImg"
+                src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx20464-ooZUyBe4ptp9.png"
+                alt="Anime Cover Page"
+                class="h-full w-full object-cover object-center"
+                loading="eager"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent"></div>
+              <span class="absolute bottom-2 left-2 right-2 text-center rounded-md bg-slate-950/90 py-0.5 font-mono-code text-[9px] font-bold text-cyan-300 ring-1 ring-cyan-400/30">
+                OFFICIAL ARTWORK
+              </span>
+            </div>
+          </div>
+
+          <div class="space-y-3 lg:col-span-5">
+            <div class="inline-flex flex-wrap items-center gap-2 rounded-full bg-cyan-500/10 px-3 py-1 font-mono-code text-[11px] text-cyan-300 ring-1 ring-cyan-400/30">
+              <span class="h-2 w-2 rounded-full bg-cyan-400"></span>
+              <span id="heroBadgeText">FEDERATED PUBLIC ANIME APIS MESH // ANILIST + KITSU + GHIBLI + TRACE.MOE + ANISKIP</span>
+            </div>
+            <h1 id="heroTitle" class="font-display text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+              Attack on Titan
+            </h1>
+            <p id="heroSynopsis" class="max-w-2xl text-sm leading-relaxed text-slate-300 sm:text-base">
+              Several hundred years ago, humans were nearly exterminated by titans. Titans are typically several stories tall, seem to have no intelligence, devour human beings and, worst of all, seem to do it for the pleasure rather than as a food sourc
+            </p>
+            <div id="heroMetaTags" class="flex flex-wrap items-center gap-2 font-mono-code text-xs">
+              <span class="rounded-md bg-white/10 px-2.5 py-1 text-white">SCORE: 94%</span>
+              <span class="rounded-md bg-cyan-500/15 px-2.5 py-1 text-cyan-300">1080p HEVC • 8.4 Mbps</span>
+              <span class="rounded-md bg-fuchsia-500/15 px-2.5 py-1 text-fuchsia-300">SUB &amp; DUB HOT-SWAP</span>
+              <span class="rounded-md bg-emerald-500/15 px-2.5 py-1 text-emerald-300">ANISKIP READY</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+              <button id="heroPlayNowBtn" type="button" class="group flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-cyan-400 to-indigo-500 px-6 py-3 font-mono-code text-sm font-extrabold text-slate-950 shadow-xl shadow-cyan-400/30 transition hover:scale-105 hover:from-cyan-300 hover:to-indigo-400">
+                <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-slate-950/20 text-xs">▶</span>
+                <span id="heroPlayBtnText">PLAY EPISODE 1 NOW</span>
+              </button>
+              <button id="heroSelectEpBtn" type="button" class="flex items-center gap-2 rounded-xl bg-white/10 px-5 py-3 font-mono-code text-xs font-semibold text-white ring-1 ring-white/15 transition hover:bg-white/20">
+                <span>📋</span>
+                <span>CHOOSE EPISODE (1–24)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Right Episode Guide & Quick Jump Card -->
+          <div class="hud-glass-elevated rounded-2xl p-5 font-mono-code text-xs lg:col-span-4 border border-cyan-500/20">
+            <div class="mb-3 flex items-center justify-between border-b border-white/10 pb-2.5 text-xs text-cyan-300">
+              <span class="font-bold flex items-center gap-1.5">
+                <span class="h-2 w-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                <span>EPISODE STREAM READY</span>
+              </span>
+              <span class="text-emerald-400 font-bold">1080p HD</span>
+            </div>
+            <div class="space-y-2.5 text-xs text-slate-300">
+              <div class="flex justify-between items-center">
+                <span class="text-slate-400">Selected Anime:</span>
+                <span id="guideAnimeName" class="text-white font-bold truncate max-w-[170px]">Attack on Titan</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-slate-400">Current Episode:</span>
+                <span id="guideEpNumber" class="text-cyan-300 font-bold">Episode 1 of 25</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-slate-400">Audio / Language:</span>
+                <span id="guideAudioTrack" class="text-fuchsia-300 font-semibold">Sub (JA-JP) + Dub (EN)</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-slate-400">Stream Status:</span>
+                <span class="text-emerald-300 font-semibold flex items-center gap-1">
+                  <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                  <span>Instant Playback Ready</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Quick Episode Jump Buttons -->
+            <div class="mt-4 pt-3 border-t border-white/10">
+              <div class="mb-2 text-[11px] text-slate-400">QUICK EPISODE SELECT:</div>
+              <div class="flex flex-wrap gap-1.5 font-mono-code text-xs">
+                <button type="button" class="quick-ep-chip rounded-lg bg-cyan-500/20 px-2.5 py-1 text-cyan-300 ring-1 ring-cyan-400/40 hover:bg-cyan-500/30" data-ep="1">EP 1</button>
+                <button type="button" class="quick-ep-chip rounded-lg bg-white/5 px-2.5 py-1 text-slate-300 hover:bg-white/10" data-ep="2">EP 2</button>
+                <button type="button" class="quick-ep-chip rounded-lg bg-white/5 px-2.5 py-1 text-slate-300 hover:bg-white/10" data-ep="3">EP 3</button>
+                <button type="button" class="quick-ep-chip rounded-lg bg-white/5 px-2.5 py-1 text-slate-300 hover:bg-white/10" data-ep="4">EP 4</button>
+                <button type="button" class="quick-ep-chip rounded-lg bg-white/5 px-2.5 py-1 text-slate-300 hover:bg-white/10" data-ep="5">EP 5</button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -1161,10 +1163,10 @@
               Vite/React universe with MangaDex chapters reader, AniList anime hub, multi-source providers (WeebCentral, Asura, Vortex).
             </p>
             <div class="pt-2 border-t border-white/10 flex items-center justify-between">
-              <span class="text-[11px] font-mono-code text-slate-400">Port 5173 Available</span>
-              <a href="http://localhost:5173" target="_blank" class="rounded-lg bg-amber-400 px-3 py-1.5 text-xs font-bold text-slate-950 hover:bg-amber-300 transition">
-                OPEN KURONEKO ↗
-              </a>
+              <span class="text-[11px] font-mono-code text-slate-400">Integrated Mesh</span>
+              <button type="button" class="quick-source-test-btn rounded-lg bg-amber-400 px-3 py-1.5 text-xs font-bold text-slate-950 hover:bg-amber-300 transition" data-source="kuroneko">
+                BROWSE MANGA &amp; ANIME MESH →
+              </button>
             </div>
           </div>
         </div>
@@ -3192,8 +3194,10 @@ USER anicli`
       document.documentElement.style.setProperty('--glow-primary', anime.accentPrimary || '#00F0FF');
       document.documentElement.style.setProperty('--glow-secondary', anime.accentSecondary || '#6366F1');
       
+      const displayTitle = anime.activeSeasonTitle ? `${anime.title} (${anime.activeSeasonTitle})` : anime.title;
+
       const heroTitle = document.getElementById('heroTitle');
-      if (heroTitle) heroTitle.textContent = anime.title;
+      if (heroTitle) heroTitle.textContent = displayTitle;
       
       const heroSynopsis = document.getElementById('heroSynopsis');
       if (heroSynopsis) heroSynopsis.textContent = anime.synopsis;
@@ -3213,10 +3217,10 @@ USER anicli`
       if (showId) showId.textContent = anime.slug;
 
       const nowPlaying = document.getElementById('playerNowPlayingTitle');
-      if (nowPlaying) nowPlaying.textContent = anime.title;
+      if (nowPlaying) nowPlaying.textContent = displayTitle;
 
       const breadcrumb = document.getElementById('breadcrumbAnimeTitle');
-      if (breadcrumb) breadcrumb.textContent = anime.title;
+      if (breadcrumb) breadcrumb.textContent = displayTitle;
 
       const epBadge = document.getElementById('playerEpisodeBadge');
       if (epBadge) epBadge.textContent = 'EP // ' + String(currentEpisode).padStart(2, '0');
@@ -3481,10 +3485,13 @@ USER anicli`
           activeSeasonIndex = idx;
           currentAnime.malId = season.malId;
           currentAnime.episodes = season.episodes;
+          currentAnime.activeSeasonTitle = season.title;
           currentEpisode = 1;
           renderSeasons();
           renderEpisodeGrid();
+          applyChameleonTheme(currentAnime);
           loadAnimeStream(currentAnime, 1, true);
+          scrollToCinemaPlayer();
           showToast(`Switched to ${season.title} (Ep 1) - ${currentMode.toUpperCase()}`);
         });
 
@@ -3778,7 +3785,7 @@ USER anicli`
         const overlayText = document.getElementById('overlayBtnText');
         if (overlayText) overlayText.textContent = `CONNECTING TO EPISODE ${episodeNumber} (${mode.toUpperCase()})...`;
 
-        fetch(`/api/anicli/run?q=${encodeURIComponent(query)}&ep=${episodeNumber}&mode=${mode}`)
+        fetch(`/api/anicli/run?q=${encodeURIComponent(query)}&ep=${episodeNumber}&mode=${mode}&malId=${malId}`)
           .then(r => r.json())
           .then(data => {
             if (data && data.dubUnavailable) {
@@ -3976,6 +3983,27 @@ USER anicli`
       applyChameleonTheme(anime);
     }
 
+    function scrollToCinemaPlayer() {
+      const tabStream = document.getElementById('navTabStream');
+      const viewStream = document.getElementById('viewStream');
+      if (window.switchView && tabStream && viewStream) {
+        window.switchView(tabStream, viewStream);
+      }
+      setTimeout(() => {
+        const cinema = document.getElementById('cinemaStageSection');
+        if (cinema) {
+          const headerOffset = 65;
+          const rect = cinema.getBoundingClientRect();
+          const targetTop = window.pageYOffset + rect.top - headerOffset;
+          window.scrollTo({
+            top: Math.max(0, targetTop),
+            behavior: 'smooth'
+          });
+        }
+      }, 40);
+    }
+    window.scrollToCinemaPlayer = scrollToCinemaPlayer;
+
     function playEpisode(epNumber) {
       currentEpisode = Math.max(1, Math.min(currentAnime.episodes || 24, epNumber));
       applyChameleonTheme(currentAnime);
@@ -3983,7 +4011,6 @@ USER anicli`
       saveWatchState();
       hidePlayOverlay();
 
-      // Ensure view switches from Home to Cinema Stream
       const tabStream = document.getElementById('navTabStream');
       const viewStream = document.getElementById('viewStream');
       if (window.switchView && tabStream && viewStream) {
@@ -3991,11 +4018,7 @@ USER anicli`
       }
 
       loadAnimeStream(currentAnime, currentEpisode, true);
-
-      const cinema = document.getElementById('cinemaStageSection');
-      if (cinema) {
-        cinema.scrollIntoView({ behavior: 'smooth' });
-      }
+      scrollToCinemaPlayer();
       showToast(`Now Playing: ${currentAnime.title} - Episode ${currentEpisode}`);
     }
 
@@ -4004,9 +4027,15 @@ USER anicli`
       currentEpisode = ep;
       currentMode = mode;
       activeSeasonIndex = 0;
+      delete currentAnime.activeSeasonTitle;
       applyChameleonTheme(currentAnime);
 
-      // Dynamically fetch and render seasons and episode matrix for selected anime
+      const tabStream = document.getElementById('navTabStream');
+      const viewStream = document.getElementById('viewStream');
+      if (window.switchView && tabStream && viewStream) {
+        window.switchView(tabStream, viewStream);
+      }
+
       fetchSeasonsForAnime(currentAnime).then(() => {
         if (currentAnime.seasons && currentAnime.seasons[0]) {
           currentAnime.malId = currentAnime.seasons[0].malId || currentAnime.malId;
@@ -4020,19 +4049,8 @@ USER anicli`
       renderRelatedMoviesAndRecommendations(currentAnime);
       saveWatchState();
 
-      // Ensure view switches from Home to Cinema Stream
-      const tabStream = document.getElementById('navTabStream');
-      const viewStream = document.getElementById('viewStream');
-      if (window.switchView && tabStream && viewStream) {
-        window.switchView(tabStream, viewStream);
-      }
-
       loadAnimeStream(currentAnime, currentEpisode, true);
-
-      const cinema = document.getElementById('cinemaStageSection');
-      if (cinema) {
-        cinema.scrollIntoView({ behavior: 'smooth' });
-      }
+      scrollToCinemaPlayer();
       showToast(`Selected "${anime.title}" - Episode ${ep}`);
     }
 
@@ -4552,15 +4570,10 @@ USER anicli`
         matched = ANIME_CATALOG[0];
       }
       if (matched) {
-        selectAndPlayAnime(matched, ep, currentMode);
-        const tabStream = document.getElementById('navTabStream');
-        const viewStream = document.getElementById('viewStream');
-        if (window.switchView && tabStream && viewStream) {
-          window.switchView(tabStream, viewStream);
-        }
         const breadcrumb = document.getElementById('breadcrumbAnimeTitle');
         if (breadcrumb) breadcrumb.textContent = matched.title;
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        selectAndPlayAnime(matched, ep, currentMode);
+        scrollToCinemaPlayer();
       }
     };
 
@@ -4935,8 +4948,19 @@ USER anicli`
       currentAnime = item;
       currentEpisode = 1;
       currentMode = 'sub';
+      currentAnime.seasons = [
+        {
+          id: item.id,
+          malId: item.malId || 20,
+          title: item.title,
+          episodes: item.episodes || 1,
+          badge: item.format || 'MOVIE'
+        }
+      ];
+      activeSeasonIndex = 0;
       
       applyChameleonTheme(currentAnime);
+      renderSeasons();
       renderEpisodeGrid();
       saveWatchState();
       loadAnimeStream(currentAnime, 1, true);
@@ -4945,8 +4969,7 @@ USER anicli`
       const epBadge = document.getElementById('playerEpisodeBadge');
       if (epBadge) epBadge.textContent = '🎬 ' + (item.format || 'MOVIE');
 
-      const cinema = document.getElementById('cinemaStageSection');
-      if (cinema) cinema.scrollIntoView({ behavior: 'smooth' });
+      scrollToCinemaPlayer();
       showToast('Now Streaming: ' + item.title);
     };
 
@@ -5506,6 +5529,11 @@ function setHomeSpotlightAnime(anime) {
             const grid = document.getElementById('catalogMatrixSection');
             if (grid) grid.scrollIntoView({ behavior: 'smooth' });
             showToast('Showing 34 public-apis AniList/Kitsu/Ghibli titles');
+          } else if (src === 'kuroneko') {
+            window.switchView(tabStream, viewStream);
+            const grid = document.getElementById('catalogMatrixSection');
+            if (grid) grid.scrollIntoView({ behavior: 'smooth' });
+            showToast('KuroNeko multi-source mesh connected (34 titles ready)');
           }
         });
       });
@@ -5585,6 +5613,7 @@ function setHomeSpotlightAnime(anime) {
       const heroSelectEpBtn = document.getElementById('heroSelectEpBtn');
       if (heroSelectEpBtn) {
         heroSelectEpBtn.addEventListener('click', () => {
+          scrollToCinemaPlayer();
           const epGrid = document.getElementById('episodeGridContainer');
           if (epGrid) epGrid.scrollIntoView({ behavior: 'smooth', block: 'center' });
         });
@@ -5677,38 +5706,46 @@ function setHomeSpotlightAnime(anime) {
           }, 450);
         }
 
-        if (currentStreamServer === 1 || currentStreamServer === 2) {
+        // 1. Direct control of native HTML5 video (Servers 1, 3, 4)
+        if (video && !video.classList.contains('hidden')) {
+          if (video.paused) {
+            video.play().then(hidePlayOverlay).catch(() => {});
+            streamIsPaused = false;
+            if (icon) icon.textContent = '▶';
+            showToast('Playback Active (1080p HLS)');
+          } else {
+            video.pause();
+            streamIsPaused = true;
+            showPlayOverlay();
+            if (icon) icon.textContent = '⏸';
+            showToast('Playback Paused');
+          }
+          return;
+        }
+
+        // 2. Control iframe embed (Server 2 YouTube or fallback)
+        if (iframe && !iframe.classList.contains('hidden')) {
+          streamIsPaused = !streamIsPaused;
           if (streamIsPaused) {
             showPlayOverlay();
-            if (iframe && iframe.contentWindow) {
+            if (icon) icon.textContent = '⏸';
+            if (iframe.contentWindow) {
               try {
                 iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
                 iframe.contentWindow.postMessage({ type: 'pause' }, '*');
-                iframe.contentWindow.postMessage('pause', '*');
               } catch(e) {}
             }
             showToast('Stream Paused (Zero Ads)');
           } else {
             hidePlayOverlay();
-            if (iframe && (iframe.src === 'about:blank' || !iframe.src || iframe.src.endsWith('about:blank'))) {
-              loadAnimeStream(currentAnime, currentEpisode, true);
-            } else if (iframe && iframe.contentWindow) {
+            if (icon) icon.textContent = '▶';
+            if (iframe.contentWindow) {
               try {
                 iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
                 iframe.contentWindow.postMessage({ type: 'play' }, '*');
-                iframe.contentWindow.postMessage('play', '*');
               } catch(e) {}
             }
             showToast('Stream Resumed (Zero Ads)');
-          }
-        } else if (video) {
-          if (video.paused) {
-            video.play().then(hidePlayOverlay).catch(() => {});
-            showToast('Playback Active (1080p HLS)');
-          } else {
-            video.pause();
-            showPlayOverlay();
-            showToast('Playback Paused');
           }
         }
       }
@@ -5745,45 +5782,6 @@ function setHomeSpotlightAnime(anime) {
 
       document.getElementById('playPauseBtn').addEventListener('click', () => {
         handlePlayPauseToggle();
-        return;
-        const iframe = document.getElementById('animeIframePlayer');
-        const video = document.getElementById('hlsVideoElement');
-
-        if (currentStreamServer === 1 || currentStreamServer === 2) {
-          streamIsPaused = !streamIsPaused;
-          if (streamIsPaused) {
-            showPlayOverlay();
-            if (iframe && iframe.contentWindow) {
-              try {
-                iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-                iframe.contentWindow.postMessage({ type: 'pause' }, '*');
-                iframe.contentWindow.postMessage('pause', '*');
-              } catch (e) {}
-            }
-            showToast('Stream Paused (Ad-Free HUD)');
-          } else {
-            hidePlayOverlay();
-            if (iframe && (iframe.src === 'about:blank' || !iframe.src || iframe.src.endsWith('about:blank'))) {
-              loadAnimeStream(currentAnime, currentEpisode, true);
-            } else if (iframe && iframe.contentWindow) {
-              try {
-                iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-                iframe.contentWindow.postMessage({ type: 'play' }, '*');
-                iframe.contentWindow.postMessage('play', '*');
-              } catch (e) {}
-            }
-            showToast('Stream Resumed (Ad-Free HUD)');
-          }
-        } else if (video) {
-          if (video.paused) {
-            video.play().then(hidePlayOverlay).catch(() => {});
-            showToast('Playback active (1080p HLS)');
-          } else {
-            video.pause();
-            showPlayOverlay();
-            showToast('Playback paused');
-          }
-        }
       });
 
       // Replay Episode from 0:00 (Clean, No-Ad Replay)
@@ -5819,7 +5817,10 @@ function setHomeSpotlightAnime(anime) {
           if (stream) {
             currentAnime.streamUrl = stream;
             currentAnime.streamName = name;
+            currentStreamServer = 4;
+            updateStreamServerUI();
             loadAnimeStream(currentAnime, currentEpisode, true);
+            scrollToCinemaPlayer();
             document.querySelectorAll('.stream-relay-btn').forEach((b) => {
               b.className = 'stream-relay-btn rounded-lg bg-white/5 px-2.5 py-1 text-slate-300 hover:bg-white/10 transition';
             });
@@ -5830,20 +5831,20 @@ function setHomeSpotlightAnime(anime) {
 
       // 7. AniSkip OP / ED Buttons
       document.getElementById('triggerOpSkipBtn').addEventListener('click', () => {
+        const video = document.getElementById('hlsVideoElement');
+        const target = (activeSkipTimes && activeSkipTimes.op) ? activeSkipTimes.op.end : 85;
+        if (video) video.currentTime = target;
         const skipBtn = document.getElementById('floatingSkipBtn');
-        const fill = document.getElementById('timelineProgressFill');
-        const curr = document.getElementById('playerTimeCurrent');
-        if (skipBtn) skipBtn.classList.remove('hidden');
-        if (fill) fill.style.width = '7%';
-        if (curr) curr.textContent = '01:26';
-        showToast('AniSkip detected Opening Sequence (85s–175s)');
+        if (skipBtn) skipBtn.classList.add('hidden');
+        showToast('Skipped Opening Intro to ' + Math.floor(target/60) + ':' + String(Math.floor(target%60)).padStart(2,'0'));
       });
 
       document.getElementById('floatingSkipBtn').addEventListener('click', (e) => {
         e.currentTarget.classList.add('hidden');
-        document.getElementById('timelineProgressFill').style.width = '14%';
-        document.getElementById('playerTimeCurrent').textContent = '02:55';
-        showToast('Skipped Opening to 02:55 via AniSkip API');
+        const video = document.getElementById('hlsVideoElement');
+        const target = (activeSkipTimes && activeSkipTimes.op) ? activeSkipTimes.op.end : 175;
+        if (video) video.currentTime = target;
+        showToast('Skipped Opening to ' + Math.floor(target/60) + ':' + String(Math.floor(target%60)).padStart(2,'0') + ' via AniSkip API');
       });
 
       document.getElementById('timelineScrubberBar').addEventListener('click', (e) => {

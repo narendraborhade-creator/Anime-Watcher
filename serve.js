@@ -189,12 +189,13 @@ async function resolveDirectHls(malId, ep = 1, mode = 'sub') {
   }
 }
 
-function runAniCli(query, ep = 1, mode = 'sub') {
+function runAniCli(query, ep = 1, mode = 'sub', explicitMalId = null) {
   return new Promise(async (resolve) => {
     const cleanQuery = query.replace(/[^a-zA-Z0-9\s\-_]/g, '').trim() || 'naruto';
     const cleanEp = parseInt(ep, 10) || 1;
     const cleanMode = mode === 'dub' ? '--dub' : '';
-    const malId = await resolveMalId(cleanQuery);
+    const numId = parseInt(explicitMalId, 10);
+    const malId = (!isNaN(numId) && numId > 0) ? numId : await resolveMalId(cleanQuery);
     const fallbackEmbed = `https://zokoanime.video/stream/mal/${malId}/${cleanEp}/${mode || 'sub'}`;
 
     // 1. Ultra-fast direct HLS resolver (~150ms pure JS)
@@ -327,9 +328,10 @@ const server = http.createServer(async (req, res) => {
     }
     const ep = parseInt(postBody.episode || postBody.ep || parsedUrl.query.ep || parsedUrl.query.episode || '1', 10);
     const mode = postBody.mode || parsedUrl.query.mode || 'sub';
+    const explicitMalId = postBody.malId || parsedUrl.query.malId;
 
     try {
-      const result = await runAniCli(q, ep, mode);
+      const result = await runAniCli(q, ep, mode, explicitMalId);
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify(result));
     } catch (e) {
