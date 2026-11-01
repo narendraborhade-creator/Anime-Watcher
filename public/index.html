@@ -86,7 +86,7 @@
       <span class="text-slate-300 hidden md:inline">SHELL: GNU bash 5.3 (ani-cli v5.1 daemon active)</span>
     </div>
     <div class="flex items-center gap-3 text-[10px]">
-      <span class="flex items-center gap-1 text-emerald-400">
+      <span id="nodeProxyStatusBadge" class="flex items-center gap-1 text-emerald-400">
         <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
         NODE PROXY: 3000 (READY)
       </span>
@@ -111,7 +111,7 @@
       </div>
 
       <!-- Navigation View Switcher -->
-      <nav class="flex items-center gap-1 rounded-xl bg-white/[0.04] p-1 ring-1 ring-white/10 flex-wrap">
+      <nav class="flex items-center gap-1 rounded-xl bg-white/[0.04] p-1 ring-1 ring-white/10 flex-wrap overflow-x-auto max-w-full">
         <button id="navTabHome" type="button" class="rounded-lg bg-cyan-400 px-3 py-1.5 font-mono-code text-xs font-bold text-slate-950 transition shadow">
           🏠 01 // HOME
         </button>
@@ -3785,8 +3785,17 @@ USER anicli`
         const overlayText = document.getElementById('overlayBtnText');
         if (overlayText) overlayText.textContent = `CONNECTING TO EPISODE ${episodeNumber} (${mode.toUpperCase()})...`;
 
+        const isStaticHost = window.location.hostname.endsWith('github.io') || window.location.protocol === 'file:';
+        if (isStaticHost) {
+          loadFallbackEmbed(malId, episodeNumber, mode);
+          return;
+        }
+
         fetch(`/api/anicli/run?q=${encodeURIComponent(query)}&ep=${episodeNumber}&mode=${mode}&malId=${malId}`)
-          .then(r => r.json())
+          .then(r => {
+            if (!r.ok) throw new Error('API server unavailable: ' + r.status);
+            return r.json();
+          })
           .then(data => {
             if (data && data.dubUnavailable) {
               showToast(`⚠️ English Dub is unavailable for ${anime.title} (Ep ${episodeNumber}) — playing in Japanese with English Subtitles.`, 4500);
@@ -5547,6 +5556,13 @@ function setHomeSpotlightAnime(anime) {
       if (sBtn2) sBtn2.addEventListener('click', () => switchStreamServer(2));
       if (sBtn3) sBtn3.addEventListener('click', () => switchStreamServer(3));
       if (sBtn4) sBtn4.addEventListener('click', () => switchStreamServer(4));
+
+      if (window.location.hostname.endsWith('github.io')) {
+        const badge = document.getElementById('nodeProxyStatusBadge');
+        if (badge) {
+          badge.innerHTML = '<span class="h-2 w-2 rounded-full bg-cyan-400 animate-pulse"></span> GITHUB PAGES: ONLINE (MOBILE READY)';
+        }
+      }
 
       // 2. Initial state hydration
       try {
