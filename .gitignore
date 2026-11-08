@@ -13,6 +13,7 @@ bin/
 # Dependencies
 node_modules/
 .npm/
+*.zip
 
 # IDE and Environment
 .vscode/
