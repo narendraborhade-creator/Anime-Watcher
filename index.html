@@ -193,6 +193,9 @@
               <span id="homeHeroSeasonsBadge" class="rounded-full bg-amber-500/20 px-3 py-1 font-mono-code text-[11px] font-extrabold text-amber-300 ring-1 ring-amber-400/40">
                 ⚡ 2 SEASONS AVAILABLE
               </span>
+              <span id="homeHeroAudioBadge" class="rounded-full bg-fuchsia-500/20 px-3 py-1 font-mono-code text-[11px] font-extrabold text-fuchsia-300 ring-1 ring-fuchsia-400/40">
+                SUB + DUB (EN)
+              </span>
               <!-- Interactive Audio Track Switcher on Hero -->
               <div class="flex items-center gap-1 rounded-full bg-slate-900/90 p-0.5 ring-1 ring-white/15 font-mono-code text-xs" id="homeHeroAudioSwitcher">
                 <button
@@ -524,22 +527,20 @@
                   <p class="mt-3 font-mono-code text-xs text-slate-300">Click to start streaming directly in your browser with sound</p>
                 </div>
 
-                <!-- Interactive Anime4K Visual Visualizer Overlay when paused or testing shaders -->
+                <!-- Interactive Anime4K Visual Visualizer Overlay (Disabled to keep video clean) -->
                 <canvas
                   id="shaderVisualizerCanvas"
-                  class="pointer-events-none absolute inset-0 h-full w-full opacity-35 mix-blend-screen"
+                  class="pointer-events-none absolute inset-0 h-full w-full hidden"
                 ></canvas>
 
                 <!-- Split-screen Anime4K comparison indicator -->
-                <div id="anime4kSplitBadge" class="pointer-events-none absolute left-4 top-4 rounded-lg bg-slate-950/85 px-3 py-1.5 font-mono-code text-[11px] text-cyan-300 ring-1 ring-cyan-400/40">
+                <div id="anime4kSplitBadge" class="pointer-events-none absolute left-4 top-4 rounded-lg bg-slate-950/85 px-3 py-1.5 font-mono-code text-[11px] text-cyan-300 ring-1 ring-cyan-400/40 hidden">
                   ✦ CNN Line-Art Reconstruction + Debanding Shader (0ms GPU Pass)
                 </div>
 
-                <!-- Dynamic Subtitle Canvas (JASSUB / VTT Overlay) -->
-                <div class="pointer-events-none absolute inset-x-0 bottom-14 flex justify-center px-6 text-center">
-                  <span id="subtitleOverlayText" class="rounded-lg bg-black/75 px-4 py-1.5 font-sans text-sm font-semibold text-white shadow-lg ring-1 ring-white/10 md:text-base">
-                    [Orbital Relay 09] &quot;Target stream locked. Bypassing syndicate firewall at sector 0x38!&quot;
-                  </span>
+                <!-- Dynamic Subtitle Canvas (Native HTML5 Video Subtitles used) -->
+                <div id="subtitleOverlayContainer" class="pointer-events-none absolute inset-x-0 bottom-14 flex justify-center px-6 text-center hidden">
+                  <span id="subtitleOverlayText" class="hidden"></span>
                 </div>
 
                 <!-- Floating AniSkip Prompt Button -->
@@ -3162,6 +3163,21 @@ USER anicli`
       saveWatchState();
       updateAudioUI();
 
+      const viewStream = document.getElementById('viewStream');
+      const isStreamView = viewStream && !viewStream.classList.contains('hidden');
+
+      if (!isStreamView) {
+        if (mode === 'dub') {
+          showToast(`🇬🇧 Audio preference set to English Dub`);
+        } else {
+          showToast(`🇯🇵 Audio preference set to Japanese with English Subtitles`);
+        }
+        return;
+      }
+
+      currentStreamServer = 1;
+      updateStreamServerUI();
+
       const video = document.getElementById('hlsVideoElement');
       let resumeTime = 0;
       if (preserveTime && video && !isNaN(video.currentTime) && video.currentTime > 0) {
@@ -3230,9 +3246,7 @@ USER anicli`
       if (typeof updateAudioUI === 'function') updateAudioUI();
 
       const subOverlay = document.getElementById('subtitleOverlayText');
-      if (subOverlay && anime.subtitles) {
-        subOverlay.textContent = currentMode === 'sub' ? anime.subtitles.sub : anime.subtitles.dub;
-      }
+      if (subOverlay) subOverlay.classList.add('hidden');
 
       const resBadge = document.getElementById('playerResolutionBadge');
       if (resBadge) resBadge.textContent = (anime.streamName || '1080p60 HLS');
@@ -3822,7 +3836,25 @@ USER anicli`
                 track.srclang = 'en';
                 track.src = `/api/proxy/hls?url=${encodeURIComponent(data.subUrl)}&referer=${encodeURIComponent(data.referer || 'https://zokoanime.video/')}`;
                 track.default = true;
+                track.addEventListener('load', () => {
+                  try {
+                    for (let i = 0; i < video.textTracks.length; i++) {
+                      video.textTracks[i].mode = 'showing';
+                    }
+                  } catch(e) {}
+                });
                 video.appendChild(track);
+                try {
+                  if (video.textTracks && video.textTracks[0]) {
+                    video.textTracks[0].mode = 'showing';
+                  }
+                } catch(e) {}
+              } else if (currentMode === 'dub') {
+                try {
+                  for (let i = 0; i < video.textTracks.length; i++) {
+                    video.textTracks[i].mode = 'disabled';
+                  }
+                } catch(e) {}
               }
 
               // Synchronize OP / ED skip timestamps if present
@@ -4031,10 +4063,10 @@ USER anicli`
       showToast(`Now Playing: ${currentAnime.title} - Episode ${currentEpisode}`);
     }
 
-    function selectAndPlayAnime(anime, ep = 1, mode = 'sub') {
+    function selectAndPlayAnime(anime, ep = 1, mode = null) {
       currentAnime = anime;
       currentEpisode = ep;
-      currentMode = mode;
+      currentMode = mode || currentMode || 'sub';
       activeSeasonIndex = 0;
       delete currentAnime.activeSeasonTitle;
       applyChameleonTheme(currentAnime);
@@ -4291,23 +4323,8 @@ USER anicli`
             const h = (shaderCanvas.height = shaderCanvas.clientHeight || 360);
             ctx.clearRect(0, 0, w, h);
 
-            // If paused or ended, show cyber HUD indicators
-            if (video.paused) {
-              const grad = ctx.createLinearGradient(0, 0, w, h);
-              grad.addColorStop(0, (currentAnime.accentPrimary || '#00F0FF') + '33');
-              grad.addColorStop(1, (currentAnime.accentSecondary || '#6366F1') + '33');
-              ctx.fillStyle = grad;
-              ctx.fillRect(0, 0, w, h);
-
-              ctx.strokeStyle = currentAnime.accentPrimary || '#00F0FF';
-              ctx.lineWidth = anime4kActive ? 1.8 : 0.8;
-              for (let i = 0; i < 3; i++) {
-                ctx.beginPath();
-                const radius = 50 + i * 36 + Math.sin(t + i) * 6;
-                ctx.arc(w / 2, h / 2, radius, t * 0.5 + i, t * 0.5 + i + Math.PI);
-                ctx.stroke();
-              }
-            }
+            // Keep shader visualizer clean and clear
+            ctx.clearRect(0, 0, w, h);
           }
         }
 
@@ -4956,7 +4973,7 @@ USER anicli`
       if (!item) return;
       currentAnime = item;
       currentEpisode = 1;
-      currentMode = 'sub';
+      currentMode = currentMode || 'sub';
       currentAnime.seasons = [
         {
           id: item.id,
@@ -5251,8 +5268,11 @@ USER anicli`
       }
     }
 
-function setHomeSpotlightAnime(anime) {
+    let currentSpotlightAnime = null;
+
+    function setHomeSpotlightAnime(anime) {
       if (!anime) return;
+      currentSpotlightAnime = anime;
       const bg = document.getElementById('homeHeroBg');
       const title = document.getElementById('homeHeroTitle');
       const nativeTitle = document.getElementById('homeHeroNativeTitle');
@@ -5260,7 +5280,8 @@ function setHomeSpotlightAnime(anime) {
       const score = document.getElementById('homeHeroScore');
       const eps = document.getElementById('homeHeroEpisodes');
       const genres = document.getElementById('homeHeroGenres');
-            const seasonsBadge = document.getElementById('homeHeroSeasonsBadge');
+      const seasonsBadge = document.getElementById('homeHeroSeasonsBadge');
+      const audioBadge = document.getElementById('homeHeroAudioBadge');
       const coverImg = document.getElementById('homeHeroCoverImg');
       if (coverImg && anime.poster) {
         coverImg.src = anime.poster;
@@ -5280,6 +5301,14 @@ function setHomeSpotlightAnime(anime) {
       const seasonsCount = getAnimeSeasonCount(anime);
       if (seasonsBadge) {
         seasonsBadge.textContent = '⚡ ' + seasonsCount + (seasonsCount > 1 ? ' SEASONS AVAILABLE' : ' SEASON');
+      }
+
+      const hasDub = anime.hasDub !== false;
+      if (audioBadge) {
+        audioBadge.textContent = hasDub ? 'SUB + DUB (EN)' : 'SUB ONLY (JA)';
+        audioBadge.className = hasDub
+          ? 'rounded-full bg-fuchsia-500/20 px-3 py-1 font-mono-code text-[11px] font-extrabold text-fuchsia-300 ring-1 ring-fuchsia-400/40'
+          : 'rounded-full bg-slate-800/80 px-3 py-1 font-mono-code text-[11px] font-extrabold text-slate-300 ring-1 ring-white/10';
       }
 
       if (watchNowBtn) {

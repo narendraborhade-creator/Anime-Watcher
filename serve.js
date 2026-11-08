@@ -439,11 +439,28 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`=======================================================`);
-  console.log(`🐧 NEOLINUX 6.8 POSIX WEB ANIME ENVIRONMENT IS LIVE ON:`);
-  console.log(`👉 http://localhost:${PORT}/`);
-  console.log(`📡 Linux ani-cli API: http://localhost:${PORT}/api/anicli/run`);
-  console.log(`⚡ HLS Stream Proxy: http://localhost:${PORT}/api/proxy/hls`);
-  console.log(`=======================================================`);
-});
+let currentPort = parseInt(process.env.PORT, 10) || 3000;
+
+function startServer(port) {
+  server.removeAllListeners('error');
+  server.removeAllListeners('listening');
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.warn(`[PORT-BUSY] Port ${port} is currently in use. Trying port ${port + 1}...`);
+      startServer(port + 1);
+    } else {
+      console.error('Server error:', err);
+    }
+  });
+
+  server.listen(port, '0.0.0.0', () => {
+    console.log(`=======================================================`);
+    console.log(`🎬 AETHER-ANI STREAMING SERVER IS LIVE ON:`);
+    console.log(`👉 http://localhost:${port}/`);
+    console.log(`📡 Linux ani-cli API: http://localhost:${port}/api/anicli/run`);
+    console.log(`⚡ HLS Stream Proxy: http://localhost:${port}/api/proxy/hls`);
+    console.log(`=======================================================`);
+  });
+}
+
+startServer(currentPort);
