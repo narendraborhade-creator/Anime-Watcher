@@ -1,5 +1,5 @@
 // Vercel Serverless Function: /api/anicli/run
-// Resolves anime stream sources (HLS master playlist, subtitles, AniSkip timestamps) with verified Dub support
+// Resolves anime stream sources (Direct HLS, Multi-Host Dub Embeds, Subtitles, AniSkip timestamps)
 
 const { URL } = require('url');
 
@@ -184,7 +184,7 @@ async function fetchAniSkip(malId, ep) {
   return null;
 }
 
-// Checks if the dub stream provided by upstream is actually an identical clone of the sub stream
+// Checks if the dub stream provided by primary CDN is actually an identical clone of the sub stream
 async function isStreamDuplicated(subSrc, dubSrc) {
   if (!subSrc || !dubSrc) return false;
   if (subSrc === dubSrc) return true;
@@ -226,6 +226,45 @@ async function isStreamDuplicated(subSrc, dubSrc) {
   return false;
 }
 
+// Resolves authentic HD-1 English Dub server from HiAnime / MegaPlay mesh
+async function resolveHiAnimeDub(query, ep = 1) {
+  try {
+    const sRes = await fetch(`https://hianime.at/search?keyword=${encodeURIComponent(query)}`, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
+    });
+    const sHtml = await sRes.text();
+    const filmMatch = sHtml.match(/class="film-detail"[\s\S]*?<a\s+href="https:\/\/hianime\.at\/([^"]+)-([0-9]+)"/);
+    if (!filmMatch) return null;
+    const animeId = filmMatch[2];
+
+    const epRes = await fetch(`https://hianime.at/api/theme/episode/list/${animeId}`, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
+    });
+    const epData = await epRes.json();
+    const epRegex = new RegExp(`data-number="${ep}"[\\s\\S]*?data-id="([0-9]+)"`, 'i');
+    const epMatch = epData.html.match(epRegex) || epData.html.match(new RegExp(`data-id="([0-9]+)"[\\s\\S]*?data-number="${ep}"`, 'i'));
+    if (!epMatch) return null;
+    const epId = epMatch[1];
+
+    const srvRes = await fetch(`https://hianime.at/api/theme/episode/servers?episodeId=${epId}`, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
+    });
+    const srvData = await srvRes.json();
+    const dubBlockMatch = srvData.html.match(/class="[^"]*servers-dub[^"]*"[\s\S]*?<\/div>\s*<\/div>/i);
+    if (!dubBlockMatch) return null;
+
+    const dubServers = [...dubBlockMatch[0].matchAll(/data-server-name="([^"]+)"\s+data-hash="([^"]+)"/g)].map(m => ({
+      name: m[1],
+      url: Buffer.from(m[2], 'base64').toString('utf8')
+    }));
+
+    const hd1 = dubServers.find(s => s.name === 'HD-1' || !s.url.includes('zokoanime'));
+    return hd1 ? hd1.url : (dubServers[0] ? dubServers[0].url : null);
+  } catch (e) {
+    return null;
+  }
+}
+
 module.exports = async (req, res) => {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -257,7 +296,7 @@ module.exports = async (req, res) => {
   const fallbackEmbed = `https://zokoanime.video/stream/mal/${malId}/${ep}/${mode}`;
 
   try {
-    // Fetch direct stream and AniSkip skip timestamps in parallel
+    // 1. Fetch direct stream and AniSkip skip timestamps in parallel
     const [subInfo, dubInfo, aniskipData] = await Promise.all([
       resolveDirectHls(malId, ep, 'sub'),
       mode === 'dub' ? resolveDirectHls(malId, ep, 'dub') : Promise.resolve(null),
@@ -267,21 +306,37 @@ module.exports = async (req, res) => {
     let streamInfo = subInfo;
     let resolvedMode = 'sub';
     let dubUnavailable = false;
+    let isEmbedPlayer = false;
+    let resolvedEmbedUrl = fallbackEmbed;
+    let serverName = 'Primary Direct HLS';
 
     if (mode === 'dub') {
-      if (!dubInfo || !dubInfo.src) {
-        dubUnavailable = true;
-      } else {
-        // Verify if dub is genuine or upstream duplicate of Japanese audio
+      let hasRealDirectDub = false;
+      if (dubInfo && dubInfo.src) {
         const isDup = await isStreamDuplicated(subInfo ? subInfo.src : null, dubInfo.src);
-        if (isDup) {
+        if (!isDup) {
+          hasRealDirectDub = true;
+          streamInfo = dubInfo;
+          resolvedMode = 'dub';
+          dubUnavailable = false;
+          serverName = 'Primary Direct English Dub';
+        }
+      }
+
+      // If primary CDN doesn't have authentic English Dub, resolve HD-1 Dub embed
+      if (!hasRealDirectDub) {
+        const hd1DubUrl = await resolveHiAnimeDub(cleanQuery, ep);
+        if (hd1DubUrl) {
+          resolvedMode = 'dub';
+          dubUnavailable = false;
+          isEmbedPlayer = true;
+          resolvedEmbedUrl = hd1DubUrl;
+          serverName = 'HD-1 Multi-Host (English Dub)';
+        } else {
+          // If no dub exists at all
           dubUnavailable = true;
           resolvedMode = 'sub';
           streamInfo = subInfo;
-        } else {
-          dubUnavailable = false;
-          resolvedMode = 'dub';
-          streamInfo = dubInfo;
         }
       }
     } else {
@@ -303,6 +358,28 @@ module.exports = async (req, res) => {
       };
     }
 
+    // Return HD-1 embed player for English Dub when direct stream is not available
+    if (isEmbedPlayer && resolvedEmbedUrl) {
+      return res.status(200).json({
+        success: true,
+        query: cleanQuery,
+        episode: ep,
+        mode: 'dub',
+        requestedMode: mode,
+        dubUnavailable: false,
+        hasDub: true,
+        isEmbedPlayer: true,
+        malId,
+        embedUrl: resolvedEmbedUrl,
+        videoUrl: null,
+        subUrl: null,
+        skip: skipTimestamps,
+        serverName,
+        referer: 'https://hianime.at/',
+        logs: `Resolved authentic English Dub via ${serverName} for ${cleanQuery} (Ep ${ep}).`
+      });
+    }
+
     if (streamInfo && streamInfo.src) {
       return res.status(200).json({
         success: true,
@@ -312,14 +389,16 @@ module.exports = async (req, res) => {
         requestedMode: mode,
         dubUnavailable,
         hasDub: !dubUnavailable,
+        isEmbedPlayer: false,
         malId,
         embedUrl: `https://zokoanime.video/stream/mal/${malId}/${ep}/${resolvedMode}`,
         videoUrl: streamInfo.src,
         subUrl: streamInfo.subUrl,
         skip: skipTimestamps,
+        serverName,
         referer: 'https://zokoanime.video/',
         logs: dubUnavailable
-          ? `English dub not provided by upstream CDN for ${cleanQuery} (Ep ${ep}). Seamlessly playing in Japanese with English Subtitles.`
+          ? `English dub not provided for ${cleanQuery} (Ep ${ep}). Seamlessly playing in Japanese with English Subtitles.`
           : `Resolved 1080p ${resolvedMode.toUpperCase()} stream for ${cleanQuery} (Ep ${ep}) via POSIX stream mesh.`
       });
     }
@@ -332,11 +411,13 @@ module.exports = async (req, res) => {
       requestedMode: mode,
       dubUnavailable,
       hasDub: !dubUnavailable,
+      isEmbedPlayer: true,
       malId,
-      embedUrl: fallbackEmbed,
+      embedUrl: resolvedEmbedUrl,
       videoUrl: null,
       subUrl: null,
       skip: skipTimestamps,
+      serverName,
       referer: 'https://zokoanime.video/',
       logs: `Resolved fallback stream for ${cleanQuery} (Ep ${ep}).`
     });

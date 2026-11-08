@@ -256,6 +256,15 @@
                 <span>WATCH EPISODE 1 NOW</span>
               </button>
               <button
+                id="homeHeroWatchDubBtn"
+                type="button"
+                class="flex items-center gap-2 rounded-xl bg-amber-500/20 px-6 py-3.5 font-mono-code text-xs font-bold text-amber-300 ring-1 ring-amber-400/40 transition hover:bg-amber-500/30 hover:scale-105 active:scale-95 cursor-pointer shadow-lg shadow-amber-500/10"
+                title="Start Watching immediately in English Dub"
+              >
+                <span>🎧</span>
+                <span>WATCH IN ENGLISH DUB</span>
+              </button>
+              <button
                 id="homeHeroViewDetailsBtn"
                 type="button"
                 class="flex items-center gap-2 rounded-xl bg-white/10 px-6 py-3.5 font-mono-code text-xs font-semibold text-white ring-1 ring-white/20 transition hover:bg-white/20 hover:ring-cyan-400/40 cursor-pointer"
@@ -1005,6 +1014,7 @@
             <!-- Genre Filter Tabs -->
             <div class="flex items-center gap-1 rounded-xl bg-white/5 p-1 ring-1 ring-white/10 font-mono-code text-xs">
               <button id="filterAllBtn" type="button" class="rounded-lg bg-cyan-400 px-2.5 py-1 font-bold text-slate-950">ALL GENRES</button>
+              <button id="filterDubBtn" type="button" class="rounded-lg px-2.5 py-1 text-amber-300 bg-amber-500/15 hover:bg-amber-500/25 ring-1 ring-amber-400/40 flex items-center gap-1">🎧 ENGLISH DUB</button>
               <button id="filterCyberBtn" type="button" class="rounded-lg px-2.5 py-1 text-slate-300 hover:bg-white/10">CYBERPUNK</button>
               <button id="filterShonenBtn" type="button" class="rounded-lg px-2.5 py-1 text-slate-300 hover:bg-white/10">SHONEN</button>
               <button id="filterFantasyBtn" type="button" class="rounded-lg px-2.5 py-1 text-slate-300 hover:bg-white/10">DARK FANTASY</button>
@@ -3634,7 +3644,7 @@ USER anicli`
 
       const filtered = ANIME_CATALOG.filter((item) => {
         const matchesSource = currentSourceFilter === 'ALL' || item.source === currentSourceFilter;
-        const matchesGenre = currentFilter === 'ALL' || item.genreTag === currentFilter;
+        const matchesGenre = currentFilter === 'ALL' || (currentFilter === 'DUB' ? true : item.genreTag === currentFilter);
         const matchesSearch = !searchVal || 
           item.title.toLowerCase().includes(searchVal) || 
           (item.romajiTitle && item.romajiTitle.toLowerCase().includes(searchVal)) ||
@@ -3678,12 +3688,15 @@ USER anicli`
           <div class="relative aspect-[3/4] w-full overflow-hidden bg-slate-900">
             <img src="${anime.poster}" alt="${anime.title}" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy">
             <div class="absolute inset-0 bg-gradient-to-t from-[#06070B] via-transparent to-transparent"></div>
-            <div class="absolute left-3 top-3 flex items-center gap-1.5">
+            <div class="absolute left-3 top-3 flex items-center gap-1.5 flex-wrap">
               <span class="rounded-md bg-slate-950/85 px-2 py-0.5 font-mono-code text-[10px] font-bold text-cyan-300 ring-1 ring-white/15">
                 ${anime.genreTag}
               </span>
               <span class="rounded-md px-2 py-0.5 font-mono-code text-[9px] font-bold ring-1 ${sourceBadgeColor} uppercase">
                 ${anime.source}
+              </span>
+              <span class="rounded-md bg-amber-500/25 px-2 py-0.5 font-mono-code text-[9px] font-bold text-amber-300 ring-1 ring-amber-400/40">
+                🎧 DUB
               </span>
             </div>
             <div class="absolute right-3 top-3 rounded-md bg-emerald-500/20 px-2 py-1 font-mono-code text-[10px] font-bold text-emerald-300 ring-1 ring-emerald-400/40">
@@ -3949,6 +3962,21 @@ USER anicli`
               updateAniSkipUI(video && video.duration ? video.duration : 1440);
             }
 
+            // If backend resolved an authentic multi-host English Dub embed (e.g. HD-1)
+            if (data && data.isEmbedPlayer && data.embedUrl) {
+              if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
+              if (video) { video.pause(); video.classList.add('hidden'); }
+              if (iframe) {
+                iframe.classList.remove('hidden');
+                iframe.src = data.embedUrl;
+              }
+              hidePlayOverlay();
+              const unmute = document.getElementById('unmutePromptBanner');
+              if (unmute) unmute.classList.add('hidden');
+              showToast(`🇬🇧 English Dub loaded via ${data.serverName || 'HD-1 Multi-Host'} for ${anime.title} (Ep ${episodeNumber})!`, 4000);
+              return;
+            }
+
             if (data && data.videoUrl) {
               if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
 
@@ -4053,15 +4081,18 @@ USER anicli`
             loadFallbackEmbed(malId, episodeNumber, mode);
           });
 
-        function loadFallbackEmbed(mId, epNum, mMode) {
+        function loadFallbackEmbed(mId, epNum, mMode, customEmbedUrl = null) {
+          if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
           if (video) { video.pause(); video.classList.add('hidden'); }
           if (iframe) {
             iframe.classList.remove('hidden');
-            const embedUrl = `https://zokoanime.video/stream/mal/${mId}/${epNum}/${mMode}`;
+            const embedUrl = customEmbedUrl || `https://zokoanime.video/stream/mal/${mId}/${epNum}/${mMode}`;
             if (iframe.src !== embedUrl) {
               iframe.src = embedUrl;
             }
             hidePlayOverlay();
+            const unmute = document.getElementById('unmutePromptBanner');
+            if (unmute) unmute.classList.add('hidden');
           }
         }
       } else if (currentStreamServer === 2) {
@@ -5443,6 +5474,13 @@ USER anicli`
       if (watchNowBtn) {
         watchNowBtn.onclick = () => window.openAnimeWatchPage(anime.slug || anime.id, 1);
       }
+      const watchDubBtn = document.getElementById('homeHeroWatchDubBtn');
+      if (watchDubBtn) {
+        watchDubBtn.onclick = () => {
+          window.switchAudioLanguage('dub');
+          window.openAnimeWatchPage(anime.slug || anime.id, 1);
+        };
+      }
       if (viewDetailsBtn) {
         viewDetailsBtn.onclick = () => window.openAnimeWatchPage(anime.slug || anime.id, 1);
       }
@@ -6298,6 +6336,7 @@ USER anicli`
       // 10. Category Filters
       const filterMap = [
         ['filterAllBtn', 'ALL'],
+        ['filterDubBtn', 'DUB'],
         ['filterCyberBtn', 'CYBERPUNK'],
         ['filterShonenBtn', 'SHONEN'],
         ['filterFantasyBtn', 'DARK FANTASY']
@@ -6307,13 +6346,22 @@ USER anicli`
         if (el) {
           el.addEventListener('click', () => {
             currentFilter = tag;
+            if (tag === 'DUB') {
+              currentMode = 'dub';
+              if (typeof updateAudioUI === 'function') updateAudioUI();
+              showToast('🎧 English Dub mode active! Showing all anime with English Dub audio.', 4000);
+            }
             filterMap.forEach(([id]) => {
               const b = document.getElementById(id);
               if (b) {
                 b.className =
                   id === btnId
-                    ? 'rounded-lg bg-cyan-400 px-3 py-1 font-mono-code text-xs font-bold text-slate-950'
-                    : 'rounded-lg bg-white/10 px-3 py-1 font-mono-code text-xs text-slate-300 hover:bg-white/15';
+                    ? (id === 'filterDubBtn'
+                        ? 'rounded-lg bg-amber-500 px-3 py-1 font-mono-code text-xs font-bold text-slate-950 shadow-md shadow-amber-500/30'
+                        : 'rounded-lg bg-cyan-400 px-3 py-1 font-mono-code text-xs font-bold text-slate-950')
+                    : (id === 'filterDubBtn'
+                        ? 'rounded-lg bg-amber-500/15 px-3 py-1 font-mono-code text-xs text-amber-300 ring-1 ring-amber-400/40 hover:bg-amber-500/25'
+                        : 'rounded-lg bg-white/10 px-3 py-1 font-mono-code text-xs text-slate-300 hover:bg-white/15');
               }
             });
             renderCatalogGrid();
