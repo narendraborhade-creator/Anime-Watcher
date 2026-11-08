@@ -1,5 +1,7 @@
 // Vercel Serverless Function: /api/anicli/run
-// Resolves anime stream sources (HLS master playlist, subtitles, skip timestamps)
+// Resolves anime stream sources (HLS master playlist, subtitles, AniSkip timestamps) with verified Dub support
+
+const { URL } = require('url');
 
 const MAL_MAP = {
   'haikyuu lev appears': 25303,
@@ -158,6 +160,72 @@ async function resolveDirectHls(malId, ep = 1, mode = 'sub') {
   }
 }
 
+async function fetchAniSkip(malId, ep) {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 2000);
+    const res = await fetch(`https://api.aniskip.com/v2/skip-times/${malId}/${ep}?types=op&types=ed&episodeLength=0`, {
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
+    if (!res.ok) return null;
+    const json = await res.json();
+    if (json && json.found && Array.isArray(json.results)) {
+      const op = json.results.find(r => r.skipType === 'op');
+      const ed = json.results.find(r => r.skipType === 'ed');
+      return {
+        intro: op ? { start: op.interval.startTime, end: op.interval.endTime } : null,
+        outro: ed ? { start: ed.interval.startTime, end: ed.interval.endTime } : null,
+        hasOp: !!op,
+        hasEd: !!ed
+      };
+    }
+  } catch (e) {}
+  return null;
+}
+
+// Checks if the dub stream provided by upstream is actually an identical clone of the sub stream
+async function isStreamDuplicated(subSrc, dubSrc) {
+  if (!subSrc || !dubSrc) return false;
+  if (subSrc === dubSrc) return true;
+  try {
+    const [mSub, mDub] = await Promise.all([
+      fetch(subSrc, { headers: { Referer: 'https://zokoanime.video/' } }).then(r => r.text()),
+      fetch(dubSrc, { headers: { Referer: 'https://zokoanime.video/' } }).then(r => r.text())
+    ]);
+
+    const getFirstUrl = (text, base) => {
+      const line = text.split('\n').map(l => l.trim()).find(l => l && !l.startsWith('#'));
+      return line ? (line.startsWith('http') ? line : new URL(line, base).href) : null;
+    };
+
+    const idxSub = getFirstUrl(mSub, subSrc);
+    const idxDub = getFirstUrl(mDub, dubSrc);
+    if (!idxSub || !idxDub) return false;
+
+    const [tIdxSub, tIdxDub] = await Promise.all([
+      fetch(idxSub, { headers: { Referer: 'https://zokoanime.video/' } }).then(r => r.text()),
+      fetch(idxDub, { headers: { Referer: 'https://zokoanime.video/' } }).then(r => r.text())
+    ]);
+
+    const segSub = getFirstUrl(tIdxSub, idxSub);
+    const segDub = getFirstUrl(tIdxDub, idxDub);
+    if (!segSub || !segDub) return false;
+
+    const [hSub, hDub] = await Promise.all([
+      fetch(segSub, { method: 'HEAD', headers: { Referer: 'https://zokoanime.video/' } }),
+      fetch(segDub, { method: 'HEAD', headers: { Referer: 'https://zokoanime.video/' } })
+    ]);
+
+    const lenSub = hSub.headers.get('content-length');
+    const lenDub = hDub.headers.get('content-length');
+    if (lenSub && lenDub && lenSub === lenDub) {
+      return true; // Exact duplicate of sub stream!
+    }
+  } catch (e) {}
+  return false;
+}
+
 module.exports = async (req, res) => {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -189,17 +257,50 @@ module.exports = async (req, res) => {
   const fallbackEmbed = `https://zokoanime.video/stream/mal/${malId}/${ep}/${mode}`;
 
   try {
-    let streamInfo = await resolveDirectHls(malId, ep, mode);
-    let resolvedMode = mode;
+    // Fetch direct stream and AniSkip skip timestamps in parallel
+    const [subInfo, dubInfo, aniskipData] = await Promise.all([
+      resolveDirectHls(malId, ep, 'sub'),
+      mode === 'dub' ? resolveDirectHls(malId, ep, 'dub') : Promise.resolve(null),
+      fetchAniSkip(malId, ep)
+    ]);
+
+    let streamInfo = subInfo;
+    let resolvedMode = 'sub';
     let dubUnavailable = false;
 
-    if ((!streamInfo || !streamInfo.src) && mode === 'dub') {
-      const subInfo = await resolveDirectHls(malId, ep, 'sub');
-      if (subInfo && subInfo.src) {
-        streamInfo = subInfo;
-        resolvedMode = 'sub';
+    if (mode === 'dub') {
+      if (!dubInfo || !dubInfo.src) {
         dubUnavailable = true;
+      } else {
+        // Verify if dub is genuine or upstream duplicate of Japanese audio
+        const isDup = await isStreamDuplicated(subInfo ? subInfo.src : null, dubInfo.src);
+        if (isDup) {
+          dubUnavailable = true;
+          resolvedMode = 'sub';
+          streamInfo = subInfo;
+        } else {
+          dubUnavailable = false;
+          resolvedMode = 'dub';
+          streamInfo = dubInfo;
+        }
       }
+    } else {
+      streamInfo = subInfo;
+      resolvedMode = 'sub';
+      dubUnavailable = false;
+    }
+
+    // Determine highest-fidelity skip timestamps: AniSkip > Upstream Provider
+    let skipTimestamps = null;
+    if (aniskipData) {
+      skipTimestamps = aniskipData;
+    } else if (streamInfo && streamInfo.skip) {
+      skipTimestamps = {
+        intro: streamInfo.skip.intro ? { start: streamInfo.skip.intro.start, end: streamInfo.skip.intro.end } : null,
+        outro: streamInfo.skip.outro ? { start: streamInfo.skip.outro.start, end: streamInfo.skip.outro.end } : null,
+        hasOp: !!(streamInfo.skip.intro),
+        hasEd: !!(streamInfo.skip.outro)
+      };
     }
 
     if (streamInfo && streamInfo.src) {
@@ -215,10 +316,10 @@ module.exports = async (req, res) => {
         embedUrl: `https://zokoanime.video/stream/mal/${malId}/${ep}/${resolvedMode}`,
         videoUrl: streamInfo.src,
         subUrl: streamInfo.subUrl,
-        skip: streamInfo.skip,
+        skip: skipTimestamps,
         referer: 'https://zokoanime.video/',
         logs: dubUnavailable
-          ? `English dub not available for ${cleanQuery} (Ep ${ep}). Seamlessly playing in Japanese with English Subtitles.`
+          ? `English dub not provided by upstream CDN for ${cleanQuery} (Ep ${ep}). Seamlessly playing in Japanese with English Subtitles.`
           : `Resolved 1080p ${resolvedMode.toUpperCase()} stream for ${cleanQuery} (Ep ${ep}) via POSIX stream mesh.`
       });
     }
@@ -235,7 +336,7 @@ module.exports = async (req, res) => {
       embedUrl: fallbackEmbed,
       videoUrl: null,
       subUrl: null,
-      skip: null,
+      skip: skipTimestamps,
       referer: 'https://zokoanime.video/',
       logs: `Resolved fallback stream for ${cleanQuery} (Ep ${ep}).`
     });

@@ -556,20 +556,20 @@
               <!-- AniSkip Color-Coded Timeline Scrubber -->
               <div class="bg-slate-950/95 px-4 pt-3 pb-2">
                 <div class="mb-1.5 flex items-center justify-between font-mono-code text-[11px] text-slate-400">
-                  <span id="playerTimeCurrent">01:28</span>
+                  <span id="playerTimeCurrent">00:00</span>
                   <div class="flex items-center gap-3 text-[10px]">
-                    <span class="flex items-center gap-1"><i class="inline-block h-2 w-2 rounded-full bg-cyan-400"></i> AniSkip OP (01:25–02:55)</span>
-                    <span class="flex items-center gap-1"><i class="inline-block h-2 w-2 rounded-full bg-fuchsia-400"></i> AniSkip ED (21:30–23:00)</span>
+                    <span id="timelineOpLegend" class="flex items-center gap-1"><i class="inline-block h-2 w-2 rounded-full bg-cyan-400"></i> AniSkip OP</span>
+                    <span id="timelineEdLegend" class="flex items-center gap-1"><i class="inline-block h-2 w-2 rounded-full bg-fuchsia-400"></i> AniSkip ED</span>
                   </div>
                   <span id="playerTimeDuration">24:00</span>
                 </div>
                 <div id="timelineScrubberBar" class="relative h-2.5 w-full cursor-pointer overflow-hidden rounded-full bg-slate-800">
                   <!-- OP Ribbon -->
-                  <div class="pointer-events-none absolute top-0 bottom-0 left-[6%] width-[6.5%] w-[7%] bg-cyan-400/75" title="AniSkip Opening"></div>
+                  <div id="timelineOpRibbon" class="pointer-events-none absolute top-0 bottom-0 left-[6%] w-[7%] bg-cyan-400/80 transition-all duration-300" title="AniSkip Opening"></div>
                   <!-- ED Ribbon -->
-                  <div class="pointer-events-none absolute top-0 bottom-0 left-[89%] w-[6.5%] bg-fuchsia-500/75" title="AniSkip Ending"></div>
+                  <div id="timelineEdRibbon" class="pointer-events-none absolute top-0 bottom-0 left-[89%] w-[6.5%] bg-fuchsia-500/80 transition-all duration-300" title="AniSkip Ending"></div>
                   <!-- Current Playback Fill -->
-                  <div id="timelineProgressFill" class="pointer-events-none h-full w-[12%] bg-gradient-to-r from-cyan-400 to-indigo-400"></div>
+                  <div id="timelineProgressFill" class="pointer-events-none h-full w-[0%] bg-gradient-to-r from-cyan-400 to-indigo-400"></div>
                 </div>
               </div>
 
@@ -592,8 +592,8 @@
                   <button id="deckNextEpBtn" type="button" class="rounded-xl bg-cyan-500/20 px-3 py-1.5 font-mono-code text-xs font-bold text-cyan-300 ring-1 ring-cyan-400/40 transition hover:bg-cyan-500/30">
                     Next Ep ⏭
                   </button>
-                  <button id="triggerOpSkipBtn" type="button" class="rounded-xl bg-white/5 px-3 py-1.5 font-mono-code text-xs text-slate-300 ring-1 ring-white/10 transition hover:bg-white/15">
-                    ⏭ Skip Intro (85s)
+                  <button id="triggerOpSkipBtn" type="button" class="rounded-xl bg-white/5 px-3 py-1.5 font-mono-code text-xs text-slate-300 ring-1 ring-white/10 transition hover:bg-white/15 cursor-pointer shadow-sm" title="AniSkip Intro Skip">
+                    ⏭ Skip Intro
                   </button>
                   <div class="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 font-mono-code text-[11px] font-bold">
                     <span>🛡️ AD-SHIELD ON:</span>
@@ -3058,8 +3058,77 @@ USER anicli`
     let currentFilter = 'ALL';
     let currentSourceFilter = 'ALL';
     let activeSkipTimes = null;
+    let dubAvailableState = {}; // Record whether dub is available per anime ID
     let selectedFileIndex = 8;
     let hlsInstance = null;
+
+    function formatTimeSec(seconds) {
+      if (isNaN(seconds) || seconds == null || seconds < 0) return '00:00';
+      const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+      const s = String(Math.floor(seconds % 60)).padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function updateAniSkipUI(duration = 1440) {
+      const opBtn = document.getElementById('triggerOpSkipBtn');
+      const opRibbon = document.getElementById('timelineOpRibbon');
+      const edRibbon = document.getElementById('timelineEdRibbon');
+      const opLegend = document.getElementById('timelineOpLegend');
+      const edLegend = document.getElementById('timelineEdLegend');
+
+      if (activeSkipTimes && activeSkipTimes.op) {
+        const { start, end } = activeSkipTimes.op;
+        if (opBtn) {
+          opBtn.textContent = `⏭ Skip Intro (${formatTimeSec(start)} → ${formatTimeSec(end)})`;
+          opBtn.title = `Skip Opening theme song from ${formatTimeSec(start)} to ${formatTimeSec(end)}`;
+          opBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+          opBtn.disabled = false;
+        }
+        if (opLegend) {
+          opLegend.innerHTML = `<i class="inline-block h-2 w-2 rounded-full bg-cyan-400"></i> AniSkip OP (${formatTimeSec(start)}–${formatTimeSec(end)})`;
+          opLegend.classList.remove('hidden');
+        }
+        if (opRibbon && duration > 0) {
+          const leftPct = Math.max(0, Math.min(100, (start / duration) * 100));
+          const widthPct = Math.max(1, Math.min(100 - leftPct, ((end - start) / duration) * 100));
+          opRibbon.style.left = `${leftPct.toFixed(2)}%`;
+          opRibbon.style.width = `${widthPct.toFixed(2)}%`;
+          opRibbon.style.display = 'block';
+          opRibbon.title = `AniSkip Opening (${formatTimeSec(start)}–${formatTimeSec(end)})`;
+        }
+      } else {
+        if (opBtn) {
+          opBtn.textContent = `ℹ️ No Intro in Ep ${currentEpisode} (Story Premiere)`;
+          opBtn.title = `This episode has no opening theme; it begins directly with the story narrative.`;
+          opBtn.classList.add('opacity-60');
+        }
+        if (opLegend) {
+          opLegend.classList.add('hidden');
+        }
+        if (opRibbon) {
+          opRibbon.style.display = 'none';
+        }
+      }
+
+      if (activeSkipTimes && activeSkipTimes.ed) {
+        const { start, end } = activeSkipTimes.ed;
+        if (edLegend) {
+          edLegend.innerHTML = `<i class="inline-block h-2 w-2 rounded-full bg-fuchsia-400"></i> AniSkip ED (${formatTimeSec(start)}–${formatTimeSec(end)})`;
+          edLegend.classList.remove('hidden');
+        }
+        if (edRibbon && duration > 0) {
+          const leftPct = Math.max(0, Math.min(100, (start / duration) * 100));
+          const widthPct = Math.max(1, Math.min(100 - leftPct, ((end - start) / duration) * 100));
+          edRibbon.style.left = `${leftPct.toFixed(2)}%`;
+          edRibbon.style.width = `${widthPct.toFixed(2)}%`;
+          edRibbon.style.display = 'block';
+          edRibbon.title = `AniSkip Ending (${formatTimeSec(start)}–${formatTimeSec(end)})`;
+        }
+      } else {
+        if (edLegend) edLegend.classList.add('hidden');
+        if (edRibbon) edRibbon.style.display = 'none';
+      }
+    }
 
     function showToast(msg) {
       const toast = document.getElementById('hudToast');
@@ -3069,7 +3138,7 @@ USER anicli`
       toast.classList.remove('translate-y-8', 'opacity-0');
       setTimeout(() => {
         toast.classList.add('translate-y-8', 'opacity-0');
-      }, 2800);
+      }, 3500);
     }
 
     function saveWatchState() {
@@ -3083,6 +3152,7 @@ USER anicli`
 
     function updateAudioUI() {
       const isSub = currentMode === 'sub';
+      const hasDub = currentAnime && dubAvailableState[currentAnime.id] !== false;
 
       // 1. Top player audio buttons
       const topSub = document.getElementById('topAudioSubBtn');
@@ -3093,9 +3163,17 @@ USER anicli`
           : 'flex items-center gap-1.5 rounded-lg px-2.5 py-1 font-mono-code text-[11px] font-semibold text-slate-400 transition hover:bg-white/10 hover:text-white cursor-pointer';
       }
       if (topDub) {
-        topDub.className = !isSub
-          ? 'flex items-center gap-1.5 rounded-lg px-2.5 py-1 font-mono-code text-[11px] font-bold transition cursor-pointer bg-amber-500 text-slate-950 shadow-md shadow-amber-500/30 ring-1 ring-amber-300'
-          : 'flex items-center gap-1.5 rounded-lg px-2.5 py-1 font-mono-code text-[11px] font-semibold text-slate-400 transition hover:bg-white/10 hover:text-white cursor-pointer';
+        if (!hasDub) {
+          topDub.className = 'flex items-center gap-1.5 rounded-lg px-2.5 py-1 font-mono-code text-[11px] font-semibold text-amber-500/70 bg-amber-500/10 ring-1 ring-amber-500/20 transition cursor-pointer hover:bg-amber-500/20';
+          topDub.title = `English Dub is not provided by upstream CDN for ${currentAnime ? currentAnime.title : 'this anime'}`;
+          topDub.innerHTML = `<span>🇬🇧</span><span>ENG DUB (N/A)</span>`;
+        } else {
+          topDub.className = !isSub
+            ? 'flex items-center gap-1.5 rounded-lg px-2.5 py-1 font-mono-code text-[11px] font-bold transition cursor-pointer bg-amber-500 text-slate-950 shadow-md shadow-amber-500/30 ring-1 ring-amber-300'
+            : 'flex items-center gap-1.5 rounded-lg px-2.5 py-1 font-mono-code text-[11px] font-semibold text-slate-400 transition hover:bg-white/10 hover:text-white cursor-pointer';
+          topDub.title = 'Switch to English Dub Audio';
+          topDub.innerHTML = `<span>🇬🇧</span><span>ENG DUB</span>`;
+        }
       }
 
       // 2. Matrix selector buttons
@@ -3110,6 +3188,7 @@ USER anicli`
         matDub.className = !isSub
           ? 'rounded px-2.5 py-1 font-mono-code text-[10px] font-bold transition cursor-pointer bg-amber-500 text-slate-950 shadow'
           : 'rounded px-2.5 py-1 font-mono-code text-[10px] font-semibold transition cursor-pointer text-slate-400 hover:text-white';
+        matDub.textContent = hasDub ? '🇬🇧 DUB' : '🇬🇧 DUB (N/A)';
       }
 
       // 3. Hot-Swap button text & styling
@@ -3127,7 +3206,9 @@ USER anicli`
       // 4. Player audio badge
       const audioBadge = document.getElementById('playerAudioBadge');
       if (audioBadge) {
-        audioBadge.textContent = isSub ? 'SUB (JA-JP)' : 'DUB (EN-US)';
+        audioBadge.textContent = isSub
+          ? (hasDub ? 'SUB (JA-JP)' : 'SUB (JA-JP) • DUB N/A')
+          : 'DUB (EN-US)';
         audioBadge.className = isSub
           ? 'rounded bg-fuchsia-500/20 px-2 py-0.5 text-fuchsia-300'
           : 'rounded bg-amber-500/20 px-2 py-0.5 text-amber-300';
@@ -3159,6 +3240,14 @@ USER anicli`
 
     window.switchAudioLanguage = function(mode, preserveTime = true) {
       if (mode !== 'sub' && mode !== 'dub') return;
+
+      if (mode === 'dub' && currentAnime && dubAvailableState[currentAnime.id] === false) {
+        showToast(`⚠️ English Dub is not provided by upstream CDN for ${currentAnime.title} (Ep ${currentEpisode}). Playing in Japanese with English Subtitles.`, 4500);
+        currentMode = 'sub';
+        updateAudioUI();
+        return;
+      }
+
       currentMode = mode;
       saveWatchState();
       updateAudioUI();
@@ -3799,6 +3888,31 @@ USER anicli`
         const overlayText = document.getElementById('overlayBtnText');
         if (overlayText) overlayText.textContent = `CONNECTING TO EPISODE ${episodeNumber} (${mode.toUpperCase()})...`;
 
+        // Reset AniSkip state and update skip intro button immediately
+        activeSkipTimes = null;
+        const opBtn = document.getElementById('triggerOpSkipBtn');
+        if (opBtn) {
+          opBtn.textContent = '⏳ Checking AniSkip...';
+        }
+
+        // Parallel direct AniSkip API resolution
+        fetch(`https://api.aniskip.com/v2/skip-times/${malId}/${episodeNumber}?types=op&types=ed&episodeLength=0`)
+          .then(r => r.ok ? r.json() : null)
+          .then(skipRes => {
+            if (skipRes && skipRes.found && Array.isArray(skipRes.results)) {
+              const op = skipRes.results.find(r => r.skipType === 'op');
+              const ed = skipRes.results.find(r => r.skipType === 'ed');
+              activeSkipTimes = {
+                op: op ? { start: op.interval.startTime, end: op.interval.endTime } : null,
+                ed: ed ? { start: ed.interval.startTime, end: ed.interval.endTime } : null
+              };
+            }
+            updateAniSkipUI(video && video.duration ? video.duration : 1440);
+          })
+          .catch(() => {
+            updateAniSkipUI(video && video.duration ? video.duration : 1440);
+          });
+
         const isStaticHost = window.location.hostname.endsWith('github.io') || window.location.protocol === 'file:';
         if (isStaticHost) {
           loadFallbackEmbed(malId, episodeNumber, mode);
@@ -3812,12 +3926,27 @@ USER anicli`
           })
           .then(data => {
             if (data && data.dubUnavailable) {
-              showToast(`⚠️ English Dub is unavailable for ${anime.title} (Ep ${episodeNumber}) — playing in Japanese with English Subtitles.`, 4500);
+              dubAvailableState[anime.id] = false;
               currentMode = 'sub';
               if (typeof updateAudioUI === 'function') updateAudioUI();
+              showToast(`⚠️ English Dub is not provided by upstream CDN for ${anime.title} (Ep ${episodeNumber}) — playing in Japanese with English Subtitles.`, 5000);
+            } else if (data && data.mode === 'dub') {
+              dubAvailableState[anime.id] = true;
+              currentMode = 'dub';
+              if (typeof updateAudioUI === 'function') updateAudioUI();
+              showToast(`🇬🇧 English Dub active for ${anime.title} (Ep ${episodeNumber})!`);
             } else if (data && data.mode) {
               currentMode = data.mode;
               if (typeof updateAudioUI === 'function') updateAudioUI();
+            }
+
+            // Sync skip times from backend if available
+            if (data && data.skip && (!activeSkipTimes || !activeSkipTimes.op)) {
+              activeSkipTimes = {
+                op: data.skip.intro ? { start: data.skip.intro.start, end: data.skip.intro.end } : (activeSkipTimes ? activeSkipTimes.op : null),
+                ed: data.skip.outro ? { start: data.skip.outro.start, end: data.skip.outro.end } : (activeSkipTimes ? activeSkipTimes.ed : null)
+              };
+              updateAniSkipUI(video && video.duration ? video.duration : 1440);
             }
 
             if (data && data.videoUrl) {
@@ -3857,14 +3986,6 @@ USER anicli`
                 } catch(e) {}
               }
 
-              // Synchronize OP / ED skip timestamps if present
-              if (data.skip && data.skip.intro) {
-                activeSkipTimes = {
-                  op: { start: data.skip.intro.start, end: data.skip.intro.end },
-                  ed: data.skip.outro ? { start: data.skip.outro.start, end: data.skip.outro.end } : null
-                };
-              }
-
               const proxyStreamUrl = `/api/proxy/hls?url=${encodeURIComponent(data.videoUrl)}&referer=${encodeURIComponent(data.referer || 'https://zokoanime.video/')}`;
 
               function startHlsPlayback() {
@@ -3872,6 +3993,14 @@ USER anicli`
                 if (seekToTime && seekToTime > 0) {
                   try { video.currentTime = seekToTime; } catch(e) {}
                 }
+                video.addEventListener('loadedmetadata', () => {
+                  const durEl = document.getElementById('playerTimeDuration');
+                  if (durEl && video.duration) {
+                    durEl.textContent = formatTimeSec(video.duration);
+                  }
+                  updateAniSkipUI(video.duration);
+                }, { once: true });
+
                 video.play()
                   .then(() => {
                     hidePlayOverlay();
@@ -4297,12 +4426,12 @@ USER anicli`
 
         // AniSkip intelligent floating button prompt
         const skipBtn = document.getElementById('floatingSkipBtn');
-        if (activeSkipTimes && activeSkipTimes.op && skipBtn) {
-          if (cur >= activeSkipTimes.op.start && cur < activeSkipTimes.op.end) {
-            skipBtn.textContent = `⏭ SKIP OPENING (${Math.round(activeSkipTimes.op.start)}s → ${Math.round(activeSkipTimes.op.end)}s)`;
+        if (skipBtn) {
+          if (activeSkipTimes && activeSkipTimes.op && cur >= activeSkipTimes.op.start && cur < activeSkipTimes.op.end) {
+            skipBtn.textContent = `⏭ SKIP OPENING (${formatTimeSec(activeSkipTimes.op.start)} → ${formatTimeSec(activeSkipTimes.op.end)})`;
             skipBtn.classList.remove('hidden');
-          } else if (activeSkipTimes.ed && cur >= activeSkipTimes.ed.start && cur < activeSkipTimes.ed.end) {
-            skipBtn.textContent = `⏭ SKIP ENDING (${Math.round(activeSkipTimes.ed.start)}s → ${Math.round(activeSkipTimes.ed.end)}s)`;
+          } else if (activeSkipTimes && activeSkipTimes.ed && cur >= activeSkipTimes.ed.start && cur < activeSkipTimes.ed.end) {
+            skipBtn.textContent = `⏭ SKIP ENDING (${formatTimeSec(activeSkipTimes.ed.start)} → ${formatTimeSec(activeSkipTimes.ed.end)})`;
             skipBtn.classList.remove('hidden');
           } else {
             skipBtn.classList.add('hidden');
@@ -5877,19 +6006,32 @@ USER anicli`
       // 7. AniSkip OP / ED Buttons
       document.getElementById('triggerOpSkipBtn').addEventListener('click', () => {
         const video = document.getElementById('hlsVideoElement');
-        const target = (activeSkipTimes && activeSkipTimes.op) ? activeSkipTimes.op.end : 85;
-        if (video) video.currentTime = target;
-        const skipBtn = document.getElementById('floatingSkipBtn');
-        if (skipBtn) skipBtn.classList.add('hidden');
-        showToast('Skipped Opening Intro to ' + Math.floor(target/60) + ':' + String(Math.floor(target%60)).padStart(2,'0'));
+        if (activeSkipTimes && activeSkipTimes.op) {
+          const target = activeSkipTimes.op.end + 0.3;
+          if (video) video.currentTime = target;
+          const skipBtn = document.getElementById('floatingSkipBtn');
+          if (skipBtn) skipBtn.classList.add('hidden');
+          showToast(`⏭ Skipped Opening Intro to ${formatTimeSec(activeSkipTimes.op.end)} (AniSkip Verified)`);
+        } else {
+          showToast(`ℹ️ Episode ${currentEpisode} has no opening theme (story premiere). Progress preserved.`);
+        }
       });
 
       document.getElementById('floatingSkipBtn').addEventListener('click', (e) => {
         e.currentTarget.classList.add('hidden');
         const video = document.getElementById('hlsVideoElement');
-        const target = (activeSkipTimes && activeSkipTimes.op) ? activeSkipTimes.op.end : 175;
-        if (video) video.currentTime = target;
-        showToast('Skipped Opening to ' + Math.floor(target/60) + ':' + String(Math.floor(target%60)).padStart(2,'0') + ' via AniSkip API');
+        if (!video) return;
+        const cur = video.currentTime;
+        if (activeSkipTimes && activeSkipTimes.op && cur >= activeSkipTimes.op.start - 2 && cur < activeSkipTimes.op.end) {
+          video.currentTime = activeSkipTimes.op.end + 0.3;
+          showToast(`⏭ Skipped Opening to ${formatTimeSec(activeSkipTimes.op.end)} via AniSkip`);
+        } else if (activeSkipTimes && activeSkipTimes.ed && cur >= activeSkipTimes.ed.start - 2 && cur < activeSkipTimes.ed.end) {
+          video.currentTime = activeSkipTimes.ed.end + 0.3;
+          showToast(`⏭ Skipped Ending to ${formatTimeSec(activeSkipTimes.ed.end)} via AniSkip`);
+        } else if (activeSkipTimes && activeSkipTimes.op) {
+          video.currentTime = activeSkipTimes.op.end + 0.3;
+          showToast(`⏭ Skipped Opening to ${formatTimeSec(activeSkipTimes.op.end)} via AniSkip`);
+        }
       });
 
       document.getElementById('timelineScrubberBar').addEventListener('click', (e) => {

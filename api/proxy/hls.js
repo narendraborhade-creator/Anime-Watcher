@@ -59,8 +59,9 @@ module.exports = async (req, res) => {
           res.end(rewritten);
         });
       } else {
+        const mimeType = targetUrl.includes('.vtt') ? 'text/vtt; charset=utf-8' : (contentType || 'video/mp2t');
         res.writeHead(proxyRes.statusCode || 200, {
-          'Content-Type': contentType || 'video/mp2t',
+          'Content-Type': mimeType,
           'Access-Control-Allow-Origin': '*',
           'Cache-Control': 'public, max-age=3600'
         });

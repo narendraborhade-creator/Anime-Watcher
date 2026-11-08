@@ -321,24 +321,31 @@ const server = http.createServer(async (req, res) => {
       } catch (e) {}
     }
 
-    let q = postBody.anime || postBody.q || postBody.query || parsedUrl.query.q || parsedUrl.query.query || 'naruto';
-    const season = postBody.season || parsedUrl.query.season || '';
-    if (season && !q.toLowerCase().includes(season.toLowerCase())) {
-      q = `${q} ${season}`.trim();
+    req.query = parsedUrl.query;
+    req.body = postBody;
+
+    if (!res.status) {
+      res.status = function(code) {
+        this.statusCode = code;
+        return this;
+      };
     }
-    const ep = parseInt(postBody.episode || postBody.ep || parsedUrl.query.ep || parsedUrl.query.episode || '1', 10);
-    const mode = postBody.mode || parsedUrl.query.mode || 'sub';
-    const explicitMalId = postBody.malId || parsedUrl.query.malId;
+    if (!res.json) {
+      res.json = function(data) {
+        this.writeHead(this.statusCode || 200, { 'Content-Type': 'application/json' });
+        this.end(JSON.stringify(data));
+        return this;
+      };
+    }
 
     try {
-      const result = await runAniCli(q, ep, mode, explicitMalId);
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify(result));
+      const anicliHandler = require('./api/anicli/run.js');
+      return anicliHandler(req, res);
     } catch (e) {
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ success: false, error: e.message }));
+      return;
     }
-    return;
   }
 
   // 3. HLS Streaming Proxy (bypasses CORS & upstream referer blocks)
@@ -386,8 +393,9 @@ const server = http.createServer(async (req, res) => {
             res.end(rewritten);
           });
         } else {
+          const mimeType = targetUrl.includes('.vtt') ? 'text/vtt; charset=utf-8' : (proxyRes.headers['content-type'] || 'application/octet-stream');
           res.writeHead(proxyRes.statusCode, {
-            'Content-Type': proxyRes.headers['content-type'] || 'application/octet-stream',
+            'Content-Type': mimeType,
             'Access-Control-Allow-Origin': '*'
           });
           proxyRes.pipe(res);
