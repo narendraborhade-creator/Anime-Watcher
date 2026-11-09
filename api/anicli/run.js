@@ -226,20 +226,47 @@ async function isStreamDuplicated(subSrc, dubSrc) {
   return false;
 }
 
-// Resolves authentic HD-1 English Dub server from HiAnime / MegaPlay mesh
-async function resolveHiAnimeDub(query, ep = 1) {
+// Resolves authentic HD-1 Multi-Host server from HiAnime / MegaPlay mesh (Sub & Dub)
+async function resolveHiAnimeServer(query, ep = 1, mode = 'dub') {
   try {
-    const sRes = await fetch(`https://hianime.at/search?keyword=${encodeURIComponent(query)}`, {
-      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
-    });
-    const sHtml = await sRes.text();
-    const filmMatch = sHtml.match(/class="film-detail"[\s\S]*?<a\s+href="https:\/\/hianime\.at\/([^"]+)-([0-9]+)"/);
-    if (!filmMatch) return null;
-    const animeId = filmMatch[2];
+    const searchTerms = [query];
+    const lower = query.toLowerCase();
+    if (lower.includes('reincarnated as a sword') && !searchTerms.includes('tensei shitara ken deshita')) {
+      searchTerms.push('tensei shitara ken deshita');
+    }
+    if (lower.includes('solo leveling') && !searchTerms.includes('ore dake level up')) {
+      searchTerms.push('ore dake level up na ken');
+    }
+    if (lower.includes('attack on titan') && !searchTerms.includes('shingeki no kyojin')) {
+      searchTerms.push('shingeki no kyojin');
+    }
+    if (lower.includes('demon slayer') && !searchTerms.includes('kimetsu no yaiba')) {
+      searchTerms.push('kimetsu no yaiba');
+    }
+
+    let animeId = null;
+    for (const term of searchTerms) {
+      try {
+        const sRes = await fetch(`https://hianime.at/search?keyword=${encodeURIComponent(term)}`, {
+          headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+          signal: AbortSignal.timeout(3500)
+        });
+        if (!sRes.ok) continue;
+        const sHtml = await sRes.text();
+        const filmMatch = sHtml.match(/class="film-detail"[\s\S]*?<a\s+href="https:\/\/hianime\.at\/([^"]+)-([0-9]+)"/);
+        if (filmMatch) {
+          animeId = filmMatch[2];
+          break;
+        }
+      } catch (e) {}
+    }
+    if (!animeId) return null;
 
     const epRes = await fetch(`https://hianime.at/api/theme/episode/list/${animeId}`, {
-      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
+      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+      signal: AbortSignal.timeout(3500)
     });
+    if (!epRes.ok) return null;
     const epData = await epRes.json();
     const epRegex = new RegExp(`data-number="${ep}"[\\s\\S]*?data-id="([0-9]+)"`, 'i');
     const epMatch = epData.html.match(epRegex) || epData.html.match(new RegExp(`data-id="([0-9]+)"[\\s\\S]*?data-number="${ep}"`, 'i'));
@@ -247,19 +274,26 @@ async function resolveHiAnimeDub(query, ep = 1) {
     const epId = epMatch[1];
 
     const srvRes = await fetch(`https://hianime.at/api/theme/episode/servers?episodeId=${epId}`, {
-      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
+      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+      signal: AbortSignal.timeout(3500)
     });
+    if (!srvRes.ok) return null;
     const srvData = await srvRes.json();
-    const dubBlockMatch = srvData.html.match(/class="[^"]*servers-dub[^"]*"[\s\S]*?<\/div>\s*<\/div>/i);
-    if (!dubBlockMatch) return null;
 
-    const dubServers = [...dubBlockMatch[0].matchAll(/data-server-name="([^"]+)"\s+data-hash="([^"]+)"/g)].map(m => ({
+    const blockRegex = mode === 'dub'
+      ? /class="[^"]*servers-dub[^"]*"[\s\S]*?<\/div>\s*<\/div>/i
+      : /class="[^"]*servers-sub[^"]*"[\s\S]*?<\/div>\s*<\/div>/i;
+    const blockMatch = srvData.html.match(blockRegex);
+    if (!blockMatch) return null;
+
+    const servers = [...blockMatch[0].matchAll(/data-server-name="([^"]+)"\s+data-hash="([^"]+)"/g)].map(m => ({
       name: m[1],
       url: Buffer.from(m[2], 'base64').toString('utf8')
     }));
 
-    const hd1 = dubServers.find(s => s.name === 'HD-1' || !s.url.includes('zokoanime'));
-    return hd1 ? hd1.url : (dubServers[0] ? dubServers[0].url : null);
+    // Prefer HD-1 or non-zokoanime server to avoid DNS block in client browsers
+    const cleanServer = servers.find(s => s.name === 'HD-1' || !s.url.includes('zokoanime.video'));
+    return cleanServer ? cleanServer.url : (servers[0] && !servers[0].url.includes('zokoanime.video') ? servers[0].url : null);
   } catch (e) {
     return null;
   }
@@ -293,7 +327,6 @@ module.exports = async (req, res) => {
   const cleanQuery = q.replace(/[^a-zA-Z0-9\s\-_]/g, '').trim() || 'haikyuu';
   const explicitMalId = parseInt(query.malId || body.malId, 10);
   const malId = (!isNaN(explicitMalId) && explicitMalId > 0) ? explicitMalId : resolveMalId(cleanQuery);
-  const fallbackEmbed = `https://zokoanime.video/stream/mal/${malId}/${ep}/${mode}`;
 
   try {
     // 1. Fetch direct stream and AniSkip skip timestamps in parallel
@@ -307,7 +340,7 @@ module.exports = async (req, res) => {
     let resolvedMode = 'sub';
     let dubUnavailable = false;
     let isEmbedPlayer = false;
-    let resolvedEmbedUrl = fallbackEmbed;
+    let resolvedEmbedUrl = null;
     let serverName = 'Primary Direct HLS';
 
     if (mode === 'dub') {
@@ -325,7 +358,7 @@ module.exports = async (req, res) => {
 
       // If primary CDN doesn't have authentic English Dub, resolve HD-1 Dub embed
       if (!hasRealDirectDub) {
-        const hd1DubUrl = await resolveHiAnimeDub(cleanQuery, ep);
+        const hd1DubUrl = await resolveHiAnimeServer(cleanQuery, ep, 'dub');
         if (hd1DubUrl) {
           resolvedMode = 'dub';
           dubUnavailable = false;
@@ -343,6 +376,17 @@ module.exports = async (req, res) => {
       streamInfo = subInfo;
       resolvedMode = 'sub';
       dubUnavailable = false;
+
+      // If direct sub stream failed or is unreachable, fallback to HD-1 Sub embed
+      if (!streamInfo || !streamInfo.src) {
+        const hd1SubUrl = await resolveHiAnimeServer(cleanQuery, ep, 'sub');
+        if (hd1SubUrl) {
+          resolvedMode = 'sub';
+          isEmbedPlayer = true;
+          resolvedEmbedUrl = hd1SubUrl;
+          serverName = 'HD-1 Multi-Host (English Sub)';
+        }
+      }
     }
 
     // Determine highest-fidelity skip timestamps: AniSkip > Upstream Provider
@@ -358,13 +402,13 @@ module.exports = async (req, res) => {
       };
     }
 
-    // Return HD-1 embed player for English Dub when direct stream is not available
+    // Return HD-1 embed player for English Dub or fallback when direct stream is not available
     if (isEmbedPlayer && resolvedEmbedUrl) {
       return res.status(200).json({
         success: true,
         query: cleanQuery,
         episode: ep,
-        mode: 'dub',
+        mode: resolvedMode,
         requestedMode: mode,
         dubUnavailable: false,
         hasDub: true,
@@ -376,7 +420,7 @@ module.exports = async (req, res) => {
         skip: skipTimestamps,
         serverName,
         referer: 'https://hianime.at/',
-        logs: `Resolved authentic English Dub via ${serverName} for ${cleanQuery} (Ep ${ep}).`
+        logs: `Resolved authentic ${resolvedMode.toUpperCase()} stream via ${serverName} for ${cleanQuery} (Ep ${ep}).`
       });
     }
 
@@ -391,7 +435,7 @@ module.exports = async (req, res) => {
         hasDub: !dubUnavailable,
         isEmbedPlayer: false,
         malId,
-        embedUrl: `https://zokoanime.video/stream/mal/${malId}/${ep}/${resolvedMode}`,
+        embedUrl: resolvedEmbedUrl,
         videoUrl: streamInfo.src,
         subUrl: streamInfo.subUrl,
         skip: skipTimestamps,
@@ -418,14 +462,14 @@ module.exports = async (req, res) => {
       subUrl: null,
       skip: skipTimestamps,
       serverName,
-      referer: 'https://zokoanime.video/',
+      referer: 'https://hianime.at/',
       logs: `Resolved fallback stream for ${cleanQuery} (Ep ${ep}).`
     });
   } catch (err) {
     return res.status(500).json({
       success: false,
       error: err.message,
-      embedUrl: fallbackEmbed
+      embedUrl: null
     });
   }
 };

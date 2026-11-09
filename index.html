@@ -486,7 +486,7 @@
                     <span class="h-2 w-2 rounded-full bg-emerald-400 animate-ping"></span>
                     <span>Official HD Stream • Audio Enabled</span>
                   </span>
-                  <a id="popoutExternalPlayerBtn" href="https://zokoanime.video/stream/mal/20583/1/sub" target="_blank" rel="noopener noreferrer" class="hidden sm:inline-flex items-center gap-1 rounded bg-slate-800 px-2 py-0.5 text-[10px] text-cyan-300 ring-1 ring-cyan-500/30 hover:bg-slate-700 hover:text-cyan-200 transition" title="Open Stream in Dedicated External Browser Window">
+                  <a id="popoutExternalPlayerBtn" href="#" target="_blank" rel="noopener noreferrer" class="hidden sm:inline-flex items-center gap-1 rounded bg-slate-800 px-2 py-0.5 text-[10px] text-cyan-300 ring-1 ring-cyan-500/30 hover:bg-slate-700 hover:text-cyan-200 transition" title="Open Stream in Dedicated External Browser Window">
                     <span>↗ Dedicated Tab</span>
                   </a>
                 </div>
@@ -1120,7 +1120,7 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <!-- Source Card 1 -->
           <div class="rounded-2xl bg-slate-900/80 border border-cyan-500/30 p-5 space-y-3 relative overflow-hidden group hover:border-cyan-400 transition">
             <div class="flex items-center justify-between">
@@ -1131,7 +1131,7 @@
               <span>🐧</span> pystardust / ani-cli
             </h3>
             <p class="text-xs text-slate-300 leading-relaxed">
-              Official POSIX bash script scraping HiAnime and ZokoAnime embeds, resolving direct HLS master playlists and WebVTT subtitles.
+              Official POSIX bash script scraping HiAnime and multi-host embeds, resolving direct HLS master playlists and WebVTT subtitles.
             </p>
             <div class="pt-2 border-t border-white/10 flex items-center justify-between">
               <span class="text-[11px] font-mono-code text-slate-400">Port 3000 API Proxy</span>
@@ -1178,6 +1178,26 @@
               <button type="button" class="quick-source-test-btn rounded-lg bg-amber-400 px-3 py-1.5 text-xs font-bold text-slate-950 hover:bg-amber-300 transition" data-source="kuroneko">
                 BROWSE MANGA &amp; ANIME MESH →
               </button>
+            </div>
+          </div>
+
+          <!-- Source Card 4: Awesome Anime Sources Federation -->
+          <div class="rounded-2xl bg-slate-900/80 border border-emerald-500/30 p-5 space-y-3 relative overflow-hidden group hover:border-emerald-400 transition">
+            <div class="flex items-center justify-between">
+              <span class="rounded bg-emerald-500/20 px-2 py-0.5 text-emerald-300 font-bold text-[10px]">SOURCE 04</span>
+              <span class="text-xs text-emerald-400 font-semibold">● AWESOME SOURCES MESH</span>
+            </div>
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+              <span>⚡</span> anshumanv / awesome-anime-sources
+            </h3>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Curated federated anime mesh: HiAnime / MegaPlay HD-1 (authentic English Dub &amp; Sub), GogoAnime, AnimePahe, Animelon, and AniSkip OP/ED API.
+            </p>
+            <div class="pt-2 border-t border-white/10 flex items-center justify-between">
+              <span class="text-[11px] font-mono-code text-slate-400">HD-1 Sub &amp; Dub Mesh</span>
+              <a href="https://github.com/anshumanv/awesome-anime-sources" target="_blank" rel="noopener noreferrer" class="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-slate-950 hover:bg-emerald-400 transition inline-block">
+                EXPLORE REPO ↗
+              </a>
             </div>
           </div>
         </div>
@@ -3895,7 +3915,20 @@ USER anicli`
         // Update dedicated tab link
         const popoutBtn = document.getElementById('popoutExternalPlayerBtn');
         if (popoutBtn) {
-          popoutBtn.href = `https://zokoanime.video/stream/mal/${malId}/${episodeNumber}/${mode}`;
+          popoutBtn.onclick = (e) => {
+            e.preventDefault();
+            const currIframe = document.getElementById('animeIframePlayer');
+            const currVideo = document.getElementById('hlsVideoElement');
+            let targetUrl = '';
+            if (currIframe && !currIframe.classList.contains('hidden') && currIframe.src && !currIframe.src.includes('about:blank')) {
+              targetUrl = currIframe.src;
+            } else if (currVideo && currVideo.src) {
+              targetUrl = currVideo.src;
+            } else {
+              targetUrl = `/api/anicli/run?q=${encodeURIComponent(query)}&ep=${episodeNumber}&mode=${mode}&malId=${malId}`;
+            }
+            window.open(targetUrl, '_blank', 'noopener,noreferrer');
+          };
         }
 
         const overlayText = document.getElementById('overlayBtnText');
@@ -3928,7 +3961,8 @@ USER anicli`
 
         const isStaticHost = window.location.hostname.endsWith('github.io') || window.location.protocol === 'file:';
         if (isStaticHost) {
-          loadFallbackEmbed(malId, episodeNumber, mode);
+          window.switchStreamServer(2);
+          showToast(`Running in Static GitHub Pages mode — playing Official HD Stream (Server 2). For English Dub & Full Episode HLS, deploy to Vercel.`);
           return;
         }
 
@@ -3942,7 +3976,7 @@ USER anicli`
               dubAvailableState[anime.id] = false;
               currentMode = 'sub';
               if (typeof updateAudioUI === 'function') updateAudioUI();
-              showToast(`⚠️ English Dub is not provided by upstream CDN for ${anime.title} (Ep ${episodeNumber}) — playing in Japanese with English Subtitles.`, 5000);
+              showToast(`⚠️ English Dub is not provided for ${anime.title} (Ep ${episodeNumber}) — playing in Japanese with English Subtitles.`, 4500);
             } else if (data && data.mode === 'dub') {
               dubAvailableState[anime.id] = true;
               currentMode = 'dub';
@@ -3966,6 +4000,8 @@ USER anicli`
             if (data && data.isEmbedPlayer && data.embedUrl) {
               if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
               if (video) { video.pause(); video.classList.add('hidden'); }
+              const clickShield = document.getElementById('playerClickShield');
+              if (clickShield) clickShield.classList.add('hidden');
               if (iframe) {
                 iframe.classList.remove('hidden');
                 iframe.src = data.embedUrl;
@@ -3979,6 +4015,10 @@ USER anicli`
 
             if (data && data.videoUrl) {
               if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
+              if (iframe) { iframe.src = 'about:blank'; iframe.classList.add('hidden'); }
+              if (video) { video.classList.remove('hidden'); }
+              const clickShield = document.getElementById('playerClickShield');
+              if (clickShield) clickShield.classList.remove('hidden');
 
               // Clear previous subtitle tracks
               while (video.querySelector('track')) {
@@ -4065,7 +4105,7 @@ USER anicli`
                 hlsInstance.on(window.Hls.Events.ERROR, (_, errData) => {
                   if (errData.fatal) {
                     console.warn('Direct stream fatal error, falling back to clean embed:', errData);
-                    loadFallbackEmbed(malId, episodeNumber, mode);
+                    loadFallbackEmbed(malId, episodeNumber, mode, data.embedUrl || null);
                   }
                 });
               } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
@@ -4073,7 +4113,7 @@ USER anicli`
                 startHlsPlayback();
               }
             } else {
-              loadFallbackEmbed(malId, episodeNumber, mode);
+              loadFallbackEmbed(malId, episodeNumber, mode, data ? data.embedUrl : null);
             }
           })
           .catch(err => {
@@ -4084,16 +4124,39 @@ USER anicli`
         function loadFallbackEmbed(mId, epNum, mMode, customEmbedUrl = null) {
           if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
           if (video) { video.pause(); video.classList.add('hidden'); }
-          if (iframe) {
-            iframe.classList.remove('hidden');
-            const embedUrl = customEmbedUrl || `https://zokoanime.video/stream/mal/${mId}/${epNum}/${mMode}`;
-            if (iframe.src !== embedUrl) {
-              iframe.src = embedUrl;
+          const clickShield = document.getElementById('playerClickShield');
+
+          if (customEmbedUrl) {
+            if (iframe) {
+              iframe.classList.remove('hidden');
+              iframe.src = customEmbedUrl;
+              if (clickShield) clickShield.classList.add('hidden');
             }
             hidePlayOverlay();
             const unmute = document.getElementById('unmutePromptBanner');
             if (unmute) unmute.classList.add('hidden');
+            return;
           }
+
+          // Safe multi-host fallback (NEVER loads blocked zokoanime.video)
+          fetch(`/api/anicli/run?q=${encodeURIComponent(anime.title || '')}&ep=${epNum}&mode=${mMode}&malId=${mId}`)
+            .then(r => r.ok ? r.json() : null)
+            .then(d => {
+              if (d && d.embedUrl && iframe) {
+                iframe.classList.remove('hidden');
+                iframe.src = d.embedUrl;
+                if (clickShield) clickShield.classList.add('hidden');
+                hidePlayOverlay();
+                showToast(`Loaded ${d.serverName || 'Multi-Host Embed'} for ${anime.title}`, 3500);
+              } else {
+                window.switchStreamServer(2);
+                showToast(`Switched to Official HD Stream (Server 2)`, 4000);
+              }
+            })
+            .catch(() => {
+              window.switchStreamServer(2);
+              showToast(`Switched to Official HD Stream (Server 2)`, 4000);
+            });
         }
       } else if (currentStreamServer === 2) {
         // Server 2: AniList Official HD Stream (YouTube video embed from public-apis / Anime project)
@@ -6044,14 +6107,29 @@ USER anicli`
       // 7. AniSkip OP / ED Buttons
       document.getElementById('triggerOpSkipBtn').addEventListener('click', () => {
         const video = document.getElementById('hlsVideoElement');
+        const iframe = document.getElementById('animeIframePlayer');
         if (activeSkipTimes && activeSkipTimes.op) {
           const target = activeSkipTimes.op.end + 0.3;
-          if (video) video.currentTime = target;
+          if (video && !video.classList.contains('hidden')) {
+            video.currentTime = target;
+          }
           const skipBtn = document.getElementById('floatingSkipBtn');
           if (skipBtn) skipBtn.classList.add('hidden');
           showToast(`⏭ Skipped Opening Intro to ${formatTimeSec(activeSkipTimes.op.end)} (AniSkip Verified)`);
         } else {
-          showToast(`ℹ️ Episode ${currentEpisode} has no opening theme (story premiere). Progress preserved.`);
+          // Standard anime OP skip fallback (+85s)
+          if (video && !video.classList.contains('hidden')) {
+            const targetTime = Math.min((video.duration || 1440) - 15, (video.currentTime || 0) + 85);
+            video.currentTime = targetTime;
+            showToast(`⏭ Skipped Opening Theme (+85s)`);
+          } else if (iframe && !iframe.classList.contains('hidden')) {
+            try {
+              iframe.contentWindow.postMessage('{"event":"command","func":"seekTo","args":[85, true]}', '*');
+            } catch(e) {}
+            showToast(`⏭ Skipped Opening Theme (+85s)`);
+          } else {
+            showToast(`⏭ Skipped Opening Theme (+85s)`);
+          }
         }
       });
 
@@ -6069,6 +6147,9 @@ USER anicli`
         } else if (activeSkipTimes && activeSkipTimes.op) {
           video.currentTime = activeSkipTimes.op.end + 0.3;
           showToast(`⏭ Skipped Opening to ${formatTimeSec(activeSkipTimes.op.end)} via AniSkip`);
+        } else {
+          video.currentTime = Math.min((video.duration || 1440) - 15, cur + 85);
+          showToast(`⏭ Skipped Opening Theme (+85s)`);
         }
       });
 
