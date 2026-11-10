@@ -7,7 +7,7 @@
     "start": "node serve.js",
     "dev": "node serve.js",
     "serve": "node serve.js",
-    "build": "node -e \"const fs=require('fs'); fs.mkdirSync('public', {recursive:true}); fs.copyFileSync('index.html', 'public/index.html'); console.log('Vercel build complete');\""
+    "build": "node -e \"const fs=require('fs'); fs.mkdirSync('public', {recursive:true}); fs.copyFileSync('index.html', 'public/index.html'); ['icon.png','icon.jpg','favicon.png','favicon.jpg','apple-touch-icon.png'].forEach(f => { if(fs.existsSync(f)) fs.copyFileSync(f, 'public/'+f); }); console.log('Vercel build complete');\""
   },
   "keywords": [
     "anime",
