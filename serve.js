@@ -196,7 +196,7 @@ function runAniCli(query, ep = 1, mode = 'sub', explicitMalId = null) {
     const cleanMode = mode === 'dub' ? '--dub' : '';
     const numId = parseInt(explicitMalId, 10);
     const malId = (!isNaN(numId) && numId > 0) ? numId : await resolveMalId(cleanQuery);
-    const fallbackEmbed = `https://zokoanime.video/stream/mal/${malId}/${cleanEp}/${mode || 'sub'}`;
+    const fallbackEmbed = null;
 
     // 1. Ultra-fast direct HLS resolver (~150ms pure JS)
     let directHls = await resolveDirectHls(malId, cleanEp, mode);
@@ -222,7 +222,7 @@ function runAniCli(query, ep = 1, mode = 'sub', explicitMalId = null) {
         dubUnavailable,
         hasDub: !dubUnavailable,
         malId,
-        embedUrl: `https://zokoanime.video/stream/mal/${malId}/${cleanEp}/${resolvedMode}`,
+        embedUrl: null,
         videoUrl: directHls.src,
         subUrl: directHls.subUrl,
         skip: directHls.skip,
@@ -240,11 +240,11 @@ function runAniCli(query, ep = 1, mode = 'sub', explicitMalId = null) {
         episode: cleanEp,
         mode: mode || 'sub',
         malId,
-        embedUrl: fallbackEmbed,
+        embedUrl: null,
         videoUrl: null,
         subUrl: null,
         skip: null,
-        referer: 'https://zokoanime.video/',
+        referer: 'https://hianime.at/',
         logs: '[POSIX-EMU] Running in Native Browser Linux Sandbox mode.\nResolved embed stream from public-apis mesh.'
       });
     }
@@ -258,8 +258,8 @@ function runAniCli(query, ep = 1, mode = 'sub', explicitMalId = null) {
       const refrMatch = output.match(/Referer:\s*([^\s\r\n]+)/);
       const embedMatch = output.match(/Embed:\s*([^\s\r\n]+)/);
 
-      const isSpecificSeason = /season\s*[2-9]|2nd|3rd|4th|part\s*[2-9]|to the top|shibuya/i.test(cleanQuery);
-      const embedUrl = isSpecificSeason ? fallbackEmbed : (embedMatch ? embedMatch[1] : fallbackEmbed);
+      const safeEmbed = (embedMatch && !embedMatch[1].includes('zokoanime.video')) ? embedMatch[1] : null;
+      const embedUrl = isSpecificSeason ? null : safeEmbed;
 
       resolve({
         success: true,

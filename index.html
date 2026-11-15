@@ -150,6 +150,10 @@
           <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
           <span>Sync-Pod (4)</span>
         </button>
+        <button id="toggleSfxBtn" type="button" class="flex items-center gap-1.5 rounded-xl bg-slate-900/90 px-3 py-2 font-mono-code text-xs text-slate-300 ring-1 ring-white/15 transition hover:bg-slate-800 hover:text-cyan-300 cursor-pointer shadow-sm" title="Toggle Procedural Cyber Sci-Fi Sound FX">
+          <span id="sfxIcon">🔊</span>
+          <span class="hidden md:inline" id="sfxStatusText">SFX: ON</span>
+        </button>
       </div>
     </div>
   </header>
@@ -296,6 +300,40 @@
               <!-- Dynamically populated spotlight pills -->
             </div>
           </div>
+        </div>
+      </section>
+
+      <!-- 1.5 Section: ⚡ CONTINUE WATCHING // NEURAL MEMORY -->
+      <section id="homeResumeSection" class="hidden space-y-4">
+        <div class="flex items-center justify-between border-b border-cyan-500/20 pb-3">
+          <div class="flex items-center gap-3">
+            <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-400 to-indigo-600 text-slate-950 font-bold text-sm shadow">
+              ⚡
+            </span>
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="font-display text-xl font-extrabold tracking-tight text-white sm:text-2xl" id="homeResumeSectionTitle">
+                  CONTINUE WATCHING
+                </h2>
+                <span class="rounded bg-cyan-400/20 px-2 py-0.5 text-[10px] font-mono-code font-bold text-cyan-300 ring-1 ring-cyan-400/40">NEURAL RESUME</span>
+              </div>
+              <p class="font-mono-code text-xs text-slate-400">
+                Jump right back into your active episodes where you left off
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="flex items-center rounded-xl bg-white/5 p-0.5 ring-1 ring-white/10 font-mono-code text-xs">
+              <button id="resumeTabHistoryBtn" type="button" class="rounded-lg bg-cyan-400 font-bold text-slate-950 px-2.5 py-1 transition cursor-pointer">⚡ RECENT</button>
+              <button id="resumeTabWatchlistBtn" type="button" class="rounded-lg text-slate-300 hover:text-white px-2.5 py-1 transition cursor-pointer">★ WATCHLIST (<span id="watchlistCountBadge">0</span>)</button>
+            </div>
+            <button id="clearResumeHistoryBtn" type="button" class="rounded-lg bg-white/5 px-2.5 py-1 font-mono-code text-[11px] text-slate-400 hover:bg-rose-500/20 hover:text-rose-300 transition">
+              Clear
+            </button>
+          </div>
+        </div>
+        <div id="homeResumeGrid" class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+          <!-- Populated dynamically via localStorage['aether_ani_history'] or watchlist -->
         </div>
       </section>
 
@@ -520,6 +558,44 @@
                   </div>
                 </div>
 
+                <!-- Mobile Touch Double-Tap Seek Ripples -->
+                <div id="touchSeekRippleLeft" class="pointer-events-none absolute inset-y-0 left-0 w-1/3 flex items-center justify-center bg-cyan-500/10 opacity-0 transition-opacity duration-300 z-25">
+                  <div class="rounded-full bg-slate-950/85 p-4 ring-2 ring-cyan-400 text-cyan-300 font-mono-code text-sm font-bold flex items-center gap-1 shadow-2xl backdrop-blur-md">
+                    <span>⏪</span><span>-10s</span>
+                  </div>
+                </div>
+                <div id="touchSeekRippleRight" class="pointer-events-none absolute inset-y-0 right-0 w-1/3 flex items-center justify-center bg-cyan-500/10 opacity-0 transition-opacity duration-300 z-25">
+                  <div class="rounded-full bg-slate-950/85 p-4 ring-2 ring-cyan-400 text-cyan-300 font-mono-code text-sm font-bold flex items-center gap-1 shadow-2xl backdrop-blur-md">
+                    <span>+10s</span><span>⏩</span>
+                  </div>
+                </div>
+
+                <!-- Futuristic Stream Telemetry HUD (Toggle with 'H' or Deck Button) -->
+                <div id="streamTelemetryOverlay" class="hidden absolute top-4 left-4 z-30 font-mono-code text-[11px] bg-slate-950/90 border border-cyan-400/40 rounded-xl p-3 shadow-2xl backdrop-blur-md text-cyan-300 w-64 pointer-events-none select-none">
+                  <div class="flex items-center justify-between border-b border-cyan-500/30 pb-1 mb-1.5 text-xs font-bold text-white">
+                    <span class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-cyan-400 animate-pulse"></span> TELEMETRY HUD</span>
+                    <span id="hudFpsBadge" class="text-emerald-400 text-[10px]">60 FPS</span>
+                  </div>
+                  <div class="space-y-1 text-[10px]">
+                    <div class="flex justify-between"><span class="text-slate-400">RESOLUTION:</span><span id="hudResolution" class="text-white font-bold">1080p 60fps</span></div>
+                    <div class="flex justify-between"><span class="text-slate-400">BITRATE EST:</span><span id="hudBitrate" class="text-cyan-300">5.3 Mbps</span></div>
+                    <div class="flex justify-between"><span class="text-slate-400">BUFFER HEALTH:</span><span id="hudBufferAhead" class="text-emerald-300">+28.4s</span></div>
+                    <div class="flex justify-between"><span class="text-slate-400">LATENCY / PING:</span><span id="hudLatency" class="text-emerald-400">14ms</span></div>
+                    <div class="flex justify-between"><span class="text-slate-400">AUDIO ENGINE:</span><span id="hudAudio" class="text-amber-300">AUTHENTIC ENG DUB</span></div>
+                    <div class="flex justify-between"><span class="text-slate-400">DROPPED FRAMES:</span><span id="hudDroppedFrames" class="text-slate-300">0</span></div>
+                    <div class="flex justify-between"><span class="text-slate-400">NEURAL LINK:</span><span class="text-emerald-400 font-bold">OPTIMAL // SYNCED</span></div>
+                  </div>
+                </div>
+
+                <!-- Floating Resume Playback Banner -->
+                <div id="resumePlaybackBanner" class="hidden absolute bottom-20 left-4 z-25 flex items-center gap-3 rounded-xl bg-slate-950/90 border border-cyan-400/50 p-2.5 shadow-2xl backdrop-blur-md">
+                  <div class="text-xs font-mono-code text-cyan-200">
+                    <span>Resume from </span><span id="resumeTimestampText" class="font-bold text-white">04:12</span>?
+                  </div>
+                  <button id="confirmResumeBtn" type="button" class="rounded-lg bg-cyan-400 px-3 py-1 font-mono-code text-xs font-extrabold text-slate-950 hover:bg-cyan-300 transition">RESUME</button>
+                  <button id="dismissResumeBtn" type="button" class="rounded-lg bg-white/10 px-2 py-1 font-mono-code text-xs text-slate-300 hover:bg-white/20 transition">DISMISS</button>
+                </div>
+
                 <!-- Mode 2: HLS Video Player (Animax / Cloud) -->
                 <video
                   id="hlsVideoElement"
@@ -618,6 +694,37 @@
                 </div>
 
                 <div class="flex flex-wrap items-center gap-2">
+                  <!-- Integrated Volume Control & Mute -->
+                  <div class="flex items-center gap-1.5 rounded-xl bg-white/5 px-2.5 py-1.5 ring-1 ring-white/10">
+                    <button id="volumeMuteBtn" type="button" class="font-mono-code text-xs text-slate-300 hover:text-white transition cursor-pointer" title="Mute / Unmute (M)">🔊</button>
+                    <input id="playerVolumeSlider" type="range" min="0" max="100" value="100" class="h-1.5 w-16 cursor-pointer accent-cyan-400 bg-slate-800 rounded-lg" title="Volume Slider">
+                  </div>
+
+                  <!-- Playback Speed Selector Chips -->
+                  <div class="flex items-center rounded-xl bg-white/5 p-0.5 ring-1 ring-white/10 font-mono-code text-[11px]">
+                    <span class="px-1 text-slate-400 text-[10px]">SPEED:</span>
+                    <button type="button" class="speed-chip rounded px-1.5 py-0.5 text-slate-400 hover:text-white transition" data-speed="0.75">0.75x</button>
+                    <button type="button" class="speed-chip rounded bg-cyan-400 font-bold text-slate-950 px-1.5 py-0.5 transition" data-speed="1">1x</button>
+                    <button type="button" class="speed-chip rounded px-1.5 py-0.5 text-slate-400 hover:text-white transition" data-speed="1.25">1.25x</button>
+                    <button type="button" class="speed-chip rounded px-1.5 py-0.5 text-slate-400 hover:text-white transition" data-speed="1.5">1.5x</button>
+                    <button type="button" class="speed-chip rounded px-1.5 py-0.5 text-slate-400 hover:text-white transition" data-speed="2">2x</button>
+                  </div>
+
+                  <!-- Picture-in-Picture (PiP) -->
+                  <button id="togglePipBtn" type="button" class="rounded-xl bg-white/5 px-2.5 py-1.5 font-mono-code text-xs text-slate-300 ring-1 ring-white/10 hover:bg-white/15 transition cursor-pointer shadow-sm" title="Picture-in-Picture Mode">
+                    📺 PiP
+                  </button>
+
+                  <!-- Stream Telemetry HUD Toggle -->
+                  <button id="toggleStreamStatsBtn" type="button" class="rounded-xl bg-cyan-500/20 px-2.5 py-1.5 font-mono-code text-xs text-cyan-300 ring-1 ring-cyan-400/40 hover:bg-cyan-500/30 transition cursor-pointer shadow-sm" title="Toggle Stream Telemetry HUD (H)">
+                    📊 HUD
+                  </button>
+
+                  <!-- Keyboard Shortcuts Cheatsheet -->
+                  <button id="openShortcutsModalBtn" type="button" class="rounded-xl bg-white/5 px-2.5 py-1.5 font-mono-code text-xs text-slate-300 ring-1 ring-white/10 hover:bg-white/15 transition cursor-pointer shadow-sm" title="Keyboard Shortcuts Cheatsheet (?)">
+                    ⌨ Hotkeys
+                  </button>
+
                   <button id="toggleAnime4kBtn" type="button" class="rounded-xl bg-cyan-500/20 px-3 py-1.5 font-mono-code text-xs text-cyan-300 ring-1 ring-cyan-400/40 transition">
                     Anime4K: ON
                   </button>
@@ -1357,6 +1464,9 @@
       <div id="cmdParsedPreview" class="mt-3 flex flex-wrap gap-2 font-mono-code text-[11px]">
         <!-- Populated dynamically -->
       </div>
+      <!-- Live Search Suggestions Container -->
+      <div id="cmdLiveSuggestionsContainer" class="hidden mt-3 max-h-60 overflow-y-auto space-y-1.5 rounded-xl bg-slate-900/90 p-2 border border-cyan-500/20 font-mono-code text-xs">
+      </div>
       <div class="mt-4 border-t border-white/10 pt-3">
         <div class="mb-2 font-mono-code text-[11px] text-slate-400">QUICK ANIME TITLES (CLICK TO STREAM NOW):</div>
         <div class="flex flex-wrap gap-2">
@@ -1387,6 +1497,69 @@
         <button id="executeCmdBarBtn" type="button" class="rounded-xl bg-cyan-400 px-5 py-2 font-mono-code text-xs font-extrabold text-slate-950 hover:bg-cyan-300">
           START STREAMING NOW ↵
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CYBERPUNK KEYBOARD SHORTCUTS CHEATSHEET -->
+  <div id="shortcutsModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-4 py-8 backdrop-blur-md">
+    <div class="hud-glass-elevated w-full max-w-xl rounded-2xl p-6 shadow-2xl border border-cyan-500/30">
+      <div class="mb-4 flex items-center justify-between border-b border-cyan-500/20 pb-3 font-mono-code text-sm text-cyan-300">
+        <span class="flex items-center gap-2"><span>⌨</span><span>NEURAL HOTKEY TELEMETRY CHEATSHEET</span></span>
+        <button id="closeShortcutsModalBtn" type="button" class="rounded bg-white/10 px-2 py-0.5 text-xs text-slate-300 hover:bg-white/20">ESC</button>
+      </div>
+      <div class="grid grid-cols-2 gap-3 text-xs font-mono-code">
+        <div class="flex items-center justify-between rounded-lg bg-slate-900/70 p-2 border border-white/5">
+          <span class="text-slate-400">Play / Pause</span>
+          <kbd class="rounded bg-white/10 px-2 py-0.5 text-cyan-300 font-bold">Space / K</kbd>
+        </div>
+        <div class="flex items-center justify-between rounded-lg bg-slate-900/70 p-2 border border-white/5">
+          <span class="text-slate-400">Fullscreen</span>
+          <kbd class="rounded bg-white/10 px-2 py-0.5 text-cyan-300 font-bold">F</kbd>
+        </div>
+        <div class="flex items-center justify-between rounded-lg bg-slate-900/70 p-2 border border-white/5">
+          <span class="text-slate-400">Mute / Unmute</span>
+          <kbd class="rounded bg-white/10 px-2 py-0.5 text-cyan-300 font-bold">M</kbd>
+        </div>
+        <div class="flex items-center justify-between rounded-lg bg-slate-900/70 p-2 border border-white/5">
+          <span class="text-slate-400">Rewind 10s</span>
+          <kbd class="rounded bg-white/10 px-2 py-0.5 text-cyan-300 font-bold">J / ←</kbd>
+        </div>
+        <div class="flex items-center justify-between rounded-lg bg-slate-900/70 p-2 border border-white/5">
+          <span class="text-slate-400">Forward 10s</span>
+          <kbd class="rounded bg-white/10 px-2 py-0.5 text-cyan-300 font-bold">L / →</kbd>
+        </div>
+        <div class="flex items-center justify-between rounded-lg bg-slate-900/70 p-2 border border-white/5">
+          <span class="text-slate-400">Volume Up / Down</span>
+          <kbd class="rounded bg-white/10 px-2 py-0.5 text-cyan-300 font-bold">↑ / ↓</kbd>
+        </div>
+        <div class="flex items-center justify-between rounded-lg bg-slate-900/70 p-2 border border-white/5">
+          <span class="text-slate-400">Next Episode</span>
+          <kbd class="rounded bg-white/10 px-2 py-0.5 text-cyan-300 font-bold">N</kbd>
+        </div>
+        <div class="flex items-center justify-between rounded-lg bg-slate-900/70 p-2 border border-white/5">
+          <span class="text-slate-400">Previous Episode</span>
+          <kbd class="rounded bg-white/10 px-2 py-0.5 text-cyan-300 font-bold">P</kbd>
+        </div>
+        <div class="flex items-center justify-between rounded-lg bg-slate-900/70 p-2 border border-white/5">
+          <span class="text-slate-400">Sub / Dub Toggle</span>
+          <kbd class="rounded bg-white/10 px-2 py-0.5 text-cyan-300 font-bold">S</kbd>
+        </div>
+        <div class="flex items-center justify-between rounded-lg bg-slate-900/70 p-2 border border-white/5">
+          <span class="text-slate-400">Skip Intro (AniSkip)</span>
+          <kbd class="rounded bg-white/10 px-2 py-0.5 text-cyan-300 font-bold">I</kbd>
+        </div>
+        <div class="flex items-center justify-between rounded-lg bg-slate-900/70 p-2 border border-white/5">
+          <span class="text-slate-400">Telemetry HUD</span>
+          <kbd class="rounded bg-white/10 px-2 py-0.5 text-cyan-300 font-bold">H</kbd>
+        </div>
+        <div class="flex items-center justify-between rounded-lg bg-slate-900/70 p-2 border border-white/5">
+          <span class="text-slate-400">Omni-Bar Search</span>
+          <kbd class="rounded bg-white/10 px-2 py-0.5 text-cyan-300 font-bold">Ctrl+K</kbd>
+        </div>
+      </div>
+      <div class="mt-4 pt-3 border-t border-white/10 text-center text-[11px] font-mono-code text-slate-400">
+        Press <kbd class="rounded bg-white/10 px-1.5 py-0.5 text-cyan-300">?</kbd> anywhere to toggle this cheatsheet • Double-tap video on mobile to seek ±10s
       </div>
     </div>
   </div>
@@ -3187,6 +3360,25 @@ USER anicli`
           'aether_ani_state',
           JSON.stringify({ animeId: currentAnime.id, episode: currentEpisode, mode: currentMode })
         );
+        const video = document.getElementById('hlsVideoElement');
+        const curTime = (video && !video.classList.contains('hidden') && video.currentTime) ? Math.floor(video.currentTime) : 0;
+        const dur = (video && !video.classList.contains('hidden') && video.duration) ? Math.floor(video.duration) : 1440;
+        const pct = dur > 0 ? Math.round((curTime / dur) * 100) : 0;
+
+        saveNeuralWatchHistory({
+          animeId: currentAnime.id,
+          malId: currentAnime.malId || resolveMalId(currentAnime.title),
+          title: currentAnime.title,
+          cover: currentAnime.coverImage,
+          banner: currentAnime.bannerImage || currentAnime.coverImage,
+          episode: currentEpisode,
+          totalEpisodes: currentAnime.episodes || 12,
+          currentTime: curTime,
+          duration: dur,
+          progressPercent: pct,
+          mode: currentMode,
+          updatedAt: Date.now()
+        });
       } catch (e) {}
     }
 
@@ -3902,6 +4094,25 @@ USER anicli`
         updateAudioUI();
       }
 
+      // Check saved progress from neural watch history
+      if (seekToTime <= 0) {
+        try {
+          const history = getNeuralWatchHistory();
+          const saved = history.find(h => h.animeId === anime.id && h.episode === episodeNumber);
+          const resumeBanner = document.getElementById('resumePlaybackBanner');
+          const resumeText = document.getElementById('resumeTimestampText');
+          const confirmResumeBtn = document.getElementById('confirmResumeBtn');
+          if (saved && saved.currentTime > 20 && resumeBanner && resumeText && confirmResumeBtn) {
+            resumeText.textContent = formatTimeSec(saved.currentTime);
+            confirmResumeBtn.setAttribute('data-seek', String(saved.currentTime));
+            resumeBanner.classList.remove('hidden');
+            setTimeout(() => { if (resumeBanner) resumeBanner.classList.add('hidden'); }, 12000);
+          } else if (resumeBanner) {
+            resumeBanner.classList.add('hidden');
+          }
+        } catch(e) {}
+      }
+
       // Silent idle state on initial page visit
       if (!autoPlay) {
         if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
@@ -4136,7 +4347,8 @@ USER anicli`
           if (video) { video.pause(); video.classList.add('hidden'); }
           const clickShield = document.getElementById('playerClickShield');
 
-          if (customEmbedUrl) {
+          // Strict security & DNS shield: NEVER load blocked zokoanime.video
+          if (customEmbedUrl && !customEmbedUrl.includes('zokoanime.video')) {
             if (iframe) {
               iframe.classList.remove('hidden');
               iframe.src = customEmbedUrl;
@@ -4152,7 +4364,7 @@ USER anicli`
           fetch(`/api/anicli/run?q=${encodeURIComponent(anime.title || '')}&ep=${epNum}&mode=${mMode}&malId=${mId}`)
             .then(r => r.ok ? r.json() : null)
             .then(d => {
-              if (d && d.embedUrl && iframe) {
+              if (d && d.embedUrl && !d.embedUrl.includes('zokoanime.video') && iframe) {
                 iframe.classList.remove('hidden');
                 iframe.src = d.embedUrl;
                 if (clickShield) clickShield.classList.add('hidden');
@@ -5707,7 +5919,674 @@ USER anicli`
       });
     }
 
+    // =========================================================================
+    // SENIOR DEV SUITE: PROCEDURAL AUDIO, NEURAL MEMORY, TELEMETRY & HOTKEYS
+    // =========================================================================
+    const CyberAudio = {
+      ctx: null,
+      enabled: true,
+      init() {
+        if (!this.ctx) {
+          try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (AudioCtx) this.ctx = new AudioCtx();
+          } catch(e) {}
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume().catch(()=>{});
+        }
+      },
+      playTone(freq, type, duration, gain = 0.04) {
+        if (!this.enabled) return;
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const osc = this.ctx.createOscillator();
+          const g = this.ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+          g.gain.setValueAtTime(gain, this.ctx.currentTime);
+          g.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+          osc.connect(g);
+          g.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + duration);
+        } catch(e) {}
+      },
+      click() { this.playTone(880, 'sine', 0.04, 0.04); },
+      blip() { this.playTone(1200, 'triangle', 0.06, 0.04); },
+      skip() {
+        this.playTone(520, 'sine', 0.08, 0.05);
+        setTimeout(() => this.playTone(1040, 'sine', 0.1, 0.05), 50);
+      },
+      warp() {
+        this.playTone(300, 'sawtooth', 0.15, 0.03);
+        setTimeout(() => this.playTone(600, 'sine', 0.1, 0.04), 80);
+      }
+    };
+
+    // Neural Multi-Anime Watch History Management
+    function getNeuralWatchHistory() {
+      try {
+        const raw = localStorage.getItem('aether_ani_history');
+        return raw ? JSON.parse(raw) : [];
+      } catch(e) { return []; }
+    }
+
+    function saveNeuralWatchHistory(entry) {
+      if (!entry || !entry.animeId) return;
+      try {
+        let history = getNeuralWatchHistory();
+        history = history.filter(h => h.animeId !== entry.animeId);
+        history.unshift(entry);
+        if (history.length > 24) history = history.slice(0, 24);
+        localStorage.setItem('aether_ani_history', JSON.stringify(history));
+        renderHomeResumeShelf();
+      } catch(e) {}
+    }
+
+    let currentResumeTab = 'history';
+
+    function getNeuralWatchlist() {
+      try {
+        const raw = localStorage.getItem('aether_ani_watchlist');
+        return raw ? JSON.parse(raw) : [];
+      } catch(e) { return []; }
+    }
+
+    window.toggleWatchlist = function(animeId) {
+      CyberAudio.blip();
+      try {
+        let list = getNeuralWatchlist();
+        if (list.includes(animeId)) {
+          list = list.filter(id => id !== animeId);
+          showToast('Removed from Neural Watchlist');
+        } else {
+          list.push(animeId);
+          showToast('★ Bookmarked to Neural Watchlist!');
+        }
+        localStorage.setItem('aether_ani_watchlist', JSON.stringify(list));
+        renderHomeResumeShelf();
+      } catch(e) {}
+    };
+
+    window.switchResumeTab = function(tab) {
+      currentResumeTab = tab;
+      CyberAudio.click();
+      const btnHist = document.getElementById('resumeTabHistoryBtn');
+      const btnWatch = document.getElementById('resumeTabWatchlistBtn');
+      const titleEl = document.getElementById('homeResumeSectionTitle');
+      if (btnHist && btnWatch) {
+        if (tab === 'history') {
+          btnHist.className = 'rounded-lg bg-cyan-400 font-bold text-slate-950 px-2.5 py-1 transition cursor-pointer';
+          btnWatch.className = 'rounded-lg text-slate-300 hover:text-white px-2.5 py-1 transition cursor-pointer';
+          if (titleEl) titleEl.textContent = 'CONTINUE WATCHING';
+        } else {
+          btnWatch.className = 'rounded-lg bg-cyan-400 font-bold text-slate-950 px-2.5 py-1 transition cursor-pointer';
+          btnHist.className = 'rounded-lg text-slate-300 hover:text-white px-2.5 py-1 transition cursor-pointer';
+          if (titleEl) titleEl.textContent = 'MY NEURAL WATCHLIST';
+        }
+      }
+      renderHomeResumeShelf();
+    };
+
+    function renderHomeResumeShelf() {
+      const section = document.getElementById('homeResumeSection');
+      const grid = document.getElementById('homeResumeGrid');
+      const badge = document.getElementById('watchlistCountBadge');
+      if (!section || !grid) return;
+      const history = getNeuralWatchHistory();
+      const watchlist = getNeuralWatchlist();
+      if (badge) badge.textContent = watchlist.length;
+
+      if (history.length === 0 && watchlist.length === 0) {
+        section.classList.add('hidden');
+        return;
+      }
+      section.classList.remove('hidden');
+
+      if (currentResumeTab === 'watchlist') {
+        const watchAnime = watchlist.map(id => findAnimeById(id)).filter(Boolean);
+        if (watchAnime.length === 0) {
+          grid.innerHTML = '<div class="col-span-full py-8 text-center text-xs font-mono-code text-slate-400">No bookmarked anime in your watchlist yet. Click any anime card to explore!</div>';
+          return;
+        }
+        grid.innerHTML = watchAnime.map(a => `
+          <div class="group relative flex flex-col overflow-hidden rounded-2xl bg-slate-900/80 border border-white/10 ring-1 ring-cyan-500/20 transition hover:scale-102 hover:border-cyan-400/50">
+            <div class="relative aspect-video w-full overflow-hidden bg-slate-950 cursor-pointer" onclick="resumeSavedAnime('${a.id}', 1, 0, 'sub')">
+              <img src="${a.bannerImage || a.coverImage}" alt="${a.title}" class="h-full w-full object-cover group-hover:scale-105 transition duration-300" loading="lazy">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+              <div class="absolute top-2 right-2 flex items-center gap-1">
+                <button type="button" onclick="event.stopPropagation(); toggleWatchlist('${a.id}')" class="rounded-md bg-slate-950/80 px-2 py-0.5 text-xs text-amber-400 hover:text-rose-400 ring-1 ring-amber-400/30" title="Remove from Watchlist">★ Saved</button>
+              </div>
+              <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-200">
+                <span class="flex h-10 w-10 items-center justify-center rounded-full bg-cyan-400 text-slate-950 font-bold shadow-lg shadow-cyan-400/40 transform scale-90 group-hover:scale-100 transition">▶</span>
+              </div>
+            </div>
+            <div class="p-3 flex flex-col justify-between flex-1">
+              <div>
+                <h4 class="font-display text-xs font-bold text-white truncate" title="${a.title}">${a.title}</h4>
+                <div class="mt-1 font-mono-code text-[10px] text-slate-400">${a.episodes || 12} Episodes • ★ ${a.score || 85}%</div>
+              </div>
+              <button type="button" onclick="resumeSavedAnime('${a.id}', 1, 0, 'sub')" class="mt-2.5 w-full rounded-lg bg-cyan-500/20 py-1 font-mono-code text-[11px] font-bold text-cyan-300 ring-1 ring-cyan-400/30 hover:bg-cyan-400 hover:text-slate-950 transition">
+                WATCH NOW ▶
+              </button>
+            </div>
+          </div>
+        `).join('');
+        return;
+      }
+
+      // History tab
+      grid.innerHTML = history.slice(0, 6).map(h => {
+        const pct = Math.min(100, Math.max(0, h.progressPercent || 0));
+        const timeStr = formatTimeSec(h.currentTime || 0);
+        const durStr = formatTimeSec(h.duration || 1440);
+        return `
+          <div class="group relative flex flex-col overflow-hidden rounded-2xl bg-slate-900/80 border border-white/10 ring-1 ring-cyan-500/20 transition hover:scale-102 hover:border-cyan-400/50 hover:shadow-xl hover:shadow-cyan-500/10">
+            <div class="relative aspect-video w-full overflow-hidden bg-slate-950 cursor-pointer" onclick="resumeSavedAnime('${h.animeId}', ${h.episode}, ${h.currentTime}, '${h.mode || 'sub'}')">
+              <img src="${h.banner || h.cover || '/icon.png'}" alt="${h.title}" class="h-full w-full object-cover transition duration-300 group-hover:scale-105" loading="lazy">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent"></div>
+              <div class="absolute top-2 left-2 flex items-center gap-1 rounded-md bg-slate-950/80 px-2 py-0.5 font-mono-code text-[10px] text-cyan-300 ring-1 ring-cyan-400/30 backdrop-blur-sm">
+                <span>EP ${String(h.episode).padStart(2, '0')}</span>
+              </div>
+              <div class="absolute top-2 right-2 rounded-md bg-amber-500/20 px-1.5 py-0.5 font-mono-code text-[10px] text-amber-300 ring-1 ring-amber-400/30">
+                ${(h.mode || 'sub').toUpperCase()}
+              </div>
+              <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-200">
+                <span class="flex h-10 w-10 items-center justify-center rounded-full bg-cyan-400 text-slate-950 font-bold shadow-lg shadow-cyan-400/40 transform scale-90 group-hover:scale-100 transition">▶</span>
+              </div>
+              <!-- Progress Bar -->
+              <div class="absolute bottom-0 inset-x-0 h-1.5 bg-slate-800">
+                <div class="h-full bg-cyan-400" style="width: ${pct}%"></div>
+              </div>
+            </div>
+            <div class="p-3 flex flex-col justify-between flex-1">
+              <div>
+                <h4 class="font-display text-xs font-bold text-white truncate" title="${h.title}">${h.title}</h4>
+                <div class="mt-1 flex items-center justify-between font-mono-code text-[10px] text-slate-400">
+                  <span>${timeStr} / ${durStr}</span>
+                  <span class="text-cyan-300 font-bold">${pct}%</span>
+                </div>
+              </div>
+              <button type="button" onclick="resumeSavedAnime('${h.animeId}', ${h.episode}, ${h.currentTime}, '${h.mode || 'sub'}')" class="mt-2.5 w-full rounded-lg bg-cyan-500/20 py-1 font-mono-code text-[11px] font-bold text-cyan-300 ring-1 ring-cyan-400/30 hover:bg-cyan-400 hover:text-slate-950 transition flex items-center justify-center gap-1">
+                <span>RESUME ▶</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.resumeSavedAnime = function(animeId, ep, seekTime, mode) {
+      CyberAudio.warp();
+      const anime = findAnimeById(animeId) || (window.currentAnime && window.currentAnime.id === animeId ? window.currentAnime : null);
+      if (anime) {
+        currentAnime = anime;
+        currentEpisode = ep;
+        currentMode = mode || 'sub';
+        const tabStream = document.getElementById('navTabStream');
+        const viewStream = document.getElementById('viewStream');
+        if (window.switchView && tabStream && viewStream) {
+          window.switchView(tabStream, viewStream);
+        }
+        loadAnimeStream(anime, ep, true, seekTime);
+        showToast(`⚡ Resumed ${anime.title} (Ep ${ep}) at ${formatTimeSec(seekTime)}`);
+      }
+    };
+
+    // Update Telemetry HUD every 1000ms
+    setInterval(() => {
+      const hudOverlay = document.getElementById('streamTelemetryOverlay');
+      if (!hudOverlay || hudOverlay.classList.contains('hidden')) return;
+      const video = document.getElementById('hlsVideoElement');
+      if (!video) return;
+
+      const resBadge = document.getElementById('hudResolution');
+      if (resBadge) resBadge.textContent = currentStreamServer === 1 ? '1080p 60fps' : '1080p HD';
+
+      const audioBadge = document.getElementById('hudAudio');
+      if (audioBadge) {
+        audioBadge.textContent = currentMode === 'dub' ? 'AUTHENTIC ENG DUB (HD-1)' : 'JAPANESE STEREO (AAC)';
+      }
+
+      const bufferBadge = document.getElementById('hudBufferAhead');
+      if (bufferBadge && video.buffered && video.buffered.length > 0) {
+        const cur = video.currentTime || 0;
+        let ahead = 0;
+        for (let i = 0; i < video.buffered.length; i++) {
+          if (video.buffered.start(i) <= cur && cur <= video.buffered.end(i)) {
+            ahead = video.buffered.end(i) - cur;
+            break;
+          }
+        }
+        bufferBadge.textContent = `+${ahead.toFixed(1)}s`;
+        bufferBadge.className = ahead > 8 ? 'text-emerald-300' : (ahead > 3 ? 'text-amber-300' : 'text-rose-300');
+      }
+
+      const droppedBadge = document.getElementById('hudDroppedFrames');
+      if (droppedBadge && video.getVideoPlaybackQuality) {
+        const q = video.getVideoPlaybackQuality();
+        droppedBadge.textContent = q.droppedVideoFrames || 0;
+      }
+    }, 1000);
+
+    // Stream Stall Detector & Auto-Heal Watchdog (Trigger if buffer freezes > 4.5s)
+    let lastPlaybackTime = 0;
+    let stallCheckCounter = 0;
+    setInterval(() => {
+      const video = document.getElementById('hlsVideoElement');
+      if (!video || video.paused || video.ended || video.classList.contains('hidden')) {
+        stallCheckCounter = 0;
+        return;
+      }
+      const cur = video.currentTime;
+      if (Math.abs(cur - lastPlaybackTime) < 0.1) {
+        stallCheckCounter++;
+        if (stallCheckCounter >= 4) { // 4 seconds without movement
+          console.warn('⚠️ Stream stall detected! Executing auto-heal recovery...');
+          if (hlsInstance) {
+            try { hlsInstance.recoverMediaError(); } catch(e) {}
+          }
+          stallCheckCounter = 0;
+          showToast('⚡ Neural stream stall detected — auto-healed buffer link.');
+        }
+      } else {
+        stallCheckCounter = 0;
+        lastPlaybackTime = cur;
+      }
+    }, 1000);
+
+    // Network Online / Offline Resilience Handlers
+    window.addEventListener('offline', () => {
+      showToast('⚠️ NEURAL LINK DISCONNECTED // OFFLINE CACHE ENGAGED', 5000);
+    });
+    window.addEventListener('online', () => {
+      showToast('⚡ NEURAL LINK RESTORED // STREAM MESH ACTIVE', 4000);
+      const video = document.getElementById('hlsVideoElement');
+      if (video && video.paused && !video.classList.contains('hidden')) {
+        video.play().catch(()=>{});
+      }
+    });
+
     window.addEventListener('DOMContentLoaded', () => {
+      // Render Continue Watching shelf on boot
+      renderHomeResumeShelf();
+
+      // Clear Resume History button
+      const clearResumeBtn = document.getElementById('clearResumeHistoryBtn');
+      if (clearResumeBtn) {
+        clearResumeBtn.addEventListener('click', () => {
+          localStorage.removeItem('aether_ani_history');
+          renderHomeResumeShelf();
+          showToast('Neural watch history cleared');
+        });
+      }
+
+      // Resume Shelf Tabs (Recent vs Watchlist)
+      const tabHistBtn = document.getElementById('resumeTabHistoryBtn');
+      const tabWatchBtn = document.getElementById('resumeTabWatchlistBtn');
+      if (tabHistBtn) tabHistBtn.addEventListener('click', () => switchResumeTab('history'));
+      if (tabWatchBtn) tabWatchBtn.addEventListener('click', () => switchResumeTab('watchlist'));
+
+      // Resume Playback Prompt Banner Confirmation
+      const confirmResumeBtn = document.getElementById('confirmResumeBtn');
+      const dismissResumeBtn = document.getElementById('dismissResumeBtn');
+      const resumeBanner = document.getElementById('resumePlaybackBanner');
+      if (confirmResumeBtn) {
+        confirmResumeBtn.addEventListener('click', () => {
+          CyberAudio.warp();
+          const targetTime = parseFloat(confirmResumeBtn.getAttribute('data-seek')) || 0;
+          const video = document.getElementById('hlsVideoElement');
+          if (video && targetTime > 0) {
+            video.currentTime = targetTime;
+            video.play().catch(()=>{});
+            showToast(`Resumed playback at ${formatTimeSec(targetTime)}`);
+          }
+          if (resumeBanner) resumeBanner.classList.add('hidden');
+        });
+      }
+      if (dismissResumeBtn) {
+        dismissResumeBtn.addEventListener('click', () => {
+          CyberAudio.click();
+          if (resumeBanner) resumeBanner.classList.add('hidden');
+        });
+      }
+
+      // SFX Toggle Button in Header
+      const toggleSfxBtn = document.getElementById('toggleSfxBtn');
+      if (toggleSfxBtn) {
+        toggleSfxBtn.addEventListener('click', () => {
+          CyberAudio.enabled = !CyberAudio.enabled;
+          if (CyberAudio.enabled) CyberAudio.init();
+          const sfxIcon = document.getElementById('sfxIcon');
+          const sfxText = document.getElementById('sfxStatusText');
+          if (sfxIcon) sfxIcon.textContent = CyberAudio.enabled ? '🔊' : '🔇';
+          if (sfxText) sfxText.textContent = CyberAudio.enabled ? 'SFX: ON' : 'SFX: OFF';
+          showToast(`Cyber Audio SFX: ${CyberAudio.enabled ? 'ENABLED' : 'MUTED'}`);
+          if (CyberAudio.enabled) CyberAudio.blip();
+        });
+      }
+
+      // Picture-in-Picture Toggle
+      const pipBtn = document.getElementById('togglePipBtn');
+      if (pipBtn) {
+        pipBtn.addEventListener('click', async () => {
+          CyberAudio.click();
+          const video = document.getElementById('hlsVideoElement');
+          if (!video) return;
+          try {
+            if (document.pictureInPictureElement) {
+              await document.exitPictureInPicture();
+              showToast('Exited Picture-in-Picture');
+            } else if (video.requestPictureInPicture) {
+              await video.requestPictureInPicture();
+              showToast('Entered Picture-in-Picture Mode');
+            }
+          } catch(e) {
+            showToast('Picture-in-Picture unavailable for current stream');
+          }
+        });
+      }
+
+      // Stream Telemetry HUD Toggle
+      const statsBtn = document.getElementById('toggleStreamStatsBtn');
+      if (statsBtn) {
+        statsBtn.addEventListener('click', () => {
+          CyberAudio.click();
+          const overlay = document.getElementById('streamTelemetryOverlay');
+          if (overlay) {
+            overlay.classList.toggle('hidden');
+            const isActive = !overlay.classList.contains('hidden');
+            statsBtn.className = isActive
+              ? 'rounded-xl bg-cyan-400 font-bold text-slate-950 px-2.5 py-1.5 font-mono-code text-xs ring-1 ring-cyan-300 transition cursor-pointer shadow-sm'
+              : 'rounded-xl bg-cyan-500/20 px-2.5 py-1.5 font-mono-code text-xs text-cyan-300 ring-1 ring-cyan-400/40 hover:bg-cyan-500/30 transition cursor-pointer shadow-sm';
+            showToast(`Stream Telemetry HUD: ${isActive ? 'VISIBLE' : 'HIDDEN'}`);
+          }
+        });
+      }
+
+      // Playback Speed Chips
+      document.querySelectorAll('.speed-chip').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          CyberAudio.click();
+          const spd = parseFloat(e.currentTarget.getAttribute('data-speed')) || 1;
+          const video = document.getElementById('hlsVideoElement');
+          if (video) video.playbackRate = spd;
+          document.querySelectorAll('.speed-chip').forEach(b => {
+            b.className = 'speed-chip rounded px-1.5 py-0.5 text-slate-400 hover:text-white transition';
+          });
+          e.currentTarget.className = 'speed-chip rounded bg-cyan-400 font-bold text-slate-950 px-1.5 py-0.5 transition';
+          showToast(`Playback Speed: ${spd}x`);
+        });
+      });
+
+      // Volume Slider & Mute Toggle
+      const volSlider = document.getElementById('playerVolumeSlider');
+      const muteBtn = document.getElementById('volumeMuteBtn');
+      if (volSlider) {
+        const savedVol = localStorage.getItem('aether_volume');
+        if (savedVol !== null) {
+          volSlider.value = savedVol;
+        }
+        volSlider.addEventListener('input', (e) => {
+          const val = parseInt(e.target.value, 10);
+          const video = document.getElementById('hlsVideoElement');
+          if (video) {
+            video.volume = val / 100;
+            video.muted = (val === 0);
+          }
+          if (muteBtn) muteBtn.textContent = val === 0 ? '🔇' : (val < 50 ? '🔉' : '🔊');
+          localStorage.setItem('aether_volume', String(val));
+        });
+      }
+      if (muteBtn) {
+        muteBtn.addEventListener('click', () => {
+          CyberAudio.click();
+          const video = document.getElementById('hlsVideoElement');
+          if (!video) return;
+          video.muted = !video.muted;
+          muteBtn.textContent = video.muted ? '🔇' : '🔊';
+          if (volSlider && !video.muted && parseInt(volSlider.value, 10) === 0) {
+            volSlider.value = '80';
+            video.volume = 0.8;
+          }
+          showToast(video.muted ? 'Audio Muted' : 'Audio Unmuted');
+        });
+      }
+
+      // Keyboard Shortcuts Modal Toggle
+      const openShortcutsBtn = document.getElementById('openShortcutsModalBtn');
+      const closeShortcutsBtn = document.getElementById('closeShortcutsModalBtn');
+      const shortcutsModal = document.getElementById('shortcutsModal');
+      function toggleShortcutsModal(show) {
+        if (!shortcutsModal) return;
+        CyberAudio.click();
+        shortcutsModal.classList.toggle('hidden', !show);
+      }
+      if (openShortcutsBtn) openShortcutsBtn.addEventListener('click', () => toggleShortcutsModal(true));
+      if (closeShortcutsBtn) closeShortcutsBtn.addEventListener('click', () => toggleShortcutsModal(false));
+      if (shortcutsModal) {
+        shortcutsModal.addEventListener('click', (e) => {
+          if (e.target === shortcutsModal) toggleShortcutsModal(false);
+        });
+      }
+
+      // Mobile Double-Tap Seek on Viewport (Left = -10s, Right = +10s)
+      const vpContainer = document.getElementById('videoViewportContainer');
+      let lastTapTime = 0;
+      let lastTapX = 0;
+      if (vpContainer) {
+        vpContainer.addEventListener('touchend', (e) => {
+          const currentTime = Date.now();
+          const tapLength = currentTime - lastTapTime;
+          const touch = e.changedTouches[0];
+          if (!touch) return;
+          const rect = vpContainer.getBoundingClientRect();
+          const touchX = touch.clientX - rect.left;
+          const width = rect.width;
+
+          if (tapLength < 350 && tapLength > 50) { // Double-tap detected
+            const video = document.getElementById('hlsVideoElement');
+            if (touchX < width * 0.4) {
+              // Left side: rewind 10s
+              if (video) video.currentTime = Math.max(0, (video.currentTime || 0) - 10);
+              const rip = document.getElementById('touchSeekRippleLeft');
+              if (rip) {
+                rip.classList.remove('opacity-0');
+                setTimeout(() => rip.classList.add('opacity-0'), 400);
+              }
+              CyberAudio.skip();
+              showToast('⏪ -10s');
+            } else if (touchX > width * 0.6) {
+              // Right side: forward 10s
+              if (video) video.currentTime = Math.min((video.duration || 1440), (video.currentTime || 0) + 10);
+              const rip = document.getElementById('touchSeekRippleRight');
+              if (rip) {
+                rip.classList.remove('opacity-0');
+                setTimeout(() => rip.classList.add('opacity-0'), 400);
+              }
+              CyberAudio.skip();
+              showToast('⏩ +10s');
+            }
+          }
+          lastTapTime = currentTime;
+          lastTapX = touchX;
+        });
+      }
+
+      // Global Master Keyboard Shortcuts
+      window.addEventListener('keydown', (e) => {
+        // Ignore if user is typing in an input or textarea
+        if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+          if (e.key === 'Escape') {
+            document.activeElement.blur();
+            const cmdM = document.getElementById('cmdBarModal');
+            if (cmdM) cmdM.classList.add('hidden');
+          }
+          return;
+        }
+
+        const video = document.getElementById('hlsVideoElement');
+        switch (e.key) {
+          case ' ':
+          case 'k':
+          case 'K':
+            e.preventDefault();
+            CyberAudio.click();
+            if (video && !video.classList.contains('hidden')) {
+              if (video.paused) video.play(); else video.pause();
+            }
+            break;
+          case 'f':
+          case 'F':
+            e.preventDefault();
+            CyberAudio.click();
+            if (video && !video.classList.contains('hidden')) {
+              if (!document.fullscreenElement) {
+                video.requestFullscreen().catch(()=>{});
+              } else {
+                document.exitFullscreen().catch(()=>{});
+              }
+            }
+            break;
+          case 'm':
+          case 'M':
+            e.preventDefault();
+            if (muteBtn) muteBtn.click();
+            break;
+          case 'j':
+          case 'J':
+          case 'ArrowLeft':
+            e.preventDefault();
+            CyberAudio.skip();
+            if (video && !video.classList.contains('hidden')) {
+              video.currentTime = Math.max(0, (video.currentTime || 0) - 10);
+              showToast('⏪ -10s');
+            }
+            break;
+          case 'l':
+          case 'L':
+          case 'ArrowRight':
+            e.preventDefault();
+            CyberAudio.skip();
+            if (video && !video.classList.contains('hidden')) {
+              video.currentTime = Math.min((video.duration || 1440), (video.currentTime || 0) + 10);
+              showToast('⏩ +10s');
+            }
+            break;
+          case 'ArrowUp':
+            e.preventDefault();
+            if (video && volSlider) {
+              const curV = parseInt(volSlider.value, 10);
+              const newV = Math.min(100, curV + 10);
+              volSlider.value = String(newV);
+              video.volume = newV / 100;
+              showToast(`🔊 Volume: ${newV}%`);
+            }
+            break;
+          case 'ArrowDown':
+            e.preventDefault();
+            if (video && volSlider) {
+              const curV = parseInt(volSlider.value, 10);
+              const newV = Math.max(0, curV - 10);
+              volSlider.value = String(newV);
+              video.volume = newV / 100;
+              showToast(`🔉 Volume: ${newV}%`);
+            }
+            break;
+          case 'n':
+          case 'N':
+            e.preventDefault();
+            const nextBtn = document.getElementById('deckNextEpBtn');
+            if (nextBtn) nextBtn.click();
+            break;
+          case 'p':
+          case 'P':
+            e.preventDefault();
+            const prevBtn = document.getElementById('deckPrevEpBtn');
+            if (prevBtn) prevBtn.click();
+            break;
+          case 's':
+          case 'S':
+            e.preventDefault();
+            const swapBtn = document.getElementById('hotSwapSubDubBtn');
+            if (swapBtn) swapBtn.click();
+            break;
+          case 'i':
+          case 'I':
+            e.preventDefault();
+            const opBtn = document.getElementById('triggerOpSkipBtn');
+            if (opBtn) opBtn.click();
+            break;
+          case 'h':
+          case 'H':
+            e.preventDefault();
+            if (statsBtn) statsBtn.click();
+            break;
+          case '?':
+            e.preventDefault();
+            toggleShortcutsModal(shortcutsModal && shortcutsModal.classList.contains('hidden'));
+            break;
+        }
+      });
+
+      // Live Autocomplete in Command Bar (#cmdBarModal)
+      const liveSearchInput = document.getElementById('cmdBarInput');
+      const cmdSugContainer = document.getElementById('cmdLiveSuggestionsContainer');
+      if (liveSearchInput && cmdSugContainer) {
+        liveSearchInput.addEventListener('input', (e) => {
+          const val = (e.target.value || '').trim().toLowerCase();
+          if (val.length < 2) {
+            cmdSugContainer.classList.add('hidden');
+            cmdSugContainer.innerHTML = '';
+            return;
+          }
+          const matches = ALL_ANIME_CATALOG.filter(a => {
+            return (a.title && a.title.toLowerCase().includes(val)) ||
+                   (a.nativeTitle && a.nativeTitle.toLowerCase().includes(val)) ||
+                   (a.genres && a.genres.some(g => g.toLowerCase().includes(val)));
+          }).slice(0, 5);
+
+          if (matches.length > 0) {
+            cmdSugContainer.classList.remove('hidden');
+            cmdSugContainer.innerHTML = matches.map(m => `
+              <div class="flex items-center justify-between p-2 rounded-lg bg-slate-950/70 hover:bg-cyan-500/10 border border-white/5 hover:border-cyan-400/40 cursor-pointer transition" onclick="selectCmdAnime('${m.id}')">
+                <div class="flex items-center gap-2.5 overflow-hidden">
+                  <img src="${m.coverImage}" class="h-9 w-7 rounded object-cover shrink-0">
+                  <div class="overflow-hidden">
+                    <div class="font-bold text-white truncate">${m.title}</div>
+                    <div class="text-[10px] text-slate-400">${m.episodes || 12} EPS • ★ ${m.score || 85}% • ${(m.genres || []).slice(0,2).join(', ')}</div>
+                  </div>
+                </div>
+                <button type="button" class="shrink-0 rounded bg-cyan-400 px-2 py-1 font-mono-code text-[10px] font-bold text-slate-950 hover:bg-cyan-300">
+                  WATCH ▶
+                </button>
+              </div>
+            `).join('');
+          } else {
+            cmdSugContainer.classList.add('hidden');
+          }
+        });
+      }
+
+      window.selectCmdAnime = function(animeId) {
+        const modal = document.getElementById('cmdBarModal');
+        if (modal) modal.classList.add('hidden');
+        const anime = findAnimeById(animeId);
+        if (anime) {
+          CyberAudio.warp();
+          currentAnime = anime;
+          currentEpisode = 1;
+          const tabStream = document.getElementById('navTabStream');
+          const viewStream = document.getElementById('viewStream');
+          if (window.switchView && tabStream && viewStream) {
+            window.switchView(tabStream, viewStream);
+          }
+          loadAnimeStream(anime, 1, true);
+        }
+      };
+
       // 1. Initialize Views and Navigation (Linux POSIX Desktop)
       const tabHome = document.getElementById('navTabHome');
       const tabStream = document.getElementById('navTabStream');

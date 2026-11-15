@@ -402,6 +402,11 @@ module.exports = async (req, res) => {
       };
     }
 
+    // Strict security & DNS shield: NEVER return zokoanime.video as an iframe embed URL
+    if (resolvedEmbedUrl && resolvedEmbedUrl.includes('zokoanime.video')) {
+      resolvedEmbedUrl = null;
+    }
+
     // Return HD-1 embed player for English Dub or fallback when direct stream is not available
     if (isEmbedPlayer && resolvedEmbedUrl) {
       return res.status(200).json({
@@ -455,13 +460,13 @@ module.exports = async (req, res) => {
       requestedMode: mode,
       dubUnavailable,
       hasDub: !dubUnavailable,
-      isEmbedPlayer: true,
+      isEmbedPlayer: !!resolvedEmbedUrl,
       malId,
       embedUrl: resolvedEmbedUrl,
       videoUrl: null,
       subUrl: null,
       skip: skipTimestamps,
-      serverName,
+      serverName: resolvedEmbedUrl ? serverName : 'Official HD Stream (Server 2)',
       referer: 'https://hianime.at/',
       logs: `Resolved fallback stream for ${cleanQuery} (Ep ${ep}).`
     });
