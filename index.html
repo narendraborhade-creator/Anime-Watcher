@@ -643,6 +643,51 @@
                 >
                   ⏭ SKIP OPENING (85s → 175s)
                 </button>
+
+                <!-- In-Player Floating Quick Next Episode Button (Visible in Fullscreen on Hover) -->
+                <button
+                  id="fullscreenNextEpBtn"
+                  type="button"
+                  class="hidden absolute top-4 right-4 z-30 flex items-center gap-2 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-mono-code text-xs font-extrabold px-3.5 py-2 shadow-2xl backdrop-blur-md transition-all duration-300 cursor-pointer pointer-events-auto ring-1 ring-cyan-300 hover:scale-105 active:scale-95"
+                  title="Play Next Episode (N) - Stays in Fullscreen"
+                >
+                  <span id="fullscreenNextEpBtnText">NEXT EPISODE ⏭</span>
+                </button>
+
+                <!-- Fullscreen End-of-Episode Countdown Modal -->
+                <div id="fullscreenNextEpCard" class="hidden absolute inset-0 z-40 flex flex-col items-center justify-center bg-black/85 backdrop-blur-md transition-all duration-300 pointer-events-auto select-none">
+                  <div class="hud-glass-elevated max-w-md w-full p-6 rounded-2xl border border-cyan-400/50 shadow-2xl text-center space-y-4">
+                    <div class="flex items-center justify-center gap-2 text-cyan-400 text-xs font-mono-code">
+                      <span class="h-2 w-2 rounded-full bg-cyan-400 animate-ping"></span>
+                      <span>EPISODE FINISHED // NEURAL LINK ACTIVE</span>
+                    </div>
+                    <div>
+                      <div class="text-xs font-mono-code text-slate-400" id="nextEpCardAnimeTitle">Anime Title</div>
+                      <h3 class="text-2xl font-display font-extrabold text-white mt-1" id="nextEpCardTitle">UP NEXT: EPISODE 02</h3>
+                    </div>
+                    <!-- Countdown Progress Bar -->
+                    <div class="space-y-1.5">
+                      <div class="flex justify-between font-mono-code text-[11px] text-slate-300">
+                        <span>Playing automatically in <strong id="nextEpCardCountdownNum" class="text-cyan-300 font-bold">5s</strong></span>
+                        <span class="text-cyan-400 font-bold">[Press N or Enter]</span>
+                      </div>
+                      <div class="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+                        <div id="nextEpCardCountdownBar" class="h-full bg-gradient-to-r from-cyan-400 to-indigo-500 w-full transition-all duration-1000 ease-linear"></div>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-center gap-3 pt-2">
+                      <button id="nextEpCardPlayNowBtn" type="button" class="flex-1 flex items-center justify-center gap-2 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-mono-code text-xs font-extrabold py-3 shadow-lg shadow-cyan-400/30 transition hover:scale-102 cursor-pointer">
+                        <span>▶ PLAY NOW (N)</span>
+                      </button>
+                      <button id="nextEpCardReplayBtn" type="button" class="rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 font-mono-code text-xs py-3 px-4 transition cursor-pointer">
+                        <span>↺ Replay</span>
+                      </button>
+                      <button id="nextEpCardDismissBtn" type="button" class="rounded-xl bg-white/5 hover:bg-rose-500/20 hover:text-rose-300 text-slate-400 font-mono-code text-xs py-3 px-3 transition cursor-pointer">
+                        <span>✕ Cancel</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <!-- AniSkip Color-Coded Timeline Scrubber -->
@@ -4082,6 +4127,23 @@ USER anicli`
       const video = document.getElementById('hlsVideoElement');
       if (!iframe && !video) return;
 
+      // Reset Fullscreen Next Episode State
+      if (typeof hideFullscreenNextEpPrompt === 'function') {
+        hideFullscreenNextEpPrompt();
+        nextEpPromptShown = false;
+      }
+      const fsNextBtn = document.getElementById('fullscreenNextEpBtn');
+      const fsNextText = document.getElementById('fullscreenNextEpBtnText');
+      const maxEpisodes = anime.episodes || 24;
+      if (fsNextBtn) {
+        if (episodeNumber < maxEpisodes) {
+          fsNextBtn.classList.remove('hidden');
+          if (fsNextText) fsNextText.textContent = `EPISODE ${String(episodeNumber + 1).padStart(2, '0')} ⏭`;
+        } else {
+          fsNextBtn.classList.add('hidden');
+        }
+      }
+
       // Update Top Telemetry Header
       const titleEl = document.getElementById('playerNowPlayingTitle');
       if (titleEl) titleEl.textContent = anime.title;
@@ -4727,6 +4789,14 @@ USER anicli`
       const unmutePrompt = document.getElementById('unmutePromptBanner');
       if (unmutePrompt) unmutePrompt.classList.add('hidden');
 
+      video.addEventListener('ended', () => {
+        if (typeof showFullscreenNextEpPrompt === 'function') {
+          showFullscreenNextEpPrompt(true);
+        } else if (typeof advanceToNextEpisode === 'function') {
+          advanceToNextEpisode(true);
+        }
+      });
+
       video.addEventListener('timeupdate', () => {
         const cur = video.currentTime;
         const dur = video.duration || 1440;
@@ -4738,6 +4808,13 @@ USER anicli`
           const m = String(Math.floor(cur / 60)).padStart(2, '0');
           const s = String(Math.floor(cur % 60)).padStart(2, '0');
           curEl.textContent = `${m}:${s}`;
+        }
+
+        // Auto-detect End-of-Episode (last 18 seconds before finish)
+        if (dur > 60 && cur >= dur - 18 && !video.ended) {
+          if (typeof showFullscreenNextEpPrompt === 'function') {
+            showFullscreenNextEpPrompt(false);
+          }
         }
 
         // AniSkip intelligent floating button prompt
@@ -5965,6 +6042,79 @@ USER anicli`
       }
     };
 
+    // Fullscreen Next Episode Manager
+    let nextEpCountdownTimer = null;
+    let nextEpPromptShown = false;
+
+    window.advanceToNextEpisode = function(preserveFullscreen = true) {
+      const isFs = !!document.fullscreenElement;
+      const max = currentAnime ? (currentAnime.episodes || 24) : 24;
+      hideFullscreenNextEpPrompt();
+      if (currentEpisode < max) {
+        CyberAudio.warp();
+        playEpisode(currentEpisode + 1);
+        showToast(`⏭ Advanced to Episode ${currentEpisode} (Fullscreen Maintained)`);
+        if (preserveFullscreen && isFs) {
+          setTimeout(() => {
+            const vp = document.getElementById('videoViewportContainer');
+            if (!document.fullscreenElement && vp) {
+              (vp.requestFullscreen || vp.webkitRequestFullscreen).call(vp).catch(()=>{});
+            }
+          }, 350);
+        }
+      } else {
+        showToast('You are on the final episode of this season');
+      }
+    };
+
+    window.showFullscreenNextEpPrompt = function(isImmediate = false) {
+      const max = currentAnime ? (currentAnime.episodes || 24) : 24;
+      if (currentEpisode >= max) return; // Final episode, nothing next
+      if (nextEpPromptShown && !isImmediate) return;
+      nextEpPromptShown = true;
+
+      const card = document.getElementById('fullscreenNextEpCard');
+      const titleEl = document.getElementById('nextEpCardAnimeTitle');
+      const epEl = document.getElementById('nextEpCardTitle');
+      const numEl = document.getElementById('nextEpCardCountdownNum');
+      const barEl = document.getElementById('nextEpCardCountdownBar');
+      if (!card) return;
+
+      const nextEpNum = currentEpisode + 1;
+      if (titleEl && currentAnime) titleEl.textContent = currentAnime.title;
+      if (epEl) epEl.textContent = `UP NEXT: EPISODE ${String(nextEpNum).padStart(2, '0')}`;
+      card.classList.remove('hidden');
+
+      let secondsLeft = isImmediate ? 4 : 7;
+      const totalSeconds = secondsLeft;
+      if (numEl) numEl.textContent = `${secondsLeft}s`;
+      if (barEl) {
+        barEl.style.width = '100%';
+        barEl.style.transition = 'none';
+        setTimeout(() => {
+          barEl.style.transition = `width ${totalSeconds}s linear`;
+          barEl.style.width = '0%';
+        }, 50);
+      }
+
+      clearInterval(nextEpCountdownTimer);
+      nextEpCountdownTimer = setInterval(() => {
+        secondsLeft--;
+        if (numEl) numEl.textContent = `${secondsLeft}s`;
+        if (secondsLeft <= 0) {
+          clearInterval(nextEpCountdownTimer);
+          window.advanceToNextEpisode(true);
+        }
+      }, 1000);
+    };
+
+    window.hideFullscreenNextEpPrompt = function() {
+      clearInterval(nextEpCountdownTimer);
+      nextEpCountdownTimer = null;
+      const card = document.getElementById('fullscreenNextEpCard');
+      if (card) card.classList.add('hidden');
+    };
+
     // Neural Multi-Anime Watch History Management
     function getNeuralWatchHistory() {
       try {
@@ -6210,6 +6360,43 @@ USER anicli`
     });
 
     window.addEventListener('DOMContentLoaded', () => {
+      // Fullscreen Next Episode Card & Floating Button Event Listeners
+      const fsNextBtn = document.getElementById('fullscreenNextEpBtn');
+      if (fsNextBtn) {
+        fsNextBtn.addEventListener('click', () => {
+          advanceToNextEpisode(true);
+        });
+      }
+
+      const nextEpPlayNow = document.getElementById('nextEpCardPlayNowBtn');
+      if (nextEpPlayNow) {
+        nextEpPlayNow.addEventListener('click', () => {
+          advanceToNextEpisode(true);
+        });
+      }
+
+      const nextEpReplay = document.getElementById('nextEpCardReplayBtn');
+      if (nextEpReplay) {
+        nextEpReplay.addEventListener('click', () => {
+          CyberAudio.click();
+          hideFullscreenNextEpPrompt();
+          const video = document.getElementById('hlsVideoElement');
+          if (video) {
+            video.currentTime = 0;
+            video.play().catch(()=>{});
+            showToast('Replaying current episode');
+          }
+        });
+      }
+
+      const nextEpDismiss = document.getElementById('nextEpCardDismissBtn');
+      if (nextEpDismiss) {
+        nextEpDismiss.addEventListener('click', () => {
+          CyberAudio.click();
+          hideFullscreenNextEpPrompt();
+        });
+      }
+
       // Render Continue Watching shelf on boot
       renderHomeResumeShelf();
 
@@ -6442,11 +6629,13 @@ USER anicli`
           case 'F':
             e.preventDefault();
             CyberAudio.click();
-            if (video && !video.classList.contains('hidden')) {
+            const vpElem = document.getElementById('videoViewportContainer');
+            const fsTarget = vpElem || video;
+            if (fsTarget) {
               if (!document.fullscreenElement) {
-                video.requestFullscreen().catch(()=>{});
+                (fsTarget.requestFullscreen || fsTarget.webkitRequestFullscreen).call(fsTarget).catch(()=>{});
               } else {
-                document.exitFullscreen().catch(()=>{});
+                (document.exitFullscreen || document.webkitExitFullscreen).call(document).catch(()=>{});
               }
             }
             break;
@@ -6498,8 +6687,14 @@ USER anicli`
           case 'n':
           case 'N':
             e.preventDefault();
-            const nextBtn = document.getElementById('deckNextEpBtn');
-            if (nextBtn) nextBtn.click();
+            advanceToNextEpisode(true);
+            break;
+          case 'Enter':
+            const promptCard = document.getElementById('fullscreenNextEpCard');
+            if (promptCard && !promptCard.classList.contains('hidden')) {
+              e.preventDefault();
+              advanceToNextEpisode(true);
+            }
             break;
           case 'p':
           case 'P':
